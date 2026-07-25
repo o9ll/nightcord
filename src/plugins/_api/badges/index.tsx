@@ -83,7 +83,6 @@ const UserPluginContributorBadge: ProfileBadge = {
 let DonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
 let EquicordDonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
 let NightcordBadges = {} as Record<string, Array<{ icon: string; placeholder: string; uuid: string; }>>;
-let IllegalcordBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
 
 async function loadBadges(url: string, noCache = false) {
     const init = {} as RequestInit;
@@ -95,13 +94,11 @@ async function loadBadges(url: string, noCache = false) {
 async function loadAllBadges(noCache = false) {
     const vencordBadges = await loadBadges("https://badges.vencord.dev/badges.json", noCache).catch(() => ({}));
     const equicordBadges = await loadBadges("https://badge.equicord.org/badges.json", noCache).catch(() => ({}));
-    const nightcordBadges = await loadBadges("https://api.o9ll.com/badges", noCache).catch(() => ({}));
-    const illegalcordBadges = await loadBadges("https://raw.githubusercontent.com/ImHisako/ImHisako/refs/heads/main/Images/badges.json", noCache).catch(() => ({}));
+    const nightcordBadges = await loadBadges("https://raw.githubusercontent.com/o9ll/nightcord/refs/heads/master/assets/badges.json", noCache).catch(() => ({}));
 
     DonorBadges = vencordBadges;
     EquicordDonorBadges = equicordBadges;
     NightcordBadges = nightcordBadges;
-    IllegalcordBadges = illegalcordBadges;
 }
 
 let intervalId: any;
@@ -322,27 +319,6 @@ export default definePlugin({
             console.error("[BadgeAPI] Error processing nightcord badges for", userId, e);
             return [];
         }
-    },
-
-    getIllegalcordBadges(userId: string) {
-        return IllegalcordBadges[userId]?.map(badge => ({
-            iconSrc: badge.badge,
-            description: badge.tooltip,
-            position: BadgePosition.START,
-            props: {
-                style: {
-                    borderRadius: "50%",
-                    maxHeight: "22px",
-                    maxWidth: "22px"
-                }
-            },
-            onContextMenu(event, badge) {
-                ContextMenuApi.openContextMenu(event, () => <BadgeContextMenu badge={badge} />);
-            },
-            onClick() {
-                return GenericBadgeModal(badge, "Illegalcord");
-            },
-        } satisfies ProfileBadge));
     }
 });
 

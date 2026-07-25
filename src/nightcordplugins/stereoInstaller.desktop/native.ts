@@ -17,7 +17,7 @@ const APP_NAME = "StereoInstaller";
 const DATA_DIR_NAME = "DiscordStereoHubSimple";
 const MAX_DOWNLOAD_BYTES = 160 * 1024 * 1024;
 const MAX_VISIBLE_LOG_LINES = 500;
-const SOURCE_DISCORD_VOICE_DIR = "C:/Users/Hisako/Documents/Illegalcord/src/userplugins/stereoInstaller.desktop/StereoMethods/Discord-Voice";
+const SOURCE_DISCORD_VOICE_DIR = "C:/Users/o9/Documents/Githubb/nightcord/src/nightcordplugins/stereoInstaller.desktop/StereoMethods/Discord-Voice";
 const PATCHED_WINDOWS_GITHUB_CONTENTS_API = "https://api.github.com/repos/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/contents/Updates%2FNodes%2FPatched%20Nodes%20%28for%20Installer%29%2FWindows";
 const PATCHED_LINUX_GITHUB_CONTENTS_API = "https://api.github.com/repos/ProdHallow/Discord-Stereo-Windows-MacOS-Linux/contents/Updates%2FNodes%2FPatched%20Nodes%20%28for%20Installer%29%2FLinux";
 

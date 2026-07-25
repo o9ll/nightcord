@@ -111,7 +111,6 @@ export function _getBadges(args: BadgeUserArgs) {
     const donorBadges = BadgeAPIPlugin.getDonorBadges(args.userId);
     const equicordDonorBadges = BadgeAPIPlugin.getEquicordDonorBadges(args.userId);
     const nightcordBadges = (BadgeAPIPlugin as any).getNightcordBadges?.(args.userId);
-    const illegalcordBadges = (BadgeAPIPlugin as any).getIllegalcordBadges?.(args.userId);
 
     if (donorBadges && !isHidden("vencord")) {
         badges.unshift(...donorBadges.map(shieldBadge));
@@ -123,10 +122,6 @@ export function _getBadges(args: BadgeUserArgs) {
 
     if (nightcordBadges && !isHidden("nightcord")) {
         badges.unshift(...nightcordBadges.map(shieldBadge));
-    }
-
-    if (illegalcordBadges && !isHidden("illegalcord")) {
-        badges.unshift(...illegalcordBadges.map(shieldBadge));
     }
 
     return badges;

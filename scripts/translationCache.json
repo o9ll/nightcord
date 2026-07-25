@@ -18563,11 +18563,11 @@
     "ru": "Файл не содержит допустимых фраз.",
     "zh": "该文件不包含任何有效短语。"
   },
-  "The numbers are samples collected while you use Illegalcord. If a plugin is not used during collection, it may look light even if it does more work in other situations.": {
-    "fr": "Les numéros sont des échantillons collectés pendant que vous utilisez Illegalcord. Si un plugin n’est pas utilisé lors de la collecte, il peut paraître léger même s’il fait plus de travail dans d’autres situations.",
-    "es": "Los números son muestras recopiladas mientras usa Illegalcord. Si un complemento no se utiliza durante la recopilación, puede parecer liviano incluso si funciona más en otras situaciones.",
-    "ru": "Цифры представляют собой образцы, собранные во время использования Illegalcord. Если плагин не используется во время сбора данных, он может выглядеть легкомысленным, даже если в других ситуациях он выполняет больше работы.",
-    "zh": "这些数字是您使用 Illegalcord 时收集的样本。如果一个插件在收集过程中没有被使用，即使它在其他情况下做了更多的工作，它也可能看起来很轻。"
+  "The numbers are samples collected while you use Nightcord. If a plugin is not used during collection, it may look light even if it does more work in other situations.": {
+    "fr": "Les numéros sont des échantillons collectés pendant que vous utilisez Nightcord. Si un plugin n’est pas utilisé lors de la collecte, il peut paraître léger même s’il fait plus de travail dans d’autres situations.",
+    "es": "Los números son muestras recopiladas mientras usa Nightcord. Si un complemento no se utiliza durante la recopilación, puede parecer liviano incluso si funciona más en otras situaciones.",
+    "ru": "Цифры представляют собой образцы, собранные во время использования Nightcord. Если плагин не используется во время сбора данных, он может выглядеть легкомысленным, даже если в других ситуациях он выполняет больше работы.",
+    "zh": "这些数字是您使用 Nightcord 时收集的样本。如果一个插件在收集过程中没有被使用，即使它在其他情况下做了更多的工作，它也可能看起来很轻。"
   },
   "The selected file will be installed as discord_voice.node.": {
     "fr": "Le fichier sélectionné sera installé sous le nom discord_voice.node.",
@@ -18587,11 +18587,11 @@
     "ru": "На этой странице объясняется, что измеряет клиентская диагностика и как читать цифры, не зная кода.",
     "zh": "本页介绍了客户端诊断的测量内容以及如何在不知道代码的情况下读取数字。"
   },
-  "This page interprets the metrics and flags plugins that may make Illegalcord lag.": {
-    "fr": "Cette page interprète les métriques et signale les plugins qui peuvent entraîner un retard d'Illegalcord.",
-    "es": "Esta página interpreta los complementos de métricas y indicadores que pueden provocar un retraso en Illegalcord.",
-    "ru": "На этой странице интерпретируются метрики и помечаются плагины, которые могут вызывать зависания Illegalcord.",
-    "zh": "此页面解释了可能导致 Illegalcord 滞后的指标和标记插件。"
+  "This page interprets the metrics and flags plugins that may make Nightcord lag.": {
+    "fr": "Cette page interprète les métriques et signale les plugins qui peuvent entraîner un retard d'Nightcord.",
+    "es": "Esta página interpreta los complementos de métricas y indicadores que pueden provocar un retraso en Nightcord.",
+    "ru": "На этой странице интерпретируются метрики и помечаются плагины, которые могут вызывать зависания Nightcord.",
+    "zh": "此页面解释了可能导致 Nightcord 滞后的指标和标记插件。"
   },
   "This plugin replaces local Discord voice files to enable higher audio quality. It keeps a backup so you can restore the original files when needed.": {
     "fr": "Ce plugin remplace les fichiers vocaux Discord locaux pour permettre une meilleure qualité audio. Il conserve une sauvegarde afin que vous puissiez restaurer les fichiers d'origine en cas de besoin.",

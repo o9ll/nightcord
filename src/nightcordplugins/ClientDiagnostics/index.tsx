@@ -106,7 +106,7 @@ interface ImpactAnalysisItem {
 }
 
 const PLUGIN_NAME = "Client diagnostics";
-const ENTRY_KEY = "illegalcord_client_diagnostics";
+const ENTRY_KEY = "nightcord_client_diagnostics";
 const SETTINGS_KEYS: SettingKey[] = ["sortBy", "showDisabled", "showApiPlugins", "refreshMs"];
 const REFRESH_SETTING_KEYS: SettingKey[] = ["refreshMs"];
 const LAG_NOTIFICATION_CHECK_MS = 30_000;
@@ -1365,7 +1365,7 @@ function ImpactAnalysisPage() {
                 <div>
                     <BaseText tag="h2" size="xl" weight="semibold">{t("Impact analysis")}</BaseText>
                     <BaseText size="sm" color="text-muted">
-                        {t("This page interprets the metrics and flags plugins that may make Illegalcord lag.")}
+                        {t("This page interprets the metrics and flags plugins that may make Nightcord lag.")}
                     </BaseText>
                 </div>
                 <div className={cl("actions")}>

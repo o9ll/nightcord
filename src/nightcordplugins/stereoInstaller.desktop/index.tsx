@@ -21,7 +21,7 @@ import { Alerts, Button, React, ScrollerThin, Select, SettingsRouter, showToast,
 import type { ActionInfo, InstallInfo, NativeResult, StereoMethod2Quality } from "./native";
 
 const Native = VencordNative.pluginHelpers.StereoInstaller as PluginNative<typeof import("./native")>;
-const SETTINGS_ENTRY_KEY = "illegalcord_stereo_installer";
+const SETTINGS_ENTRY_KEY = "nightcord_stereo_installer";
 const DISCORD_AUDIO_COLLECTIVE_SOURCE_URL = "https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux";
 const VOICE_PLAYGROUND_SOURCE_URL = "https://codeberg.org/UnpackedX/Discord-Experimental-Subsystem";
 const VOICE_PLAYGROUND_TUTORIAL_URL = "https://www.youtube.com/watch?v=zSIIganbZxg";

@@ -419,7 +419,7 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
 
         if (!search.length) return true;
 
-        const isIllegalcordPartner = (
+        const isNightcordPartner = (
             plugin.name === "DynamicIslande" ||
             plugin.name === "StereoInstaller" ||
             plugin.name === "ClientDiagnostics" ||
@@ -428,7 +428,7 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
             plugin.name === "MutualScanner"
         );
 
-        if ((search.includes("illegalcord") || search.includes("illegal")) && isIllegalcordPartner) {
+        if ((search.includes("nightcord") || search.includes("night")) && isNightcordPartner) {
             return true;
         }
 

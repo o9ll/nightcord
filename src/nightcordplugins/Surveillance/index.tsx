@@ -28,7 +28,7 @@ import { tPlugin } from "@api/pluginI18n";
 import { recordEvent, trimEvents } from "./store";
 import type { MessageSnapshot, SurveillanceEvent, SurveillanceEventType, SurveillanceScope, VoiceParticipant, VoiceState, VoiceStateFlag } from "./types";
 
-const SETTINGS_ENTRY_KEY = "illegalcord_surveillance";
+const SETTINGS_ENTRY_KEY = "nightcord_surveillance";
 const NOTIFICATION_COLOR = "#5865f2";
 const MESSAGE_PREVIEW_LIMIT = 220;
 const MESSAGE_CACHE_LIMIT = 1000;

@@ -2282,7 +2282,7 @@ export default definePlugin({
                 if (id.includes("vencord") || desc.includes("vencord")) return false;
                 if (id.includes("equicord") || desc.includes("equicord")) return false;
                 if (id.includes("nightcord") || desc.includes("nightcord")) return false;
-                if (id.includes("illegalcord") || desc.includes("illegalcord")) return false;
+                if (id.includes("nightcord") || desc.includes("nightcord")) return false;
                 if (id.includes("contributor") || desc.includes("contributor")) return false;
                 if (id === "nc-badge") return false;
                 return true;
@@ -2474,7 +2474,6 @@ export default definePlugin({
                 if (id.includes("vencord") || desc.includes("vencord")) return false;
                 if (id.includes("equicord") || desc.includes("equicord")) return false;
                 if (id.includes("nightcord") || desc.includes("nightcord")) return false;
-                if (id.includes("illegalcord") || desc.includes("illegalcord")) return false;
                 if (id.includes("contributor") || desc.includes("contributor")) return false;
                 if (id === "nc-badge") return false;
                 return true;

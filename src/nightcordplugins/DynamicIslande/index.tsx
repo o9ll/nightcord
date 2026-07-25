@@ -79,9 +79,9 @@ const IslandType = {
 
 type IslandType = typeof IslandType[keyof typeof IslandType];
 
-const cl = classNameFactory("vc-illegalcord-dynamic-island-");
+const cl = classNameFactory("vc-nightcord-dynamic-island-");
 const NOTIFICATION_DURATION = 5000;
-const RUNTIME_KEY = Symbol.for("IllegalcordDynamicIsland.runtime");
+const RUNTIME_KEY = Symbol.for("NightcordDynamicIsland.runtime");
 const SPOTIFY_IDLE_DURATION = 60_000;
 const SWIPE_MIN_DISTANCE = 48;
 const SWIPE_MIN_DURATION = 120;
@@ -320,7 +320,7 @@ function SoundCordSection({ sc }: { sc: ReturnType<typeof useSoundCordState> }) 
                         min={0} 
                         max={100} 
                         value={sc.volume} 
-                        className="vc-illegalcord-dynamic-island-volume-slider"
+                        className="vc-nightcord-dynamic-island-volume-slider"
                         style={{ "--value-percent": `${sc.volume}%` } as React.CSSProperties}
                         onChange={(e: any) => {
                             FluxDispatcher.dispatch({ type: "SOUNDCORD_COMMAND", command: "volume", value: Number(e.currentTarget.value) });
@@ -381,7 +381,7 @@ function ParticipantRow({ p, channel, currentUser }: { p: { user: any; member: a
 
     return (
         <div 
-            className="vc-illegalcord-dynamic-island-participant-row"
+            className="vc-nightcord-dynamic-island-participant-row"
             onContextMenu={(e) => {
                 e.preventDefault();
                 const copy = (window as any).DiscordNative?.clipboard?.copy;
@@ -563,7 +563,7 @@ function VoiceSection({ channelId }: { channelId: string; }) {
             
             {showCallParticipants && expanded && participants.length > 0 && (
                 <div 
-                    className="vc-illegalcord-dynamic-island-voice-participants-list"
+                    className="vc-nightcord-dynamic-island-voice-participants-list"
                     style={{ 
                         display: "flex", 
                         flexDirection: "column", 
