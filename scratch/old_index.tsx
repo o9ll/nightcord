@@ -721,8 +721,8 @@ async function _doRpc() {
                 buttons: ["Watch Together", "Download"],
                 metadata: {
                     button_urls: [
-                        `https://o9ll.com/watch?v=${p.video.id}`,
-                        "https://o9ll.com",
+                        `https://vencord.dev/watch?v=${p.video.id}`,
+                        "https://vencord.dev",
                     ],
                 },
                 flags: 1,

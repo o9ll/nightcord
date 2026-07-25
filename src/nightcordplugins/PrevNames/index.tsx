@@ -45,7 +45,7 @@ const STATUS_COLOR: Record<UserStatus, string> = {
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 
-const API_BASE = "https://api.o9ll.com/api";
+const API_BASE = "https://api-dq0h.onrender.com";
 
 interface PrevNameEntry {
     timestamp: number;

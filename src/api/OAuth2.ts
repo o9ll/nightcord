@@ -1,4 +1,4 @@
-export const API_BASE = "https://api.o9ll.com";
+export const API_BASE = "https://cloud.equicord.org";
 
 import * as DataStore from "./DataStore";
 

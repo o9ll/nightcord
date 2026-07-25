@@ -980,7 +980,7 @@ async function _doUpdateRichPresence() {
                 assets: large_image ? { large_image } : undefined,
                 buttons: ["Listening Together", "Download"],
                 metadata: {
-                    button_urls: [`https://o9ll.com/listen?sc_id=${p.playing.id}&start=${start}&userId=${myUserId}`, "https://o9ll.com"],
+                    button_urls: [`https://127.0.0.1/listen?sc_id=${p.playing.id}&start=${start}&userId=${myUserId}`, "https://127.0.0.1"],
                 },
                 flags: 1,
             }
@@ -1162,7 +1162,7 @@ export default definePlugin({
                 if (fiberHref) href = fiberHref;
             }
 
-            if (href.startsWith("https://o9ll.com/listen?") || href.startsWith("http://o9ll.com/listen?")) {
+            if (href.startsWith("https://127.0.0.1/listen?") || href.startsWith("http://127.0.0.1/listen?")) {
                 e.preventDefault();
                 e.stopPropagation();
                 try {

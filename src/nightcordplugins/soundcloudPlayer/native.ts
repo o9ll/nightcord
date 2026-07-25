@@ -1,5 +1,5 @@
 /*
- * Nightcord, a Discord client mod
+ * Vencord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -164,9 +164,9 @@ export async function resolveTrack(
 
 // ─── Listening Together ─────────────────────────────────────────────────────────────────
 // Electron : intercept navigation events on BrowserWindow
-// Browser extension : intercept clicks on <a> tags pointing to o9ll.com/listen
+// Browser extension : intercept clicks on <a> tags pointing to 127.0.0.1/listen
 
-const LISTEN_URL_PREFIX = "https://o9ll.com/listen?";
+const LISTEN_URL_PREFIX = "https://127.0.0.1/listen?";
 
 export function setupListeningTogetherHandler(_?: any): void {
     // no-op

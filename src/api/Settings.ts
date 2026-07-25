@@ -59,7 +59,6 @@ export interface Settings {
     enableOnlineThemes: boolean;
     pinnedThemes: string[];
     themeNames: Record<string, string>;
-    mellowtelOnboardingSeen: boolean;
     enableReactDevtools: boolean;
     themeLinks: string[];
     mainWindowFrameless: boolean;
@@ -135,7 +134,6 @@ const DefaultSettings: Settings = {
     enableOnlineThemes: true,
     pinnedThemes: [],
     themeNames: {},
-    mellowtelOnboardingSeen: false,
     enableReactDevtools: false,
     mainWindowFrameless: false,
     frameless: false,
@@ -165,7 +163,7 @@ const DefaultSettings: Settings = {
 
     cloud: {
         authenticated: false,
-        url: "https://api.o9ll.com/",
+        url: "https://cloud.equicord.org/",
         settingsSync: false,
         settingsSyncVersion: 0
     },
@@ -175,11 +173,6 @@ const DefaultSettings: Settings = {
 
 const settings = !IS_REPORTER ? VencordNative.settings.get() : {} as Settings;
 mergeDefaults(settings, DefaultSettings);
-
-// Force migrate cloud URL to Nightcord if it's still Equicord
-if (settings.cloud && settings.cloud.url && settings.cloud.url.includes("equicord.org")) {
-    settings.cloud.url = "https://api.o9ll.com/";
-}
 
 // Nightcord native defaults — defaultPlugins is always enabled, no external prefs file
 const NIGHTCORD_PREFS = { defaultPlugins: true, autoUpdate: true } as const;
@@ -196,17 +189,13 @@ if (!IS_REPORTER && settings.plugins && plugins) {
             continue;
         }
 
-        const isRequired = Boolean(pluginDef?.required);
-        const isDefault = Boolean(pluginDef?.enabledByDefault);
-
-        if (isRequired) {
+        const shouldBeEnabled = Boolean(pluginDef?.required) || Boolean(pluginDef?.enabledByDefault);
+        if (shouldBeEnabled) {
             if (!settings.plugins[pluginKey]) {
                 settings.plugins[pluginKey] = { enabled: true };
             } else {
                 settings.plugins[pluginKey].enabled = true;
             }
-        } else if (isDefault && settings.plugins[pluginKey] === undefined) {
-            settings.plugins[pluginKey] = { enabled: true };
         }
     }
 }
@@ -228,15 +217,14 @@ export const SettingsStore = new SettingsStoreClass(settings, {
                 FORCE_DISABLED_DEFAULT_PLUGIN_KEYS.has(pluginKey.toLowerCase())
                 || FORCE_DISABLED_DEFAULT_PLUGIN_KEYS.has(String(pluginDef?.name ?? "").toLowerCase());
 
-            const isRequired = !forceOff && (IS_REPORTER || Boolean(pluginDef?.required));
-            const isDefault = !forceOff && (isRequired || Boolean(pluginDef?.enabledByDefault));
+            const shouldBeEnabled = !forceOff && (IS_REPORTER || Boolean(pluginDef?.required) || Boolean(pluginDef?.enabledByDefault));
 
             if (!target[key]) {
-                return target[key] = { enabled: isDefault };
+                return target[key] = { enabled: shouldBeEnabled };
             }
 
-            // Force required plugins on, force disabled list off
-            if (isRequired && target[key].enabled === false) {
+            // Force enabledByDefault plugins on, force disabled list off
+            if (shouldBeEnabled && target[key].enabled === false) {
                 target[key].enabled = true;
             }
             if (forceOff) {

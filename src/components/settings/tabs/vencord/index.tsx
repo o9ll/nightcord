@@ -31,8 +31,6 @@ import { openModal } from "@utils/modal";
 import { relaunch } from "@utils/native";
 import { Avatar, OAuth2AuthorizeModal, React, Select, UserStore } from "@webpack/common";
 
-import { MELLOWTEL_ONBOARDING_VERSION } from "@components/MellowtelConsentModal";
-
 import { ContributeModal } from "../../../../nightcord/renderer/components/ContributeModal";
 import { openNotificationSettingsModal } from "./NotificationSettings";
 
@@ -66,7 +64,7 @@ function useDiscordUser(userId: string) {
                     ? `https://cdn.discordapp.com/avatars/${userId}/${u.avatar}.webp?size=128`
                     : `https://cdn.discordapp.com/embed/avatars/${Number(BigInt(userId) >> 22n) % 6}.png`
             }))
-            .catch(() => setUser({ name: userId, pfp: "https://cdn.discordapp.com/embed/avatars/0.png" }));
+            .catch(() => setUser({ name: userId, pfp: `https://cdn.discordapp.com/embed/avatars/0.png` }));
     }, [userId]);
     return user;
 }
@@ -77,7 +75,7 @@ function DevCard({ id, role }: { id: string; role: string; }) {
         <Card variant="primary" outline style={{ padding: "10px" }}>
             <Flex align={Flex.Align.CENTER} gap="10px">
                 <Avatar
-                    src={user?.pfp ?? "https://cdn.discordapp.com/embed/avatars/0.png"}
+                    src={user?.pfp ?? `https://cdn.discordapp.com/embed/avatars/0.png`}
                     size="SIZE_48"
                 />
                 <Flex direction={Flex.Direction.VERTICAL} style={{ flex: 1, gap: "0px" }}>
@@ -205,29 +203,7 @@ function StealthModeButton() {
     );
 }
 
-function MellowtelSupportSwitch() {
-    const [consent, setConsentState] = React.useState<{ consent: "accepted" | "declined"; version: string; } | null>(
-        () => VencordNative.mellowtel.getConsent()
-    );
 
-    return (
-        <FormSwitch
-            value={consent?.consent === "accepted"}
-            onChange={accepted => {
-                const version = consent?.version ?? MELLOWTEL_ONBOARDING_VERSION;
-                VencordNative.mellowtel.setConsent(accepted, version);
-                setConsentState({ consent: accepted ? "accepted" : "declined", version });
-            }}
-            title={t("Share bandwidth to support Nightcord (Mellowtel)")}
-            description={
-                consent
-                    ? undefined
-                    : t("You haven't been asked yet - this will opt you in immediately if enabled here.")
-            }
-            hideBorder
-        />
-    );
-}
 
 function EquicordSettings() {
     const settings = useSettings();
@@ -388,8 +364,6 @@ function EquicordSettings() {
                         />
                     ),
                 )}
-
-                <MellowtelSupportSwitch />
 
                 {needsVibrancySettings && (
                     <>
