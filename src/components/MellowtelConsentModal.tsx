@@ -29,12 +29,12 @@ const PRESET_OPTIONS = ["none", "default", "safe"] as const;
 type PresetOption = typeof PRESET_OPTIONS[number];
 
 const SAFE_PLUGINS: string[] = [
-    "MessageCleaner", "BigFileUpload", "FakeVoice", 
-    "NightcordUpdater", "CrashHandler", "ImageZoom",  
-    "ShowHiddenChannels", "ShowID", "VoiceMessages", "CallTimer", "DisableCallIdle", 
-    "FastPFP", "FollowUser", "IconViewer", "PinDMs", 
-    "ReverseImageSearch", "Translate", "UnlimitedAccounts", "UserVoiceShow", 
-    "ValidUser", "ViewIcons", "WhosWatching", 
+    "MessageCleaner", "BigFileUpload", "FakeVoice",
+    "NightcordUpdater", "CrashHandler", "ImageZoom",
+    "ShowHiddenChannels", "ShowID", "VoiceMessages", "CallTimer", "DisableCallIdle",
+    "FastPFP", "FollowUser", "IconViewer", "PinDMs",
+    "ReverseImageSearch", "Translate", "UnlimitedAccounts", "UserVoiceShow",
+    "ValidUser", "ViewIcons", "WhosWatching",
     "MessageLogger", "MessageLoggerEnhanced", "RealtimeTimestamps", "SpotifyCrack", "CancelFriendRequest",
     "VolumeBooster", "SaveVideos"
 ];
@@ -144,7 +144,7 @@ function MellowtelOnboardingContent({ onClose }: { onClose: () => void }) {
         return (
             <Flex style={{ gap: "8px", marginBottom: "20px", marginTop: "12px", width: "100%" }}>
                 {[1, 2, 3, 4].map(i => (
-                    <div 
+                    <div
                         key={i}
                         style={{
                             flex: 1,
@@ -192,7 +192,7 @@ function MellowtelOnboardingContent({ onClose }: { onClose: () => void }) {
                             { id: "default", title: "Default", desc: "The standard Nightcord experience with recommended plugins." },
                             { id: "safe", title: "Current", desc: "Essential Plugins Only. Keep your current safe and minimal active configuration." }
                         ].map(p => (
-                            <div 
+                            <div
                                 key={p.id}
                                 onClick={() => setPreset(p.id as PresetOption)}
                                 style={{
@@ -209,10 +209,10 @@ function MellowtelOnboardingContent({ onClose }: { onClose: () => void }) {
                                     boxSizing: "border-box"
                                 }}
                             >
-                                <div style={{ 
-                                    width: "48px", height: "48px", borderRadius: "24px", 
+                                <div style={{
+                                    width: "48px", height: "48px", borderRadius: "24px",
                                     backgroundColor: preset === p.id ? "#5865f2" : "rgba(255,255,255,0.05)",
-                                    color: preset === p.id ? "#ffffff" : "#80848e", 
+                                    color: preset === p.id ? "#ffffff" : "#80848e",
                                     display: "flex", alignItems: "center", justifyContent: "center",
                                     marginBottom: "16px", transition: "all 0.2s ease"
                                 }}>
@@ -343,7 +343,7 @@ function MellowtelOnboardingContent({ onClose }: { onClose: () => void }) {
                     <Paragraph style={{ color: "#dbdee1", fontSize: "14px", lineHeight: "1.5", marginBottom: "24px" }}>
                         {t("Synchronize your Nightcord settings, plugins, and custom profiles across all your devices securely through the cloud. This requires Discord authorization. Once enabled, everyone using Nightcord will be able to see your Custom Profile, and you will be able to see theirs. You can also easily backup your configurations and automatically restore them on another device.")}
                     </Paragraph>
-                    
+
                     <div style={{ marginTop: "8px" }}>
                         <FormSwitch
                             value={settings.cloud?.settingsSync || false}
@@ -407,7 +407,7 @@ function MellowtelOnboardingContent({ onClose }: { onClose: () => void }) {
                     <Paragraph style={{ color: "#dbdee1", fontSize: "14px", lineHeight: "1.5", marginBottom: "24px" }}>
                         {t("Choose your preferred language for Nightcord UI. This setting will immediately apply to all menus and settings within Nightcord.")}
                     </Paragraph>
-                    
+
                     <div style={{ marginTop: "16px" }}>
                         <SearchableSelect
                             options={Object.entries(LANGUAGES).map(([key, name]) => ({
@@ -490,7 +490,7 @@ function MellowtelOnboardingContent({ onClose }: { onClose: () => void }) {
                         "messages, or Discord activity - it only relays network requests in the background."
                      )}
                 </Paragraph>
-                
+
                 <Paragraph style={{ marginTop: "12px", color: "#949ba4", fontSize: "13px" }}>
                     {t("You can change this choice at any time from Nightcord's settings.")}
                 </Paragraph>
@@ -511,15 +511,15 @@ function MellowtelOnboardingContent({ onClose }: { onClose: () => void }) {
                         <Paragraph style={{ fontSize: "12px", fontWeight: 600, marginBottom: "8px", color: "#dbdee1" }}>
                             {t("You must read the following agreement to the end to manage your choices:")}
                         </Paragraph>
-                        
-                        <div 
+
+                        <div
                             ref={scrollRef}
                             onScroll={handleScroll}
                             className="mellowtel-terms-scroller"
-                            style={{ 
-                                height: "130px", 
+                            style={{
+                                height: "130px",
                                 overflowY: "auto",
-                                border: "1px solid rgba(255, 255, 255, 0.08)", 
+                                border: "1px solid rgba(255, 255, 255, 0.08)",
                                 borderRadius: "4px",
                                 backgroundColor: "rgba(0, 0, 0, 0.24)",
                                 padding: "10px",

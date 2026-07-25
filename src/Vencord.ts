@@ -49,7 +49,7 @@ try {
                 }
                 return String(a);
             }).join(" ");
-            
+
             return skipLogs.some(pat => str.includes(pat));
         } catch {
             return false;

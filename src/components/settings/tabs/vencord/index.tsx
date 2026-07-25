@@ -89,8 +89,6 @@ function DevCard({ id, role }: { id: string; role: string; }) {
     );
 }
 
-
-
 function DevTeamSection() {
     const [showDevs, setShowDevs] = React.useState(false);
 
@@ -206,8 +204,6 @@ function StealthModeButton() {
         </Button>
     );
 }
-
-
 
 function MellowtelSupportSwitch() {
     const [consent, setConsentState] = React.useState<{ consent: "accepted" | "declined"; version: string; } | null>(
@@ -364,8 +360,6 @@ function EquicordSettings() {
                     </a>.
                 </Notice.Info>
 
-
-
                 {Switches.filter((s): s is Exclude<typeof s, false> => !!s).map(
                     s => (
                         <FormSwitch
@@ -514,6 +508,3 @@ function EquicordSettings() {
 }
 
 export default wrapTab(EquicordSettings, "Nightcord Settings");
-
-
-

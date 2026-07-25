@@ -1564,4 +1564,3 @@ ipcMain.handle(IpcEvents.INSTALL_VB_CABLE, async (event) => {
         try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch {}
     }
 });
-

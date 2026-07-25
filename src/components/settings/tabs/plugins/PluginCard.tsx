@@ -309,7 +309,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
     }
 
     const hasSettings = plugin.settings?.def && Object.values(plugin.settings.def).some(s => s.type !== OptionType.CUSTOM && !s.hidden);
-    
+
     const PluginIcon = plugin.headerBarButton?.icon || 
                        plugin.chatBarButton?.icon || 
                        plugin.messagePopoverButton?.icon || 

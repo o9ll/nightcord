@@ -51,4 +51,3 @@ export async function getPublicPluginConfig(pluginName: string, userId: string) 
 }
 
 export function clearPublicProfileCache() {}
-

@@ -120,7 +120,7 @@ export async function authorizePluginSync(): Promise<boolean> {
                             headers: { Accept: "application/json" }
                         });
                         const data = await res.json();
-                        
+
                         if (data.token) {
                             logger.info("Authorized plugin sync");
                             await setPluginSyncToken(data.token);
@@ -157,4 +157,3 @@ export async function authorizePluginSync(): Promise<boolean> {
         return false;
     }
 }
-

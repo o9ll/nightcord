@@ -100,5 +100,3 @@ export const enum IpcEvents {
     // Updates global content protection
     SET_CONTENT_PROTECTION = "NightcordSetContentProtection"
 }
-
-
