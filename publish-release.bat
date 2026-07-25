@@ -1,9 +1,8 @@
 @echo off
-:: ─── Nightcord — Publier une nouvelle release sur GitHub ─────────────────────
-:: Usage : publish-release.bat 1.18.1 "Description des changements"
-:: Necessite : pnpm, node, gh (GitHub CLI, authentifie)
-::
-:: Auth : gh auth login  (ou configurer GITHUB_TOKEN)
+:: ─── Nightcord — Publish a new release to GitHub ──────────────────────────────
+:: Usage: publish-release.bat 1.21.6 "Release v1.21.6"
+:: Requires: gh (GitHub CLI) — https://cli.github.com
+::           pnpm, node, dotnet SDK (or .NET Framework 4.x)
 
 setlocal EnableDelayedExpansion
 
@@ -11,33 +10,16 @@ set "VERSION=%~1"
 set "NOTES=%~2"
 
 if "%VERSION%"=="" (
-    echo [ERREUR] Usage: publish-release.bat VERSION "Notes de version"
-    echo Exemple : publish-release.bat 1.18.1 "Correction bug audio"
+    echo [ERROR] Usage: publish-release.bat VERSION "Notes"
+    echo Example: publish-release.bat 1.21.6 "Fixed"
+    echo Command: .\publish-release.bat 1.21.6 "Nightcord v1.21.6"
     pause
     exit /b 1
 )
 
 if "%NOTES%"=="" set NOTES=Nightcord %VERSION%
 
-:: ── Config GitHub ──────────────────────────────────────────────────────────────
-set GITHUB_REPO=o9ll/nightcord
-
-:: ── Verification gh CLI ──────────────────────────────────────────────────────
-where gh >nul 2>&1
-if errorlevel 1 (
-    echo [ERREUR] gh CLI introuvable. Installez-le depuis https://cli.github.com/
-    pause
-    exit /b 1
-)
-
-gh auth status >nul 2>&1
-if errorlevel 1 (
-    echo [ERREUR] gh CLI non authentifie. Lancez : gh auth login
-    pause
-    exit /b 1
-)
-
-:: Chemins de sortie
+:: Output paths
 set DIST_DIR=dist\desktop
 set OUT_DIR=release\installer
 set DIST_ZIP=%OUT_DIR%\nightcord-dist.zip
@@ -47,152 +29,175 @@ set DESKTOP_ASAR=dist\desktop.asar
 
 echo.
 echo  ╔═══════════════════════════════════════════════════╗
-echo  ║    NIGHTCORD — Publication release v%VERSION%
+echo  ║    Nightcord — Publishing release v%VERSION%
 echo  ╚═══════════════════════════════════════════════════╝
 echo.
 
-:: ── 1. Mise à jour de la version ──────────────────────────────────────────────
-echo  [1/8] Mise a jour de la version vers %VERSION%...
-node -e "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8')); pkg.version = '%VERSION%'; fs.writeFileSync('package.json', JSON.stringify(pkg, null, 4) + '\n', 'utf8');"
-echo  [1/8] Version mise a jour.
+:: ── 1. Update version numbers in files ─────────────────────────────────────────
+echo  [1/8] Updating version to %VERSION%...
 
-:: ── 2. Envoi du code source sur GitHub ─────────────────────────────────────────
+powershell -NoProfile -Command "$c = Get-Content -Raw 'package.json'; $c = $c -replace '\"version\": \"[^\"]+\"', '\"version\": \"%VERSION%\"'; [IO.File]::WriteAllText((Resolve-Path 'package.json').Path, $c)"
+
+echo  [1/8] Version updated.
+
+:: ── 2. Push source code to GitHub ──────────────────────────────────────────────
 echo.
-echo  [2/8] Committer et pusher le code source...
+echo  [2/8] Committing and pushing source code...
 git add .
 git diff --quiet --cached
 if errorlevel 1 (
-    git commit -m "build: release v%VERSION% - %NOTES%"
+    git commit -m "build: release v%VERSION% - !NOTES!"
 ) else (
-    echo  Aucun changement a committer.
+    echo  No changes to commit.
 )
 git push --set-upstream origin master
 if errorlevel 1 (
-    echo  [ERREUR] Impossible de push sur GitHub. Verifiez vos identifiants/droits d'acces.
+    echo  [ERROR] Unable to push to GitHub. Check your credentials/access rights.
     pause
     exit /b 1
 )
-echo  [2/8] Code source synchronise avec GitHub.
+echo  [2/8] Source code synchronized with GitHub.
 
-:: ── 3. Build JS ───────────────────────────────────────────────────────────────
+:: ── 3. Build JS (with automatic obfuscation) ───────────────────────────────────
 echo.
-echo  [3/8] Build + obfuscation en cours...
+echo  [3/8] Building + obfuscating...
+echo        (JavaScript files will be obfuscated automatically)
+
 taskkill /F /IM Discord.exe /T >nul 2>&1
 taskkill /F /IM node.exe    /T >nul 2>&1
 timeout /t 2 /nobreak >nul
+
 call pnpm build
 if errorlevel 1 (
-    echo  [ERREUR] pnpm build a echoue.
+    echo  [ERROR] pnpm build failed.
     pause
     exit /b 1
 )
-echo  [3/8] Build + obfuscation termines !
+echo  [3/8] Build + obfuscation completed!
 
-:: ── 4. Assets ─────────────────────────────────────────────────────────────────
+:: ── 4. Prepare additional assets ───────────────────────────────────────────────
 echo.
-echo  [4/8] Copie des assets (ffmpeg, node, modules...) vers %DIST_DIR%...
+echo  [4/8] Copying assets (ffmpeg, node, modules...) to %DIST_DIR%...
+
 node scripts\build\collect-assets.mjs
-echo  [4/8] Assets copies.
 
-:: ── 5. Nightcord-Installer.exe ────────────────────────────────────────────────
+echo  [4/8] Assets copied.
+
+:: ── 5. Compile Nightcord-Installer.exe ─────────────────────────────────────────
 echo.
-echo  [5/8] Compilation de Nightcord-Installer.exe...
+echo  [5/8] Compiling Nightcord-Installer.exe...
+
 if not exist "%OUT_DIR%" mkdir "%OUT_DIR%"
+
 powershell -NoProfile -ExecutionPolicy Bypass -File "build-installer.ps1"
 if errorlevel 1 (
-    echo  [ERREUR] Compilation de l'installeur echouee.
+    echo  [ERROR] Installer compilation failed.
     pause
     exit /b 1
 )
-if not exist "%INSTALLER_EXE%" (
-    echo  [ERREUR] Nightcord-Installer.exe introuvable apres compilation.
-    pause
-    exit /b 1
-)
-for %%F in ("%INSTALLER_EXE%") do echo  [5/8] Nightcord-Installer.exe cree (%%~zF octets)
 
-:: ── 6. nightcord-dist.zip ─────────────────────────────────────────────────────
-echo.
-echo  [6/8] Creation de nightcord-dist.zip...
-if not exist "%DIST_DIR%\patcher.js" (
-    echo  [ERREUR] dist\desktop\patcher.js introuvable.
+if not exist "%INSTALLER_EXE%" (
+    echo  [ERROR] Nightcord-Installer.exe not found after compilation.
     pause
     exit /b 1
 )
+
+for %%F in ("%INSTALLER_EXE%") do echo  [5/8] Nightcord-Installer.exe created (%%~zF bytes)
+
+:: ── 6. Create nightcord-dist.zip ───────────────────────────────────────────────
+echo.
+echo  [6/8] Creating nightcord-dist.zip...
+
+if not exist "%DIST_DIR%\patcher.js" (
+    echo  [ERROR] dist\desktop\patcher.js not found.
+    pause
+    exit /b 1
+)
+
 if exist "%DIST_ZIP%" del /F /Q "%DIST_ZIP%"
+
+:: Remove unnecessary files before compression
 del /s /q "%DIST_DIR%\*.map" >nul 2>&1
 del /s /q "%DIST_DIR%\*.LEGAL.txt" >nul 2>&1
+
+:: Verify that @babel is present before creating the ZIP
 node scripts\build\verify-dist.mjs
 if errorlevel 1 (
-    echo  [ERREUR] Verification du dist echouee.
+    echo  [ERROR] Dist verification failed - @babel is missing or incomplete.
     pause
     exit /b 1
 )
-powershell -NoProfile -Command "Add-Type -Assembly System.IO.Compression.FileSystem; $src = (Resolve-Path '%DIST_DIR%').Path; $dst = (Join-Path (Resolve-Path 'release\installer').Path 'nightcord-dist.zip'); [System.IO.Compression.ZipFile]::CreateFromDirectory($src, $dst, [System.IO.Compression.CompressionLevel]::Optimal, $false)"
-if not exist "%DIST_ZIP%" (
-    echo  [ERREUR] Impossible de creer nightcord-dist.zip
-    pause
-    exit /b 1
-)
-for %%F in ("%DIST_ZIP%") do echo  [6/8] nightcord-dist.zip cree (%%~zF octets)
 
-:: ── 7. version.json ───────────────────────────────────────────────────────────
+:: Compress directly using .NET ZipFile (more reliable than Compress-Archive for node_modules)
+powershell -NoProfile -Command "Add-Type -Assembly System.IO.Compression.FileSystem; $src = (Resolve-Path '%DIST_DIR%').Path; $dst = (Join-Path (Resolve-Path 'release\installer').Path 'nightcord-dist.zip'); [System.IO.Compression.ZipFile]::CreateFromDirectory($src, $dst, [System.IO.Compression.CompressionLevel]::Optimal, $false)"
+
+if not exist "%DIST_ZIP%" (
+    echo  [ERROR] Unable to create nightcord-dist.zip
+    pause
+    exit /b 1
+)
+
+for %%F in ("%DIST_ZIP%") do echo  [6/8] nightcord-dist.zip created (%%~zF bytes)
+
+:: ── 7. Update version.json ─────────────────────────────────────────────────────
 echo.
-echo  [7/8] Mise a jour de version.json...
+echo  [7/8] Updating version.json...
+
 for /f "usebackq" %%d in (`powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd'"`) do set ISO_DATE=%%d
+
 (
     echo {
     echo   "version": "%VERSION%",
     echo   "releaseDate": "%ISO_DATE%",
-    echo   "installerUrl": "https://github.com/%GITHUB_REPO%/releases/download/v%VERSION%/Nightcord-Installer.exe",
-    echo   "distUrl": "https://github.com/%GITHUB_REPO%/releases/download/v%VERSION%/nightcord-dist.zip",
-    echo   "downloadUrl": "https://github.com/%GITHUB_REPO%/releases/download/v%VERSION%/desktop.asar",
-    echo   "changelog": "%NOTES%"
+    echo   "installerUrl": "https://github.com/o9ll/nightcord/releases/latest/download/Nightcord-Installer.exe",
+    echo   "distUrl": "https://github.com/o9ll/nightcord/releases/latest/download/nightcord-dist.zip",
+    echo   "downloadUrl": "https://github.com/o9ll/nightcord/releases/latest/download/desktop.asar",
+    echo   "changelog": "!NOTES!"
     echo }
 ) > "%VERSION_JSON%"
-echo  [7/8] version.json mis a jour.
 
-:: ── 8. Publier sur GitHub Releases ─────────────────────────────────────────────
+echo  [7/8] version.json updated.
+
+:: ── 8. Publish to GitHub Releases ──────────────────────────────────────────────
 echo.
-echo  [8/8] Creation de la release v%VERSION% sur GitHub...
+echo  [8/8] Publishing release v%VERSION% to GitHub...
 
-set "TAG_NAME=v%VERSION%"
-
-:: Creer le tag et le pousser
-git tag "%TAG_NAME%"
-git push origin "%TAG_NAME%"
+where gh >nul 2>&1
 if errorlevel 1 (
-    echo  [ERREUR] Impossible de pousser le tag.
+    echo  [ERROR] GitHub CLI is not installed — https://cli.github.com
     pause
     exit /b 1
 )
 
-:: Creer la release et uploader les assets via gh CLI
-gh release create "%TAG_NAME%" ^
+gh release create "v%VERSION%" ^
+    "%INSTALLER_EXE%#Nightcord-Installer.exe" ^
+    "%DIST_ZIP%#nightcord-dist.zip" ^
+    "%DESKTOP_ASAR%#desktop.asar" ^
+    "%VERSION_JSON%#version.json" ^
+    --repo o9ll/nightcord ^
     --title "Nightcord v%VERSION%" ^
-    --notes "%NOTES%" ^
-    "%INSTALLER_EXE%" ^
-    "%DIST_ZIP%" ^
-    "%DESKTOP_ASAR%" ^
-    "%VERSION_JSON%"
+    --notes "!NOTES!" ^
+    --latest
+
 if errorlevel 1 (
-    echo  [ERREUR] Echec de la creation de la release GitHub.
+    echo  [ERROR] GitHub publication failed.
     pause
     exit /b 1
 )
 
 :: ── Done ───────────────────────────────────────────────────────────────────────
 echo.
-echo  ╔═══════════════════════════════════════════════════════════════════════╗
-echo  ║  Nightcord v%VERSION% publie avec succes sur GitHub !
+echo  ╔═══════════════════════════════════════════════════════════════╗
+echo  ║  Nightcord v%VERSION% published successfully!
 echo  ║
-echo  ║  URL : https://github.com/%GITHUB_REPO%/releases/tag/%TAG_NAME%
+echo  ║  Files published to GitHub:
+echo  ║    Nightcord-Installer.exe    — GUI installer
+echo  ║    nightcord-dist.zip         — Obfuscated JS (for injection)
+echo  ║    version.json               — Version metadata
 echo  ║
-echo  ║  Fichiers publies :
-echo  ║    Nightcord-Installer.exe    — installeur .exe avec GUI
-echo  ║    nightcord-dist.zip         — JS obfusques (pour l'injec.)
-echo  ║    desktop.asar               — asar Discord patcher
-echo  ║    version.json               — metadonnees de version
-echo  ╚═══════════════════════════════════════════════════════════════════════╝
+echo  ║  Users will download Nightcord-Installer.exe
+echo  ║  and run it to choose their target Discord installation.
+echo  ║  No visible source code — everything is obfuscated.
+echo  ╚═══════════════════════════════════════════════════════════════╝
 echo.
 pause
