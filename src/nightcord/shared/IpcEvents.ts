@@ -77,7 +77,7 @@ export const enum IpcEvents {
 
     GET_PLATFORM_SPOOF_INFO = "VCD_GET_PLATFORM_SPOOF_INFO",
 
-    // Relaunch depuis VencordNative.nightcord.relaunch() (boutons Restart plugins)
+    // Relaunch from VencordNative.nightcord.relaunch() (Restart plugins buttons)
     RELAUNCH_APP = "NightcordRelaunchApp"
 }
 

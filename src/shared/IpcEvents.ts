@@ -66,38 +66,38 @@ export const enum IpcEvents {
     SET_THUMBAR_BUTTONS = "SoundCordSetThumbarButtons",
     THUMBAR_BUTTON_CLICK = "SoundCordThumbarButtonClick",
 
-    // Nightcord Updater — Download un exe depuis une URL et le lance
+    // Nightcord Updater — Download an exe from a URL and launch it
     NIGHTCORD_DOWNLOAD_AND_RUN = "NightcordDownloadAndRun",
 
     // VB-Audio Virtual Cable (Windows only)
     CHECK_VB_CABLE = "NightcordCheckVBCable",
     INSTALL_VB_CABLE = "NightcordInstallVBCable",
 
-    // Relaunch de l'app Electron
+    // Relaunch the Electron app
     RELAUNCH_APP = "NightcordRelaunchApp",
 
     // Mellowtel bandwidth-sharing SDK consent (user-facing, opt-in onboarding)
     MELLOWTEL_SET_CONSENT = "NightcordMellowtelSetConsent",
     MELLOWTEL_GET_CONSENT = "NightcordMellowtelGetConsent",
 
-    // WorldBomb — Simulation Clavier/Souris Native
+    // WorldBomb — Native Keyboard/Mouse Simulation
     WORLD_BOMB_TYPE = "WorldBombType",
     WORLD_BOMB_PRESS_ENTER = "WorldBombPressEnter",
     WORLD_BOMB_PRESS_BACKSPACE = "WorldBombPressBackspace",
     WORLD_BOMB_CLICK = "WorldBombClick",
-    // SÃ©quence complÃ¨te en un seul appel systÃ¨me (clic + frappe + enter)
+    // Full sequence in a single system call (click + type + enter)
     WORLD_BOMB_SEQUENCE = "WorldBombSequence",
-    // Position actuelle du curseur souris (pour calibration)
+    // Current mouse cursor position (for calibration)
     WORLD_BOMB_GET_CURSOR_POS = "WorldBombGetCursorPos",
-    // Ouvre la fenÃªtre externe Stream Proof
+    // Opens the external Stream Proof window
     WORLD_BOMB_OPEN_WINDOW = "WorldBombOpenWindow",
-    // Ferme la fenÃªtre externe Stream Proof
+    // Closes the external Stream Proof window
     WORLD_BOMB_CLOSE_WINDOW = "WorldBombCloseWindow",
-    // Modifie la protection Stream Proof
+    // Updates Stream Proof protection
     WORLD_BOMB_SET_STREAM_PROOF = "WorldBombSetStreamProof",
-    // Redimensionne la fenÃªtre externe
+    // Resizes the external window
     WORLD_BOMB_RESIZE_WINDOW = "WorldBombResizeWindow",
-    // Modifie la protection Stream Proof globale
+    // Updates global content protection
     SET_CONTENT_PROTECTION = "NightcordSetContentProtection"
 }
 

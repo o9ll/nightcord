@@ -5,28 +5,28 @@ const Module = require("module");
 const fs = require("fs");
 const { app } = require("electron");
 
-// ── CRITIQUE : userData = dossier Nightcord pour les settings/plugins
+// ── CRITICAL: userData = Nightcord folder for settings/plugins
 const nightcordData = path.join(app.getPath("appData"), "Nightcord");
 app.setPath("userData", nightcordData);
 
-// AppUserModelId unique — Windows reconnaît Nightcord comme app séparée de Discord
+// Unique AppUserModelId — Windows recognizes Nightcord as a separate app from Discord
 app.setAppUserModelId("com.squirrel.Discord.Discord");
 
-// Flags Chromium utiles uniquement (suppression des flags qui nuisent au démarrage :
-// process-per-site, renderer-process-limit, enable-low-end-device-mode forçaient
-// des sous-processus et désactivaient l'accélération GPU → freeze sur splash screen)
+// Useful Chromium flags only (removing flags that harm startup:
+// process-per-site, renderer-process-limit, enable-low-end-device-mode forced
+// sub-processes and disabled GPU acceleration → freeze on splash screen)
 app.commandLine.appendSwitch("enable-gpu-rasterization");
 app.commandLine.appendSwitch("enable-zero-copy");
 app.commandLine.appendSwitch("disk-cache-size", "104857600");
 
 app.once("ready", () => {
     try {
-        // Liste des modules natifs qui causent des erreurs 403 inutiles
-        // NB: discord_overlay est intentionnellement ABSENT de cette liste —
-        //     il doit pouvoir s'initialiser localement pour que l'overlay en jeu fonctionne.
-        //     Seuls les modules vraiment inutiles pour Nightcord sont bloqués.
+        // List of native modules that cause unnecessary 403 errors
+        // NB: discord_overlay is intentionally ABSENT from this list —
+        //     it must be able to initialize locally for in-game overlay to work.
+        //     Only modules truly useless for Nightcord are blocked.
         const BLOCKED_MODULES = new Set([
-            // "discord_overlay",  // RETIRE — nécessaire pour l'overlay in-game
+            // "discord_overlay",  // REMOVED — needed for in-game overlay
             "discord_rpc",
             "discord_dispatch",
             "discord_erinn",
@@ -35,7 +35,7 @@ app.once("ready", () => {
         const { session, shell } = require("electron");
         const { webContents: webContentsModule } = require("electron");
 
-        // URLs Discord légitimes à ne pas bloquer dans will-navigate
+        // Legitimate Discord URLs not to block in will-navigate
         function isDiscordUrl(url) {
             return url.startsWith("https://discord.com") ||
                 url.startsWith("https://canary.discord.com") ||
@@ -46,100 +46,100 @@ app.once("ready", () => {
         }
 
         function patchWebContents(wc) {
-            // Éviter de patcher deux fois le même webContents
+            // Avoid patching the same webContents twice
             if (wc._nightcordPatched) return;
             wc._nightcordPatched = true;
 
-            // Intercepte les window.open() :
-            // - about:blank est autorisé (Discord en a besoin pour ses popups légitimes)
-            //   MAIS on écoute did-create-window pour patcher immédiatement la fenêtre enfant
-            // - devtools:// est autorisé
-            // - tout le reste → navigateur externe
+            // Intercept window.open():
+            // - about:blank is allowed (Discord needs it for legitimate popups)
+            //   BUT we listen to did-create-window to immediately patch the child window
+            // - devtools:// is allowed
+            // - everything else → external browser
             wc.setWindowOpenHandler(({ url }) => {
                 if (!url || url === "about:blank" || url.startsWith("devtools://")) {
                     return { action: "allow" };
                 }
                 shell.openExternal(url).catch(() => {});
-                console.log("[Nightcord][LINK] Ouverture externe:", url);
+                console.log("[Nightcord][LINK] External open:", url);
                 return { action: "deny" };
             });
 
-            // FIX CLEF : quand about:blank crée une fenêtre enfant,
-            // Discord navigue ensuite vers une URL externe (TikTok, GitHub, etc.)
-            // dans cette fenêtre enfant. On la patche immédiatement à sa création
-            // pour bloquer cette navigation et l'ouvrir dans le navigateur.
+            // KEY FIX: when about:blank creates a child window,
+            // Discord then navigates to an external URL (TikTok, GitHub, etc.)
+            // in that child window. We patch it immediately on creation
+            // to block this navigation and open it in the browser.
             wc.on("did-create-window", (childWin) => {
                 const childWc = childWin.webContents;
                 if (childWc._nightcordPatched) return;
                 childWc._nightcordPatched = true;
 
-                // La fenêtre enfant démarre sur about:blank mais va naviguer vers une URL externe
-                // On bloque toute navigation non-Discord dès qu'elle se produit
+                // The child window starts on about:blank but will navigate to an external URL
+                // Block any non-Discord navigation as soon as it happens
                 childWc.on("will-navigate", (event, url) => {
                     if (!isDiscordUrl(url)) {
                         event.preventDefault();
                         shell.openExternal(url).catch(() => {});
-                        console.log("[Nightcord][CHILD-NAV] Redirection externe:", url);
-                        // Fermer la fenêtre enfant vide après redirection
+                        console.log("[Nightcord][CHILD-NAV] External redirect:", url);
+                        // Close the empty child window after redirect
                         try { childWin.close(); } catch (_) {}
                     }
                 });
 
-                // did-navigate couvre les cas ou la navigation a deja eu lieu (OAuth, TikTok) avant will-navigate
+                // did-navigate covers cases where navigation already happened (OAuth, TikTok) before will-navigate
                 childWc.on('did-navigate', function(_event, url) {
                     if (!isDiscordUrl(url)) {
                         shell.openExternal(url).catch(function() {});
-                        console.log('[Nightcord][CHILD-DID-NAV] Redirection externe apres navigation:', url);
+                        console.log('[Nightcord][CHILD-DID-NAV] External redirect after navigation:', url);
                         try { childWin.close(); } catch (_) {}
                     }
                 });
 
-                // Aussi bloquer les nouvelles navigations via setWindowOpenHandler dans l'enfant
+                // Also block new navigations via setWindowOpenHandler in the child
                 childWc.setWindowOpenHandler(({ url }) => {
                     if (!url || url === "about:blank" || url.startsWith("devtools://")) return { action: "allow" };
                     shell.openExternal(url).catch(() => {});
-                    console.log("[Nightcord][CHILD-LINK] Ouverture externe:", url);
+                    console.log("[Nightcord][CHILD-LINK] External open:", url);
                     return { action: "deny" };
                 });
 
-                // Bloquer aussi did-finish-load si la fenêtre a chargé une URL externe
+                // Also block did-finish-load if the window loaded an external URL
                 childWc.on("did-finish-load", () => {
                     const url = childWc.getURL();
                     if (url && url !== "about:blank" && !isDiscordUrl(url)) {
                         shell.openExternal(url).catch(() => {});
-                        console.log("[Nightcord][CHILD-LOAD] Fermeture et redirection:", url);
+                        console.log("[Nightcord][CHILD-LOAD] Closing and redirecting:", url);
                         try { childWin.close(); } catch (_) {}
                     }
                 });
             });
 
-            // Bloquer les navigations de la fenêtre mère vers des URLs externes
+            // Block parent window navigations to external URLs
             wc.on("will-navigate", (event, url) => {
                 const currentUrl = wc.getURL();
                 if (url !== currentUrl && !isDiscordUrl(url)) {
                     event.preventDefault();
                     shell.openExternal(url).catch(() => {});
-                    console.log("[Nightcord][NAV] Redirection externe:", url);
+                    console.log("[Nightcord][NAV] External redirect:", url);
                 }
             });
         }
 
-        // Patcher tous les webContents créés (fenêtres ET popups)
+        // Patch all created webContents (windows AND popups)
         app.on("browser-window-created", (_, win) => {
             patchWebContents(win.webContents);
         });
 
-        // Patcher aussi les webContents créés sans BrowserWindow (popups détachés, etc.)
+        // Also patch webContents created without BrowserWindow (detached popups, etc.)
         app.on("web-contents-created", (_, wc) => {
             patchWebContents(wc);
         });
 
-        // Patcher les webContents déjà existants au moment du ready
+        // Patch already existing webContents at ready time
         for (const wc of webContentsModule.getAllWebContents()) {
             patchWebContents(wc);
         }
 
-        console.log("[Nightcord] Patch liens externes activé sur TOUS les webContents (avec did-create-window) ✓");
+        console.log("[Nightcord] External link patch active on ALL webContents (with did-create-window) ✓");
 
         app.once("browser-window-created", (_, win) => {
 
@@ -152,46 +152,46 @@ app.once("ready", () => {
                         let isBlocked = false;
                         for (const m of BLOCKED_MODULES) { if (url.includes(m)) { isBlocked = true; break; } }
                         if (isBlocked) {
-                            // Bloquer silencieusement — évite le 403 + les logs d'erreur
-                            console.log("[Nightcord] Module bloqué (inutile pour Nightcord):", url.split("/").slice(-2).join("/"));
+                            // Block silently — avoids 403 + error logs
+                            console.log("[Nightcord] Blocked module (unused by Nightcord):", url.split("/").slice(-2).join("/"));
                             callback({ cancel: true });
                         } else {
                             callback({});
                         }
                     }
                 );
-                console.log("[Nightcord] Filtre modules 403 activé ✓");
+                console.log("[Nightcord] 403 module filter activated ✓");
             } catch (e) {
-                console.warn("[Nightcord] Impossible d'activer le filtre modules:", e.message);
+                console.warn("[Nightcord] Could not activate module filter:", e.message);
             }
         });
     } catch (e) {
-        console.warn("[Nightcord] FIX modules 403 failed:", e.message);
+        console.warn("[Nightcord] 403 modules fix failed:", e.message);
     }
 });
 
-// Protection contre le freeze après crash — vérifier et réparer le LevelDB localStorage
-// Quand Discord crash pendant une écriture localStorage, le fichier LevelDB peut se
-// corrompre et géler le renderer au démarrage suivant.
+// Protection against freeze after crash — check and repair LevelDB localStorage
+// When Discord crashes during a localStorage write, the LevelDB file can
+// become corrupted and freeze the renderer on next startup.
 try {
     const lsPath = path.join(nightcordData, "Local Storage", "leveldb");
     if (fs.existsSync(lsPath)) {
-        // Détecter la corruption : fichier LOCK verrouillé ou fichier LOG manquant
+        // Detect corruption: locked LOCK file or missing LOG file
         const lockFile = path.join(lsPath, "LOCK");
         const logFile = path.join(lsPath, "LOG");
         let corrupted = false;
         if (fs.existsSync(lockFile)) {
             try {
-                // Essayer d'ouvrir le LOCK en écriture — si échoue, un process zombie le tient
+                // Try opening LOCK for writing — if it fails, a zombie process holds it
                 const fd = fs.openSync(lockFile, "r+");
                 fs.closeSync(fd);
             } catch (e) {
-                // LOCK verrouillé par un zombie — supprimer pour débloquer
+                // LOCK locked by a zombie — delete to unlock
                 try { fs.unlinkSync(lockFile); } catch { }
                 corrupted = true;
             }
         }
-        // Vérifier aussi les fichiers .ldb corrompus (taille 0)
+        // Also check corrupted .ldb files (size 0)
         if (!corrupted) {
             const files = fs.readdirSync(lsPath).filter(f => f.endsWith(".ldb"));
             for (const f of files) {
@@ -200,21 +200,21 @@ try {
             }
         }
         if (corrupted) {
-            console.warn("[Nightcord] LevelDB localStorage corrompu détecté — réparation...");
+            console.warn("[Nightcord] Corrupted LevelDB localStorage detected — repairing...");
             try { fs.rmSync(lsPath, { recursive: true, force: true }); } catch { }
-            console.warn("[Nightcord] LevelDB supprimé — les données localStorage seront récréées");
+            console.warn("[Nightcord] LevelDB deleted — localStorage data will be recreated");
         }
     }
 } catch (e) { console.warn("[Nightcord] LevelDB check failed:", e.message); }
 
-// Modules bundlés dans nightcord-dist/modules/
+// Bundled modules in nightcord-dist/modules/
 const bundledModulesPath = path.join(path.dirname(process.execPath), "modules");
 const moduleDataPath = path.join(app.getPath("appData"), "discord", "module_data");
 
-// ── DÉTECTION AUTOMATIQUE du dossier modules de Discord stable ───────────────
-// Les modules natifs (discord_voice, discord_krisp...) sont dans AppData\Local\Discord\app-X.X.XXXX\modules\
-// et NON dans AppData\Roaming\discord\module_data\ (qui est souvent vide).
-// On détecte automatiquement la version installée pour avoir le bon chemin.
+// ── AUTO-DETECT Discord stable modules folder ──────────────────────────────
+// Native modules (discord_voice, discord_krisp...) are in AppData\Local\Discord\app-X.X.XXXX\modules\
+// NOT in AppData\Roaming\discord\module_data\ (which is often empty).
+// We auto-detect the installed version to get the correct path.
 const discordLocalBase = path.join(app.getPath("appData"), "..", "Local", "Discord");
 let discordNativeModulesPath = null;
 try {
@@ -225,13 +225,13 @@ try {
         .sort((a, b) => b.name.localeCompare(a.name, undefined, { numeric: true }));
     if (entries.length > 0) {
         discordNativeModulesPath = entries[0].full;
-        console.log("[Nightcord] Modules natifs Discord détectés:", discordNativeModulesPath);
+        console.log("[Nightcord] Discord native modules detected:", discordNativeModulesPath);
     }
 } catch (e) {
-    console.warn("[Nightcord] Impossible de détecter les modules natifs Discord:", e.message);
+    console.warn("[Nightcord] Could not detect Discord native modules:", e.message);
 }
 
-// Utilise un Set pour les ajouts O(1) (au lieu de .includes() O(n) en boucle)
+// Use a Set for O(1) additions (instead of O(n) .includes() in loops)
 const _globalPathsSet = new Set(Module.globalPaths);
 
 function addGlobalPath(p) {
@@ -243,10 +243,10 @@ function addGlobalPath(p) {
     } catch (_) { }
 }
 
-// Priorité aux modules bundlés (portables, dans nightcord-dist/modules/)
+// Priority to bundled modules (portable, in nightcord-dist/modules/)
 addGlobalPath(bundledModulesPath);
 
-// Ajout des modules natifs Discord (discord_voice, discord_krisp, etc.)
+// Add Discord native modules (discord_voice, discord_krisp, etc.)
 if (discordNativeModulesPath) {
     addGlobalPath(discordNativeModulesPath);
     try {
@@ -254,7 +254,7 @@ if (discordNativeModulesPath) {
             const modDir = path.join(discordNativeModulesPath, mod);
             try { if (!fs.statSync(modDir).isDirectory()) continue; } catch { continue; }
             addGlobalPath(modDir);
-            // Entrer dans le sous-dossier du module (ex: discord_voice-1/discord_voice/)
+            // Enter the module subfolder (e.g. discord_voice-1/discord_voice/)
             try {
                 for (const sub of fs.readdirSync(modDir)) {
                     const subDir = path.join(modDir, sub);
@@ -262,7 +262,7 @@ if (discordNativeModulesPath) {
                 }
             } catch { }
         }
-    } catch (e) { console.warn("[Nightcord] Erreur lors du scan des modules natifs:", e.message); }
+    } catch (e) { console.warn("[Nightcord] Error scanning native modules:", e.message); }
 }
 try {
     for (const mod of fs.readdirSync(bundledModulesPath)) {
@@ -278,7 +278,7 @@ try {
     }
 } catch (e) { }
 
-// Fallback : module_data utilisateur
+// Fallback: user module_data
 addGlobalPath(moduleDataPath);
 try {
     for (const mod of fs.readdirSync(moduleDataPath)) {
@@ -294,24 +294,24 @@ try {
     }
 } catch (e) { }
 
-// Ce patch garantit que les modules chargés depuis l'asar Discord (qui ont
-// parent.paths = []) trouvent quand même les modules natifs Nightcord.
-// Node.js injecte déjà Module.globalPaths nativement dans tous les autres cas.
+// This patch ensures modules loaded from Discord's asar (which have
+// parent.paths = []) still find Nightcord's native modules.
+// Node.js already injects Module.globalPaths natively in all other cases.
 const _globalPathsArr = Module.globalPaths.slice();
 const _origResolve = Module._resolveLookupPaths;
 Module._resolveLookupPaths = function (request, parent) {
-    // Uniquement pour les contextes asar isolés (paths vide) —
-    // dans tous les autres cas, Node gère globalPaths lui-même, on ne touche à rien.
+    // Only for isolated asar contexts (empty paths) —
+    // in all other cases, Node handles globalPaths itself, we don't touch anything.
     if (parent && (!parent.paths || parent.paths.length === 0)) {
         parent.paths = _globalPathsArr.slice();
     }
     return _origResolve.call(this, request, parent);
 };
 
-// Chercher discord_desktop_core dans cet ordre :
-// 1. modules bundlés (portable)
-// 2. modules natifs Discord local (AppData\Local\Discord\app-X\modules\)
-// 3. module_data Roaming (fallback)
+// Look up discord_desktop_core in this order:
+// 1. bundled modules (portable)
+// 2. local Discord native modules (AppData\Local\Discord\app-X\modules\)
+// 3. Roaming module_data (fallback)
 const coreModuleDir = path.join(bundledModulesPath, "discord_desktop_core-1", "discord_desktop_core");
 const coreModuleDirNative = discordNativeModulesPath
     ? path.join(discordNativeModulesPath, "discord_desktop_core-1", "discord_desktop_core")
@@ -323,25 +323,25 @@ global.mainAppDirname = fs.existsSync(coreModuleDir)
         : path.join(moduleDataPath, "discord_desktop_core");
 console.log("[Nightcord] mainAppDirname:", global.mainAppDirname);
 
-// ── FIX AUDIO NATIF : patch build_info.json pour que Discord trouve les modules ──
-// On ne patche qu'une fois (vérification rapide avant toute lecture disque)
+// ── NATIVE AUDIO FIX: patch build_info.json so Discord finds modules ──
+// Only patch once (quick check before any disk reads)
 try {
     const buildInfoPath = path.join(
         path.dirname(process.execPath), "resources", "build_info.json"
     );
     const nativeModulesDir = path.join(path.dirname(process.execPath), "modules");
-    // Lire le fichier seulement si le dossier modules existe
+    // Only read the file if the modules folder exists
     if (fs.existsSync(nativeModulesDir)) {
         const buildInfoRaw = fs.readFileSync(buildInfoPath, "utf-8");
         const buildInfo = JSON.parse(buildInfoRaw);
         if (!buildInfo.localModulesRoot) {
             buildInfo.localModulesRoot = nativeModulesDir;
             fs.writeFileSync(buildInfoPath, JSON.stringify(buildInfo, null, 2));
-            console.log("[Nightcord] build_info.json patché → localModulesRoot:", nativeModulesDir);
+            console.log("[Nightcord] build_info.json patched → localModulesRoot:", nativeModulesDir);
         }
     }
 } catch (e) {
-    console.warn("[Nightcord] Impossible de patcher build_info.json:", e.message);
+    console.warn("[Nightcord] Could not patch build_info.json:", e.message);
 }
 
 require(path.join(__dirname, "dist", "desktop", "patcher.js"));

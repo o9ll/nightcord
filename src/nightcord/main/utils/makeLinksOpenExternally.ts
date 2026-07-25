@@ -207,9 +207,9 @@ export function makeLinksOpenExternally(win: BrowserWindow) {
             const key = stablePopoutKey(frameName);
             setupPopout(childWin, key);
         } else {
-            // Fenêtre non-popout / non-captcha : c'est une redirection externe (about:blank → lien).
-            // On cache la fenêtre immédiatement pour éviter le flash blanc, puis on ferme
-            // dès que la navigation vers le vrai lien se déclenche.
+            // Non-popout / non-captcha window: this is an external redirect (about:blank → link).
+            // Hide the window immediately to avoid the white flash, then close
+            // once navigation to the real URL starts.
             childWin.hide();
             childWin.webContents.on("will-navigate", (e, navUrl) => {
                 e.preventDefault();
@@ -220,7 +220,7 @@ export function makeLinksOpenExternally(win: BrowserWindow) {
                     handleExternalUrl(navUrl);
                 }
             });
-            // Filet de sécurité : si rien ne navigue dans les 2s, fermer quand même
+            // Safety net: if nothing navigates within 2s, close anyway
             setTimeout(() => {
                 if (!childWin.isDestroyed()) childWin.close();
             }, 2000);

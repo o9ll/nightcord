@@ -1,14 +1,14 @@
 /*
  * Nightcord — Installer via EquilotlCli
- * Download EquilotlCli.exe depuis les releases Equicord et le lance
- * avec les variables d'environnement pointant vers les fichiers Nightcord.
+ * Downloads EquilotlCli.exe from Equicord releases and runs it
+ * with env vars pointing to Nightcord files.
  *
- * L'exe affiche une interface graphique permettant de choisir le Discord cible.
+ * The exe shows a GUI to pick the target Discord.
  *
  * Usage:
- *   pnpm inject    â†’ installe Nightcord dans le Discord choisi
- *   pnpm uninject  â†’ dÃ©sinstalle Nightcord du Discord choisi
- *   pnpm repair    â†’ rÃ©pare l'installation
+ *   pnpm inject    → installs Nightcord into the chosen Discord
+ *   pnpm uninject  → uninstalls Nightcord from the chosen Discord
+ *   pnpm repair    → repairs the installation
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -86,7 +86,7 @@ async function ensureBinary() {
     return outputFile;
 }
 
-// â”€â”€ VÃ©rifier que le build existe â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Check that build exists ───────────────────────────────────────────────────
 function checkBuild() {
     const patcherPath = join(BASE_DIR, "dist", "desktop", "patcher.js");
     if (!existsSync(patcherPath)) {
@@ -96,9 +96,9 @@ function checkBuild() {
     }
 }
 
-// ── Suppression des mises à jour Discord incomplètes ─────────────────────────────
-// Quand Discord télécharge une mise à jour mais qu'elle est incomplète (pas d'app.asar),
-// l'installeur essaie d'y injecter et échoue. On supprime ces dossiers cassés.
+// ── Remove incomplete Discord updates ──────────────────────────────────────────
+// When Discord downloads an update but it's incomplete (no app.asar),
+// the installer tries to inject and fails. We remove these broken folders.
 function cleanIncompleteDiscordUpdates() {
     if (process.platform !== "win32") return;
     const localAppData = process.env.LOCALAPPDATA || "";
@@ -112,20 +112,20 @@ function cleanIncompleteDiscordUpdates() {
             const resourcesDir = join(base, ver, "resources");
             const appAsarPath  = join(resourcesDir, "app.asar");
             const backupPath   = join(resourcesDir, "_app.asar");
-            // Dossier incomplet : resources existe mais ni app.asar ni _app.asar
+            // Incomplete folder: resources exists but neither app.asar nor _app.asar
             if (existsSync(join(base, ver)) && !existsSync(appAsarPath) && !existsSync(backupPath)) {
                 try {
                     rmSync(join(base, ver), { recursive: true, force: true });
-                    console.log(`[Nightcord] Supprimé le dossier de mise à jour Discord incomplet : ${join(base, ver)}`);
+                    console.log(`[Nightcord] Removed incomplete Discord update folder: ${join(base, ver)}`);
                 } catch (e) {
-                    console.warn(`[Nightcord] Impossible de supprimer ${join(base, ver)}: ${e.message}`);
+                    console.warn(`[Nightcord] Could not remove ${join(base, ver)}: ${e.message}`);
                 }
             }
         }
     }
 }
 
-// ── Nettoyage des injections précédentes ─────────────────────────────────────────
+// ── Clean previous injections ──────────────────────────────────────────────────
 function cleanOldNightcord(isUninstall) {
     console.log("[Nightcord] Cleaning previous installations...");
     const platform = process.platform;
@@ -192,7 +192,7 @@ function cleanOldNightcord(isUninstall) {
                     rmSync(appAsarPath, { recursive: true, force: true });
                 }
                 renameSync(backupPath, appAsarPath);
-                console.log(`[Nightcord] Restored _app.asar â†’ app.asar in ${resourcesDir}`);
+                console.log(`[Nightcord] Restored _app.asar → app.asar in ${resourcesDir}`);
                 cleanedAny = true;
             }
 
@@ -208,9 +208,9 @@ function cleanOldNightcord(isUninstall) {
     }
 }
 
-// â”€â”€ Lancer Discord aprÃ¨s injection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Cherche quel Discord vient d'Ãªtre injectÃ© (_app.asar prÃ©sent = injectÃ©)
-// et le lance via Update.exe --processStart Discord.exe
+// ── Launch Discord after injection ─────────────────────────────────────────────
+// Finds which Discord was just injected (_app.asar present = injected)
+// and launches it via Update.exe --processStart Discord.exe
 function launchInjectedDiscord() {
     if (process.platform !== "win32") return;
 
@@ -229,7 +229,7 @@ function launchInjectedDiscord() {
             const resourcesDir = join(base, ver, "resources");
             const backupPath   = join(resourcesDir, "_app.asar");
 
-            // _app.asar prÃ©sent = EquilotlCli vient d'injecter ici
+            // _app.asar present = EquilotlCli just injected here
             if (existsSync(backupPath)) {
                 const exeName   = channel + ".exe";
                 const updateExe = join(base, "Update.exe");
@@ -238,20 +238,20 @@ function launchInjectedDiscord() {
                     console.log(`[Nightcord] Launching ${channel}...`);
                     exec(`"${updateExe}" --processStart ${exeName}`);
                 } else {
-                    // Fallback : lancer l'exe directement
+                    // Fallback: launch the exe directly
                     const directExe = join(base, ver, channel + ".exe");
                     if (existsSync(directExe)) {
                         console.log(`[Nightcord] Launching ${channel} (direct)...`);
                         exec(`"${directExe}"`);
                     }
                 }
-                return; // On lance le premier Discord injectÃ© trouvÃ©
+                return; // Launch the first injected Discord found
             }
         }
     }
 }
 
-// â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Main ──────────────────────────────────────────────────────────────────────
 const argStart = process.argv.indexOf("--");
 const args = argStart === -1 ? process.argv.slice(2) : process.argv.slice(argStart + 1);
 
@@ -291,7 +291,7 @@ try {
     process.exit(1);
 }
 
-// Lancer Discord uniquement aprÃ¨s une injection rÃ©ussie (pas aprÃ¨s uninject)
+// Launch Discord only after a successful injection (not after uninstall)
 if (!isUninstall) {
     launchInjectedDiscord();
 }

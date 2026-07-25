@@ -134,15 +134,15 @@ export default {
         type: (text: string, delay: number) => invoke(IpcEvents.WORLD_BOMB_TYPE, text, delay),
         pressEnter: () => invoke(IpcEvents.WORLD_BOMB_PRESS_ENTER),
         pressBackspace: () => invoke(IpcEvents.WORLD_BOMB_PRESS_BACKSPACE),
-        // SÃ©quence complÃ¨te en un seul processus PowerShell (clic auto au centre + frappe + enter)
-        // targetX/targetY : position calibrÃ©e du clic (-1 = centre de la fenÃªtre par dÃ©faut)
+        // Full sequence in a single native call (auto-center click + type + enter)
+        // targetX/targetY: calibrated click position (-1 = default window center)
         sequence: (word: string, lps: number, humanChance: number, targetX: number = -1, targetY: number = -1) =>
             invoke(IpcEvents.WORLD_BOMB_SEQUENCE, word, lps, humanChance, targetX, targetY),
-        // Ouvre la fenÃªtre externe Stream Proof
+        // Opens the external Stream Proof window
         openWindow: (lps: number, humanChance: number, safeMode: boolean, theme: string, playMode: string, noSpace: boolean, groqKey: string, words: string[], streamProof: boolean) => invoke(IpcEvents.WORLD_BOMB_OPEN_WINDOW, lps, humanChance, safeMode, theme, playMode, noSpace, groqKey, words, streamProof),
-        // Ferme la fenÃªtre externe Stream Proof
+        // Closes the external Stream Proof window
         closeWindow: () => invoke(IpcEvents.WORLD_BOMB_CLOSE_WINDOW),
-        // Retourne la position actuelle du curseur (plus utilisÃ© mais gardÃ© au cas oÃ¹)
+        // Returns the current cursor position (no longer used but kept just in case)
         getCursorPos: (): Promise<{ x: number; y: number; }> => invoke(IpcEvents.WORLD_BOMB_GET_CURSOR_POS),
     },
     setContentProtection: (enabled: boolean) =>

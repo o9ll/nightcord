@@ -3,7 +3,7 @@ const { readFileSync, writeFileSync, existsSync, readdirSync, statSync, mkdirSyn
 const { createHash } = require("crypto");
 const { join } = require("path");
 
-// ─── Configuration de Build Nightcord ─────────────────────────────────────────
+// ─── Nightcord Build Configuration ─────────────────────────────────────────
 
 function killNightcord() {
     const releaseDir = join(__dirname, "release", "nightcord-dist");
@@ -35,12 +35,12 @@ function findDiscordApp() {
             if (v[0] > bestVer[0] || v[1] > bestVer[1] || v[2] > bestVer[2]) { bestVer = v; best = join(base, e); }
         }
     } catch { }
-    if (!best) throw new Error("Discord introuvable. Assurez-vous que Discord est installé.");
+    if (!best) throw new Error("Discord not found. Make sure Discord is installed.");
     return best;
 }
 
 function buildEquicord() {
-    console.log("[build] Compilation de Nightcord...");
+    console.log("[build] Building Nightcord...");
     execSync("node --require=./scripts/suppressExperimentalWarnings.js scripts/build/build.mjs --standalone", { stdio: "inherit" });
 }
 
@@ -52,7 +52,7 @@ function buildNightcordFromDiscord(discordApp) {
         try { rmSync(outDir, { recursive: true, force: true }); } catch (e) { }
     }
 
-    console.log("[nightcord] Copie des binaires Discord...");
+    console.log("[nightcord] Copying Discord binaries...");
     mkdirSync(outDir, { recursive: true });
 
     for (const f of readdirSync(discordApp)) {
@@ -93,7 +93,7 @@ function buildNightcordFromDiscord(discordApp) {
         cpSync(bootstrapSrc, bootstrapDst, { recursive: true });
     }
 
-    console.log("[nightcord] Préparation de _app.asar...");
+    console.log("[nightcord] Preparing _app.asar...");
     let appAsarSrc = join(discordRes, "_app.asar");
     if (!existsSync(appAsarSrc)) appAsarSrc = join(discordRes, "app.asar");
     
@@ -151,14 +151,14 @@ require(path.join(__dirname, "dist", "desktop", "patcher.js"));
         if (existsSync(localBin)) cpSync(localBin, join(outDir, bin));
     }
 
-    // Curseurs macOS (utilises par le plugin CursorMacOS) -> resourcesPath/mac/mac/...
-    // native.ts cherche via process.resourcesPath, qui pointe vers outDir/resources (asar: false)
+    // macOS cursors (used by the CursorMacOS plugin) -> resourcesPath/mac/mac/...
+    // native.ts looks via process.resourcesPath, which points to outDir/resources (asar: false)
     const macCursorsSrc = join(__dirname, "mac");
     if (existsSync(macCursorsSrc)) {
-        console.log("[nightcord] Copie des curseurs macOS...");
+        console.log("[nightcord] Copying macOS cursors...");
         cpSync(macCursorsSrc, join(outRes, "mac"), { recursive: true });
     } else {
-        console.warn("[nightcord] ATTENTION: dossier 'mac' introuvable a la racine, le plugin CursorMacOS ne fonctionnera pas dans le build package.");
+        console.warn("[nightcord] WARNING: 'mac' folder not found at root, CursorMacOS plugin will not work in the packaged build.");
     }
 
     const discordExe = join(outDir, "Discord.exe");
@@ -177,11 +177,11 @@ require(path.join(__dirname, "dist", "desktop", "patcher.js"));
         } catch (e) { }
     }
 
-    console.log(`[nightcord] Build terminé -> ${outDir}`);
+    console.log(`[nightcord] Build finished -> ${outDir}`);
 }
 
 function obfuscateDesktop() {
-    // Obfuscation légère pour la protection intellectuelle de base sans casser les perfs
+    // Light obfuscation for basic IP protection without breaking performance
     const obfArgs = ["--compact", "true", "--simplify", "true", "--string-array", "true"];
     const files = ["patcher.js", "preload.js", "renderer.js"];
     for (const f of files) {
@@ -191,12 +191,12 @@ function obfuscateDesktop() {
     }
 }
 
-// ─── Execution du build ───────────────────────────────────────────────────────
+// ─── Build Execution ───────────────────────────────────────────────────────
 
 killNightcord();
 const discord = findDiscordApp();
 buildEquicord();
-// obfuscateDesktop(); // Optionnel pour l'open source
+// obfuscateDesktop(); // Optional for open source
 buildNightcordFromDiscord(discord);
 
 module.exports = {

@@ -391,8 +391,8 @@ function buildBrowserWindowOptions(): BrowserWindowConstructorOptions {
     return options;
 }
 
-// Helper : maximize la fenetre uniquement si elle ne l'est pas encore et qu'elle n'est pas detruite.
-// Utilise un delai pour laisser Discord terminer son initialisation fullscreen IPC avant d'agir.
+// Helper: maximize the window only if not already maximized and not destroyed.
+// Uses a delay to let Discord finish its fullscreen IPC initialization before acting.
 function safeMaximizeLater(win: BrowserWindow, delayMs = 2500) {
     setTimeout(() => {
         if (!win.isDestroyed() && !win.isMaximized()) {
@@ -436,10 +436,10 @@ function createMainWindow() {
 
     initWindowBoundsListeners(win);
 
-    // Ne pas écouter enter-html-full-screen ici — c'est géré dans patcher.ts via
-    // les handlers enter/leave-html-full-screen sur la BrowserWindow patchée.
-    // On écoute seulement leave-html-full-screen comme filet de sécurité pour s'assurer
-    // que le fullscreen natif est bien quitté si Discord sort du mode HTML FS.
+    // Do not listen to enter-html-full-screen here — handled in patcher.ts via
+    // enter/leave-html-full-screen handlers on the patched BrowserWindow.
+    // Only listen to leave-html-full-screen as a safety net to ensure
+    // native fullscreen is properly exited when Discord leaves HTML FS mode.
     win.on("leave-html-full-screen", () => {
         if (win.isFullScreen()) win.setFullScreen(false);
     });
@@ -508,28 +508,27 @@ export async function createWindows() {
         if (!startMinimized) {
             if (splash) mainWin?.show();
 
-            // FIX PRINCIPAL : maximize() différé de 2.5s.
+            // MAIN FIX: maximize() deferred by 2.5s.
             //
-            // Problème : Discord émet DISCORD_WINDOW_TOGGLE_FULLSCREEN automatiquement
-            // pendant son initialisation (~500ms après le chargement de la page) pour
-            // synchroniser son état fullscreen interne. Si on appelle maximize() juste
-            // après show(), on se retrouve dans cette séquence :
-            //   1. maximize() → état "maximized" mais pas fullscreen
-            //   2. Discord émet DISCORD_WINDOW_TOGGLE_FULLSCREEN
-            //   3. Notre handler : isFullScreen()=false → setFullScreen(true)
-            //   4. L'OS met la fenêtre en fullscreen natif
-            //   5. L'overlay fullscreen OS capture tous les inputs → app figée
-            //   6. Les animations continuent car le renderer tourne normalement
-            //   7. F11 sort du fullscreen → inputs restaurés
+            // Problem: Discord emits DISCORD_WINDOW_TOGGLE_FULLSCREEN automatically
+            // during initialization (~500ms after page load) to sync its internal
+            // fullscreen state. If we call maximize() right after show(), we get:
+            //   1. maximize() → "maximized" state but not fullscreen
+            //   2. Discord emits DISCORD_WINDOW_TOGGLE_FULLSCREEN
+            //   3. Our handler: isFullScreen()=false → setFullScreen(true)
+            //   4. OS puts the window in native fullscreen
+            //   5. OS fullscreen overlay captures all input → app frozen
+            //   6. Animations continue because renderer runs normally
+            //   7. F11 exits fullscreen → inputs restored
             //
-            // Solution en deux volets :
-            // A) Dans patcher.ts : le handler DISCORD_WINDOW_TOGGLE_FULLSCREEN ignore
-            //    les appels pendant les 2 premières secondes (_fullscreenReady flag).
-            // B) Ici : on diffère maximize() de 2.5s pour être sûr que le guard est
-            //    actif AVANT que Discord émette son signal fullscreen IPC.
+            // Two-part solution:
+            // A) In patcher.ts: DISCORD_WINDOW_TOGGLE_FULLSCREEN handler ignores
+            //    calls during the first 2 seconds (_fullscreenReady flag).
+            // B) Here: defer maximize() by 2.5s to ensure the guard is
+            //    active BEFORE Discord emits its fullscreen IPC signal.
             //
-            // Même fix pour les thèmes : quand un thème est appliqué, Discord recharge
-            // partiellement et réémet le signal fullscreen → même blocage → même fix.
+            // Same fix for themes: when a theme is applied, Discord partially
+            // reloads and re-emits the fullscreen signal → same lockup → same fix.
             const shouldMaximize = State.store.maximized === true
                 && !isDeckGameMode
                 && !State.store.windowBounds;
