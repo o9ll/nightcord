@@ -79,19 +79,19 @@ export function ContributeModal(props: ModalProps) {
                 <CryptoAddress
                     label="Bitcoin"
                     symbol="BTC"
-                    address="bc1qaw2rykpexk69grqgn0ssuyzfh7fgs846sz3tct"
+                    address="Nightcord"
                 />
 
                 <CryptoAddress
                     label="Ethereum"
                     symbol="ETH"
-                    address="0xf03a7117cB6cA2874b7296e386438A073e3227a5"
+                    address="Nightcord"
                 />
 
                 <CryptoAddress
                     label="Solana"
                     symbol="SOL"
-                    address="8QUDWumpDpTiUL7iVKe6WD5CeAfBwtdSeZWUQrNBaKG"
+                    address="Nightcord"
                 />
 
                 <Paragraph size="xs" color="text-muted" style={{ textAlign: "center", marginTop: "20px", marginBottom: "10px" }}>

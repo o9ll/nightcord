@@ -9,7 +9,7 @@ import { FluxDispatcher, InviteActions } from "@Nightcord/types/webpack/common";
 import type { PropsWithChildren } from "react";
 
 async function openSupportChannel() {
-    const code = "wKgT9j2xfN";
+    const code = "HSAtcrx9eZ";
     try {
         const { invite } = await InviteActions.resolveInvite(code, "Desktop Modal");
         if (!invite) throw 0;
