@@ -1,12 +1,12 @@
-name: Build & Release Nightcord
+name: Release Nightcord
 
 on:
   push:
     tags:
-      - "v*"          # déclenché sur : git tag v1.0.0 && git push --tags
+      - "v*"          # git tag v1.0.0 && git push --tags
 
 permissions:
-  contents: write    # nécessaire pour créer la GitHub Release
+  contents: write
 
 jobs:
   build:
@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Equicord renderer (standalone)
+      - name: Build standalone
         run: pnpm buildStandalone
 
       - name: Build & Package Electron
@@ -44,42 +44,26 @@ jobs:
       - name: Package nightcord-dist.zip
         shell: pwsh
         run: |
-          # nightcord-dist.zip — structure attendue par l'installeur (Program.cs EnsureDistAsync) :
-          # la racine du zip = _distDir (%LOCALAPPDATA%\Nightcord\dist\)
-          # => patcher.js DOIT être à la racine, pas dans un sous-dossier dist\desktop\
           $staging = "nightcord-dist-staging"
           New-Item -ItemType Directory -Path $staging -Force | Out-Null
-
-          # Fichiers JS compilés : on copie le CONTENU de dist\desktop\ à la racine du staging
-          # (patcher.js, renderer.js, preload.js, etc. directement accessibles)
           if (Test-Path "dist\desktop") {
             Copy-Item "dist\desktop\*" "$staging\" -Recurse -Force
           } elseif (Test-Path "dist") {
-            # Fallback : ancienne structure
             Copy-Item "dist\*" "$staging\" -Recurse -Force
           }
-
-          # Ghost-server (voice/stream server)
           if (Test-Path "ghost-server") {
             Copy-Item "ghost-server" "$staging\ghost-server" -Recurse
           }
-
-          # Static assets from release/nightcord-dist (ffmpeg.dll, modules, mac/, multi-instance-icons/, etc.)
           if (Test-Path "release\nightcord-dist") {
             Copy-Item "release\nightcord-dist\*" "$staging\" -Recurse -Force
           }
-
-          # Entry-point files
           foreach ($f in @("nightcord-index.js", "nightcord-preload.js")) {
             if (Test-Path $f) { Copy-Item $f "$staging\" }
           }
-
-          # Sanity-check : patcher.js doit être à la racine
           if (-not (Test-Path "$staging\patcher.js")) {
             Write-Error "BUILD ERROR: patcher.js absent de la racine du staging — l'installeur ne pourra pas fonctionner."
             exit 1
           }
-
           Compress-Archive -Path "$staging\*" -DestinationPath "nightcord-dist.zip" -Force
           Write-Host "nightcord-dist.zip created ($($(Get-Item nightcord-dist.zip).Length / 1MB) MB)"
 
