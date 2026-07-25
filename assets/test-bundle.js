@@ -25830,7 +25830,7 @@ import_electron36.ipcMain.handle("NightcordCheckVBCable" /* CHECK_VB_CABLE */, a
   if (!validateSender(event)) throw new Error("Unauthorized IPC invocation");
   if (process.platform !== "win32") return { installed: false };
   const { existsSync: existsSync8 } = require("fs");
-  const p1 = "C:\\Program Files\\VB\\Cable\\VBCABLE_ControlPanel.exe";
+  const p1 = "C:\\Program Files\\VB\\CABLE\\VBCABLE_ControlPanel.exe";
   const p2 = "C:\\Program Files (x86)\\VB\\Cable\\VBCABLE_ControlPanel.exe";
   return { installed: existsSync8(p1) || existsSync8(p2) };
 });
@@ -25841,9 +25841,9 @@ import_electron36.ipcMain.handle("NightcordInstallVBCable" /* INSTALL_VB_CABLE *
   const os = require("os");
   const path = require("path");
   const fs = require("fs");
-  const zipUrl = "https://download.vb-audio.com/Download_Html/VBCABLE_Setup.zip";
+  const zipUrl = "https://download.vb-audio.com/Download_CABLE/VBCABLE_Driver_Pack45.zip";
   const tmpDir = path.join(os.tmpdir(), "Nightcord-VBCable");
-  const tmpZip = path.join(os.tmpdir(), "VBCable_Setup.zip");
+  const tmpZip = path.join(os.tmpdir(), "VBCABLE_Driver_Pack45.zip");
   try {
     if (fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true, force: true });
   } catch {

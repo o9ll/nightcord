@@ -1486,7 +1486,7 @@ ipcMain.handle(IpcEvents.CHECK_VB_CABLE, async (event) => {
     if (process.platform !== "win32") return { installed: false };
     const { existsSync } = require("fs");
 
-    const p1 = "C:\\Program Files\\VB\\Cable\\VBCABLE_ControlPanel.exe";
+    const p1 = "C:\\Program Files\\VB\\CABLE\\VBCABLE_ControlPanel.exe";
     const p2 = "C:\\Program Files (x86)\\VB\\Cable\\VBCABLE_ControlPanel.exe";
     return { installed: existsSync(p1) || existsSync(p2) };
 });
@@ -1500,9 +1500,9 @@ ipcMain.handle(IpcEvents.INSTALL_VB_CABLE, async (event) => {
     const path = require("path");
     const fs = require("fs");
 
-    const zipUrl = "https://download.vb-audio.com/Download_Html/VBCABLE_Setup.zip";
+    const zipUrl = "https://download.vb-audio.com/Download_CABLE/VBCABLE_Driver_Pack45.zip";
     const tmpDir = path.join(os.tmpdir(), "Nightcord-VBCable");
-    const tmpZip = path.join(os.tmpdir(), "VBCable_Setup.zip");
+    const tmpZip = path.join(os.tmpdir(), "VBCABLE_Driver_Pack45.zip");
 
     try { if (fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true, force: true }); } catch { }
     fs.mkdirSync(tmpDir, { recursive: true });
