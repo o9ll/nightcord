@@ -66,7 +66,7 @@ function useDiscordUser(userId: string) {
                     ? `https://cdn.discordapp.com/avatars/${userId}/${u.avatar}.webp?size=128`
                     : `https://cdn.discordapp.com/embed/avatars/${Number(BigInt(userId) >> 22n) % 6}.png`
             }))
-            .catch(() => setUser({ name: userId, pfp: `https://cdn.discordapp.com/embed/avatars/0.png` }));
+            .catch(() => setUser({ name: userId, pfp: "https://cdn.discordapp.com/embed/avatars/0.png" }));
     }, [userId]);
     return user;
 }
@@ -77,7 +77,7 @@ function DevCard({ id, role }: { id: string; role: string; }) {
         <Card variant="primary" outline style={{ padding: "10px" }}>
             <Flex align={Flex.Align.CENTER} gap="10px">
                 <Avatar
-                    src={user?.pfp ?? `https://cdn.discordapp.com/embed/avatars/0.png`}
+                    src={user?.pfp ?? "https://cdn.discordapp.com/embed/avatars/0.png"}
                     size="SIZE_48"
                 />
                 <Flex direction={Flex.Direction.VERTICAL} style={{ flex: 1, gap: "0px" }}>
