@@ -146,10 +146,6 @@
       ],
       "format": "esm"
     },
-    "DOMAIN.json": {
-      "bytes": 32,
-      "imports": []
-    },
     "src/main/updater/http.ts": {
       "bytes": 4963,
       "imports": [
@@ -187,11 +183,6 @@
           "path": "path",
           "kind": "import-statement",
           "external": true
-        },
-        {
-          "path": "DOMAIN.json",
-          "kind": "import-statement",
-          "original": "../../../DOMAIN.json"
         },
         {
           "path": "src/main/updater/common.ts",
@@ -405,11 +396,6 @@
           "path": "src/nightcord/main/utils/http.ts",
           "kind": "import-statement",
           "original": "./http"
-        },
-        {
-          "path": "DOMAIN.json",
-          "kind": "import-statement",
-          "original": "../../../../DOMAIN.json"
         }
       ],
       "format": "esm"
@@ -5517,9 +5503,9 @@
           "original": "./cli"
         },
         {
-          "path": "DOMAIN.json",
+          "path": "src/nightcord/main/utils/makeLinksOpenExternally.ts",
           "kind": "import-statement",
-          "original": "../../../DOMAIN.json"
+          "original": "./makeLinksOpenExternally"
         }
       ],
       "format": "esm"
@@ -5607,11 +5593,6 @@
           "path": "path",
           "kind": "import-statement",
           "external": true
-        },
-        {
-          "path": "DOMAIN.json",
-          "kind": "import-statement",
-          "original": "../../DOMAIN.json"
         },
         {
           "path": "src/main/csp/manager.ts",
@@ -5861,11 +5842,6 @@
           "kind": "import-statement",
           "original": "./http"
         },
-        {
-          "path": "DOMAIN.json",
-          "kind": "import-statement",
-          "original": "../../../DOMAIN.json"
-        }
       ],
       "format": "esm"
     },
@@ -7337,9 +7313,6 @@
         },
         "src/shared/vencordUserAgent.ts": {
           "bytesInOutput": 658
-        },
-        "DOMAIN.json": {
-          "bytesInOutput": 95
         },
         "src/main/updater/http.ts": {
           "bytesInOutput": 4258

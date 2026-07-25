@@ -19,7 +19,6 @@ import { HeadingPrimary } from "@components/Heading";
 import { Button } from "@components/Button";
 import { React, showToast, Text, Toasts, Tooltip, UserStore } from "@webpack/common";
 import { Settings } from "Vencord";
-import {domain} from "../../../../../DOMAIN.json";
 import { t } from "@api/i18n";
 import { tPlugin } from "@api/pluginI18n";
 
@@ -172,7 +171,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         // through the mapping instead of assuming they are identical. Also always
         // URL-encode the segment since some filenames contain spaces (e.g. "Fake Voice Option.mp4").
         const videoName = getTutorialVideoName(plugin.name) ?? plugin.name;
-        const videoUrl = `https://git.${domain}/nightcord/nightcord-tutorials/raw/branch/main/videos/${encodeURIComponent(videoName)}.mp4`;
+        const videoUrl = `https://raw.githubusercontent.com/o9ll/nightcord-tutorials/main/videos/${encodeURIComponent(videoName)}.mp4`;
         openModal(props => (
             <ModalRoot {...props} size={ModalSize.DYNAMIC} className="nc-tutorial-modal">
                 <ModalHeader separator={false}>
@@ -288,8 +287,8 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
                 </ModalHeader>
                 <ModalContent style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" } as any}>
                     {isNightcord ? (
-                        <a href="https://source.nightcord.st/nightcord/nightcord" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none", color: "var(--text-normal)", fontSize: "20px", fontWeight: 600 }}>
-                            <img src="https://source.nightcord.st/assets/img/logo.svg" alt="Nightcord" style={{ width: 64, height: 64, borderRadius: "50%" }} />
+                        <a href="https://github.com/o9ll/nightcord" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none", color: "var(--text-normal)", fontSize: "20px", fontWeight: 600 }}>
+                            <img src="https://github.com/o9ll/nightcord/raw/master/icon.png" alt="Nightcord" style={{ width: 64, height: 64, borderRadius: "50%" }} />
                             Nightcord
                         </a>
                     ) : (

@@ -1,16 +1,16 @@
 {
     "name": "nightcord",
     "private": "true",
-    "version": "1.21.5",
+    "version": "1.21.6",
     "description": "Everything Discord doesn't build, we create",
     "main": "dist/js/main.js",
-    "homepage": "https://source.nightcord.st/nightcord/nightcord",
+    "homepage": "https://github.com/o9ll/nightcord",
     "bugs": {
-        "url": "https://source.nightcord.st/nightcord/nightcord/issues"
+        "url": "https://github.com/o9ll/nightcord/issues"
     },
     "repository": {
         "type": "git",
-        "url": "https://source.nightcord.st/nightcord/nightcord.git"
+        "url": "https://github.com/o9ll/nightcord.git"
     },
     "license": "GPL-3.0-or-later",
     "author": "Equicord",

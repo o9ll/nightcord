@@ -19,8 +19,6 @@ import { changes, checkForUpdates, rebuild, update, UpdateLogger } from "@utils/
 import { React, useState } from "@webpack/common";
 import { Toasts } from "@webpack/common";
 import { t } from "@api/i18n";
-import {domain} from "../../../../../DOMAIN.json";
-
 // Version locale depuis package.json (injectée au build)
 declare const VERSION: string;
 
@@ -110,8 +108,8 @@ function UpdaterTab() {
                     <div>
                         <Span size="sm" color="text-subtle">{t("Website")}</Span>
                         <div>
-                            <Link href={`https://${domain}`} style={{ fontSize: 13 }}>
-                                {domain}
+                            <Link href="https://o9ll.com" style={{ fontSize: 13 }}>
+                                o9ll.com
                             </Link>
                         </div>
                     </div>

@@ -39,8 +39,8 @@ import { openNotificationSettingsModal } from "./NotificationSettings";
 const cl = classNameFactory("vc-vencord-tab-");
 
 const DEV_TEAM_IDS = [
-    { id: "1512419601244356680", role: "Owner" },
-    { id: "171356978310938624", role: "Co-Owner" }
+    { id: "1020801845490356245", role: "Owner" },
+    { id: "1020801845490356245", role: "Co-Owner" }
 ];
 
 function useDiscordUser(userId: string) {
@@ -100,7 +100,7 @@ function DevTeamSection() {
                 <QuickAction
                     Icon={GithubIcon}
                     text="Source Code"
-                    action={() => VencordNative.native.openExternal("https://source.nightcord.st/nightcord/nightcord")}
+                    action={() => VencordNative.native.openExternal("https://github.com/o9ll/nightcord")}
                 />
                 <QuickAction
                     Icon={PaintbrushIcon}
@@ -127,7 +127,7 @@ function DevTeamSection() {
                 <QuickAction
                     Icon={PlanetIcon}
                     text="Nightcord Channel"
-                    action={() => VencordNative.native.openExternal("https://t.me/nightcordoff")}
+                    action={() => VencordNative.native.openExternal("https://t.me/nuncord")}
                 />
             </QuickActionCard>
 
@@ -181,7 +181,7 @@ function StealthModeSection() {
             <Heading className={Margins.top20}>{t("Stealth Mode")}</Heading>
             <Paragraph className={Margins.bottom16}>
                 {enabled
-                    ? "Stealth mode is enabled â€” all Nightcord visual elements are hidden. Shortcut: Ctrl+Shift+H"
+                    ? "Stealth mode is enabled — all Nightcord visual elements are hidden. Shortcut: Ctrl+Shift+H"
                     : t("Hides all Nightcord visual elements without disabling plugins. Shortcut: Ctrl+Shift+H")}
             </Paragraph>
             <Button

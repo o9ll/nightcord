@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -39,6 +40,27 @@ if (fs.existsSync(lolllSrc)) {
     console.log(`[collect] ✅ ${copied} multi-instance icons copied`);
 } else {
     console.warn("[collect] ⚠️ Desktop/lolll NOT FOUND — multi-instance icons missing");
+}
+
+// ── ghost-server : npm install puis copie ──────────────────────────────────
+const ghostServerSrc = path.join(rootDir, "ghost-server");
+const ghostServerDst = path.join(distDir, "ghost-server");
+if (fs.existsSync(ghostServerSrc)) {
+    const packageJson = path.join(ghostServerSrc, "package.json");
+    if (fs.existsSync(packageJson)) {
+        console.log("[collect] Running npm install in ghost-server (full, no --production)...");
+        try {
+            execSync("npm install", { cwd: ghostServerSrc, stdio: "inherit" });
+            console.log("[collect] ghost-server npm install done.");
+        } catch (e) {
+            console.error("[collect] ❌ npm install failed in ghost-server:", e.message);
+        }
+    }
+    if (copyIfExists(ghostServerSrc, ghostServerDst)) {
+        console.log("[collect] ghost-server folder copied (with node_modules)");
+    }
+} else {
+    console.warn("[collect] ⚠️ ghost-server folder NOT FOUND");
 }
 
 // ── mac folder ──────────────────────────────────────────────────────────────

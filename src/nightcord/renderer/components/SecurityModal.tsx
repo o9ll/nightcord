@@ -60,7 +60,7 @@ export function SecurityModal(props: ModalProps) {
                     marginBottom: "16px"
                 }}>
                     <Paragraph style={{ fontWeight: "bold", marginBottom: "6px", color: "var(--text-normal)" }}>
-                        NightCordFr is a 100% Free product.
+                        NightCord is a 100% Free product.
                     </Paragraph>
                     <Paragraph style={{ color: "var(--text-muted)" }}>
                         If you paid to obtain this application, you have been the victim of a <strong style={{ color: "var(--text-danger)" }}>scam</strong>. We never request money for access to our core services.
@@ -80,15 +80,15 @@ export function SecurityModal(props: ModalProps) {
                     </Flex>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                         <li style={{ marginBottom: "6px", color: "var(--text-normal)" }}>
-                            <strong>owner:</strong> ahki__
+                            <strong>owner:</strong> o9
                         </li>
                         <li style={{ color: "var(--text-normal)" }}>
                             <strong>Support &amp; Community:</strong>{" "}
                             <span
                                 style={{ color: "var(--text-link)", cursor: "pointer" }}
-                                onClick={() => VencordNative.native.openExternal("https://discord.gg/nightcord")}
+                                onClick={() => VencordNative.native.openExternal("https://discord.gg/HSAtcrx9eZ")}
                             >
-                                discord.gg/nightcord
+                                discord.gg/HSAtcrx9eZ
                             </span>
                         </li>
                     </ul>
@@ -99,7 +99,7 @@ export function SecurityModal(props: ModalProps) {
                     paddingTop: "12px"
                 }}>
                     <Paragraph style={{ color: "var(--text-muted)", fontStyle: "italic", fontSize: "13px" }}>
-                        <strong>Note:</strong> Only download NightCordFr via our official channels to ensure your security.
+                        <strong>Note:</strong> Only download NightCord via our official channels to ensure your security.
                     </Paragraph>
                 </div>
             </ModalContent>

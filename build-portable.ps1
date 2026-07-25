@@ -1,10 +1,10 @@
 $ErrorActionPreference = "Stop"
-$DISCORD = "C:\Users\zzafi\AppData\Local\Discord\app-1.0.9228"
-$OUT = "C:\Users\zzafi\Desktop\equicord\release\win-unpacked"
+$DISCORD = "C:\Users\o9\AppData\Local\Discord\app-1.0.9228"
+$OUT = "C:\Users\o9\Documents\Githubb\nightcord\release\win-unpacked"
 $RES = "$OUT\resources"
 
 Write-Host "=== ETAPE 1 : Build ===" -ForegroundColor Cyan
-Set-Location "C:\Users\zzafi\Desktop\equicord"
+Set-Location "C:\Users\o9\Documents\Githubb\nightcord"
 npx electron-builder --config electron-builder.config.cjs --win dir --x64
 
 Write-Host "=== ETAPE 2 : Copie _app.asar ===" -ForegroundColor Cyan

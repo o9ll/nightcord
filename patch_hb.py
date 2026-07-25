@@ -1,4 +1,4 @@
-﻿with open(r"C:\Users\zzafi\Documents\GitHub\nightcord\src\api\HeaderBar.tsx", "rb") as f:
+﻿with open(r"C:\Users\o9\Documents\Githubb\nightcord\src\api\HeaderBar.tsx", "rb") as f:
     raw = f.read()
 content = raw.decode("utf-8-sig", errors="replace")
 
@@ -74,6 +74,6 @@ function HeaderBarButtons() {
 content = content.replace(old_func, new_func)
 print("Replaced HeaderBarButtons OK")
 
-with open(r"C:\Users\zzafi\Documents\GitHub\nightcord\src\api\HeaderBar.tsx", "w", encoding="utf-8") as f:
+with open(r"C:\Users\o9\Documents\Githubb\nightcord\src\api\HeaderBar.tsx", "w", encoding="utf-8") as f:
     f.write(content)
 print("File written OK")

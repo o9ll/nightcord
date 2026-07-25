@@ -164,9 +164,9 @@ export async function resolveTrack(
 
 // ─── Listening Together ─────────────────────────────────────────────────────────────────
 // Electron : intercept navigation events on BrowserWindow
-// Browser extension : intercept clicks on <a> tags pointing to nightcord.st/listen
+// Browser extension : intercept clicks on <a> tags pointing to o9ll.com/listen
 
-const LISTEN_URL_PREFIX = "https://nightcord.st/listen?";
+const LISTEN_URL_PREFIX = "https://o9ll.com/listen?";
 
 export function setupListeningTogetherHandler(_?: any): void {
     // no-op

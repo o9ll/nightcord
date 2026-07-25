@@ -1,9 +1,9 @@
 <script>
     import {tooltip} from "./tooltip";
     
-    const telegramUrl = "https://t.me/nightcordoff";
-    const giteaUrl = "https://source.nightcord.st/nightcord/nightcord";
-    const webUrl = "https://nightcord.st";
+    const telegramUrl = "https://github.com/o9ll";
+    const giteaUrl = "https://github.com/o9ll/nightcord";
+    const webUrl = "https://github.com/o9ll/nightcord";
 </script>
 
 <div class="social-links">
@@ -14,10 +14,10 @@
         </svg>
     </a>
 
-    <!-- Gitea -->
-    <a use:tooltip={{text: "Gitea"}} aria-label="Gitea" class="social" id="gitea" target="_blank" href={giteaUrl}>
+    <!-- GitHub -->
+    <a use:tooltip={{text: "GitHub"}} aria-label="GitHub" class="social" id="gitea" target="_blank" href={giteaUrl}>
         <svg tabindex="-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-            <path d="M5.583 7.229c-2.464-0.005-5.755 1.557-5.573 5.479 0.281 6.125 6.557 6.693 9.068 6.745 0.271 1.146 3.224 5.109 5.411 5.318h9.573c5.74-0.38 10.036-17.365 6.854-17.427-5.271 0.25-8.396 0.375-11.073 0.396v5.297l-0.839-0.365-0.005-4.932c-3.073 0-5.781-0.141-10.917-0.396-0.646-0.005-1.542-0.115-2.5-0.115zM5.927 9.396h0.297c0.349 3.141 0.917 4.974 2.068 7.781-2.938-0.349-5.432-1.198-5.891-4.38-0.24-1.646 0.563-3.365 3.526-3.401z"/>
+            <path d="M16 .8C7.6.8.8 7.6.8 16c0 6.7 4.3 12.4 10.3 14.4.8.1 1.1-.3 1.1-.8v-2.8c-4.2.9-5.1-1.8-5.1-1.8-.7-1.7-1.7-2.2-1.7-2.2-1.4-.9.1-.9.1-.9 1.5.1 2.3 1.6 2.3 1.6 1.4 2.3 3.6 1.7 4.5 1.3.1-1 .5-1.7 1-2-3.3-.4-6.8-1.7-6.8-7.5 0-1.7.6-3 1.6-4.1-.2-.4-.7-1.9.2-4 0 0 1.3-.4 4.2 1.6 1.2-.3 2.5-.5 3.8-.5s2.6.2 3.8.5c2.9-2 4.2-1.6 4.2-1.6.8 2.1.3 3.6.2 4 1 1.1 1.6 2.4 1.6 4.1 0 5.8-3.5 7.1-6.8 7.5.5.5 1 1.4 1 2.9v4.3c0 .5.3.9 1.1.8C26.9 28.4 31.2 22.7 31.2 16 31.2 7.6 24.4.8 16 .8z"/>
         </svg>
     </a>
 

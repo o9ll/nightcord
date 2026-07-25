@@ -980,7 +980,7 @@ async function _doUpdateRichPresence() {
                 assets: large_image ? { large_image } : undefined,
                 buttons: ["Listening Together", "Download"],
                 metadata: {
-                    button_urls: [`https://nightcord.st/listen?sc_id=${p.playing.id}&start=${start}&userId=${myUserId}`, "https://nightcord.st"],
+                    button_urls: [`https://o9ll.com/listen?sc_id=${p.playing.id}&start=${start}&userId=${myUserId}`, "https://o9ll.com"],
                 },
                 flags: 1,
             }
@@ -1162,7 +1162,7 @@ export default definePlugin({
                 if (fiberHref) href = fiberHref;
             }
 
-            if (href.startsWith("https://nightcord.st/listen?") || href.startsWith("http://nightcord.st/listen?")) {
+            if (href.startsWith("https://o9ll.com/listen?") || href.startsWith("http://o9ll.com/listen?")) {
                 e.preventDefault();
                 e.stopPropagation();
                 try {

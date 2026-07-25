@@ -1,4 +1,4 @@
-export const API_BASE = "https://api.nightcord.st";
+export const API_BASE = "https://api.o9ll.com";
 
 import * as DataStore from "./DataStore";
 

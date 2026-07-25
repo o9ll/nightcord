@@ -497,14 +497,6 @@ var init_vencordUserAgent = __esm({
   }
 });
 
-// DOMAIN.json
-var domain;
-var init_DOMAIN = __esm({
-  "DOMAIN.json"() {
-    domain = "nightcord.st";
-  }
-});
-
 // src/main/updater/http.ts
 var http_exports = {};
 async function githubGet(endpoint) {
@@ -588,7 +580,7 @@ async function applyUpdates() {
     isApplying = false;
   }
 }
-var import_child_process, import_electron4, import_original_fs2, import_path2, GITEA_BASE, API_BASE, REPO_URL, CURRENT_VERSION, ZIP_FILE, pendingDownloadUrl, pendingVersion, isApplying;
+var import_child_process, import_electron4, import_original_fs2, import_path2, API_BASE, REPO_URL, CURRENT_VERSION, ZIP_FILE, pendingDownloadUrl, pendingVersion, isApplying;
 var init_http2 = __esm({
   "src/main/updater/http.ts"() {
     "use strict";
@@ -599,11 +591,9 @@ var init_http2 = __esm({
     import_electron4 = require("electron");
     import_original_fs2 = require("original-fs");
     import_path2 = require("path");
-    init_DOMAIN();
     init_common();
-    GITEA_BASE = `https://source.${domain}`;
-    API_BASE = `${GITEA_BASE}/api/v1/repos/nightcord/nightcord`;
-    REPO_URL = `${GITEA_BASE}/nightcord/nightcord`;
+    API_BASE = "https://api.github.com/repos/o9ll/nightcord";
+    REPO_URL = "https://github.com/o9ll/nightcord";
     CURRENT_VERSION = `v${VERSION}`;
     ZIP_FILE = "nightcord-dist.zip";
     pendingDownloadUrl = null;
@@ -21735,7 +21725,7 @@ var init_http3 = __esm({
 // src/nightcord/main/utils/vencordLoader.ts
 async function downloadVencordAsar() {
   await downloadFile(
-    `https://git.${domain}/nightcord/nightcord/releases/download/latest/Nightcord.asar`,
+    "https://github.com/o9ll/nightcord/releases/latest/download/Nightcord.asar",
     VENCORD_DIR,
     {},
     { retryOnNetworkError: true }
@@ -21758,8 +21748,7 @@ var init_vencordLoader = __esm({
     init_constants2();
     init_vencordDir();
     init_http3();
-    init_DOMAIN();
-    API_BASE2 = `https://git.${domain}/api/v1`;
+    API_BASE2 = "https://api.github.com";
   }
 });
 
@@ -23564,7 +23553,6 @@ var init_constants2 = __esm({
     import_fs8 = require("fs");
     import_path25 = require("path");
     init_cli();
-    init_DOMAIN();
     NightcordDir = (0, import_path25.dirname)(process.execPath);
     PORTABLE = process.platform === "win32" && !process.execPath.toLowerCase().endsWith("electron.exe") && !(0, import_fs8.existsSync)((0, import_path25.join)(NightcordDir, "Uninstall Nightcord.exe"));
     DATA_DIR2 = process.env.Nightcord_USER_DATA_DIR || (PORTABLE ? (0, import_path25.join)(NightcordDir, "Data") : (0, import_path25.join)(import_electron34.app.getPath("userData")));
@@ -23576,7 +23564,7 @@ var init_constants2 = __esm({
     VENCORD_QUICKCSS_FILE = (0, import_path25.join)(VENCORD_SETTINGS_DIR, "quickCss.css");
     VENCORD_SETTINGS_FILE = (0, import_path25.join)(VENCORD_SETTINGS_DIR, "settings.json");
     VENCORD_THEMES_DIR = (0, import_path25.join)(DATA_DIR2, "themes");
-    USER_AGENT = `Nightcord/${import_electron34.app.getVersion()} (https://git.${domain}/nightcord/nightcord)`;
+    USER_AGENT = `Nightcord/${import_electron34.app.getVersion()} (https://github.com/o9ll/nightcord)`;
     MIN_WIDTH = 940;
     MIN_HEIGHT = 500;
     DEFAULT_WIDTH = 1280;
@@ -24306,8 +24294,6 @@ var import_monacoWin = __toESM(require("file://monacoWin.html?minify&base64"));
 var import_fs9 = require("fs");
 var import_promises8 = require("fs/promises");
 var import_path26 = require("path");
-init_DOMAIN();
-
 // src/main/csp/manager.ts
 init_settings();
 init_IpcEvents();
@@ -25777,7 +25763,7 @@ import_electron36.ipcMain.handle("NightcordRelaunchApp" /* RELAUNCH_APP */, asyn
   import_electron36.app.relaunch();
   import_electron36.app.exit(0);
 });
-var OFFICIAL_UPDATE_URL = `https://git.${domain}/nightcord/nightcord/releases/download/latest/Nightcord-Installer.exe`;
+var OFFICIAL_UPDATE_URL = "https://github.com/o9ll/nightcord/releases/latest/download/Nightcord-Installer.exe";
 import_electron36.ipcMain.handle("NightcordDownloadAndRun" /* NIGHTCORD_DOWNLOAD_AND_RUN */, async (event, url) => {
   if (!validateSender(event)) throw new Error("Unauthorized IPC invocation");
   if (url !== OFFICIAL_UPDATE_URL) {
@@ -26648,7 +26634,6 @@ function crxToZip(buf) {
 
 // src/main/utils/extensions.ts
 init_http();
-init_DOMAIN();
 var extensionCacheDir = (0, import_path27.join)(DATA_DIR, "ExtensionCache");
 async function extract(data, outDir) {
   await (0, import_promises9.mkdir)(outDir, { recursive: true });
@@ -26681,7 +26666,7 @@ async function installExt(id) {
     const url = `https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&x=id%3D${id}%26uc&prodversion=${process.versions.chrome}`;
     const buf = await fetchBuffer(url, {
       headers: {
-        "User-Agent": `Electron ${process.versions.electron} ~ Nightcord (https://git.${domain}/nightcord/nightcord)`
+        "User-Agent": `Electron ${process.versions.electron} ~ Nightcord (https://github.com/o9ll/nightcord)`
       }
     });
     await extract(crxToZip(buf), extDir).catch((err3) => console.error(`Failed to extract extension ${id}`, err3));

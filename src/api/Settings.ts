@@ -165,7 +165,7 @@ const DefaultSettings: Settings = {
 
     cloud: {
         authenticated: false,
-        url: "https://api.nightcord.st/",
+        url: "https://api.o9ll.com/",
         settingsSync: false,
         settingsSyncVersion: 0
     },
@@ -178,7 +178,7 @@ mergeDefaults(settings, DefaultSettings);
 
 // Force migrate cloud URL to Nightcord if it's still Equicord
 if (settings.cloud && settings.cloud.url && settings.cloud.url.includes("equicord.org")) {
-    settings.cloud.url = "https://api.nightcord.st/";
+    settings.cloud.url = "https://api.o9ll.com/";
 }
 
 // Nightcord native defaults — defaultPlugins is always enabled, no external prefs file

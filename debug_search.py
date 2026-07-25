@@ -1,4 +1,4 @@
-﻿with open(r"C:\Users\zzafi\Documents\GitHub\nightcord\src\api\HeaderBar.tsx", "rb") as f:
+﻿with open(r"C:\Users\o9\Documents\Githubb\nightcord\src\api\HeaderBar.tsx", "rb") as f:
     raw = f.read()
 
 content = raw.decode("utf-8-sig", errors="replace")

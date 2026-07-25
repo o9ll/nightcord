@@ -1,14 +1,12 @@
 <div align="center">
-  <img src="https://nightcord.st/image.png" width="96" height="96" alt="Nightcord Logo">
+  <img src="./browser/icon.png" width="96" height="96" alt="Nightcord Logo">
 
 # Nightcord
 
 **A custom Discord client built for people who actually care about how Discord runs.**
 
-[![Telegram](https://img.shields.io/badge/Telegram-Join%20us-26A5E4?logo=telegram&logoColor=white)](https://t.me/nightcordoff)
 [![License](https://img.shields.io/badge/license-GPL%20v3-a855f7)](./LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows-3b82f6.svg?logo=windows\&logoColor=white)](https://source.nightcord.st/nightcord/nightcord)
-[![Website](https://img.shields.io/badge/website-nightcord.st-5865F2?logo=googlechrome\&logoColor=white)](https://nightcord.st)
+[![Platform](https://img.shields.io/badge/platform-Windows-3b82f6.svg?logo=windows\&logoColor=white)](https://github.com/o9ll/nightcord)
 
 ---
 
@@ -51,7 +49,7 @@ npm install -g pnpm
 ### Clone & Build
 
 ```bash
-git clone https://source.nightcord.st/nightcord/nightcord.git
+git clone https://github.com/o9ll/nightcord.git
 cd nightcord
 pnpm install
 pnpm build
@@ -75,7 +73,7 @@ pnpm uninject
 
 Source code:
 
-https://source.nightcord.st/nightcord/nightcord
+https://github.com/o9ll/nightcord
 
 ---
 

@@ -1,6 +1,6 @@
 /*
- * Nightcord â€” Installer via EquilotlCli
- * TÃ©lÃ©charge EquilotlCli.exe depuis les releases Equicord et le lance
+ * Nightcord — Installer via EquilotlCli
+ * Download EquilotlCli.exe depuis les releases Equicord et le lance
  * avec les variables d'environnement pointant vers les fichiers Nightcord.
  *
  * L'exe affiche une interface graphique permettant de choisir le Discord cible.
@@ -60,7 +60,7 @@ async function ensureBinary() {
     console.log("[Nightcord] Downloading installer (" + filename + ")...");
 
     const res = await fetch(BASE_URL + filename, {
-        headers: { "User-Agent": "Nightcord (https://github.com/nightcordfr/nightcord)" }
+        headers: { "User-Agent": "Nightcord (https://github.com/o9ll/nightcord)" }
     });
 
     if (!res.ok)

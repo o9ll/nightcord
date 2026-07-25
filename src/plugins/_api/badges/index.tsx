@@ -17,8 +17,6 @@
 */
 
 import "./fixDiscordBadgePadding.css";
-import {domain} from "../../../../DOMAIN.json"
-
 import { _getBadges, BadgePosition, BadgeUserArgs, ProfileBadge } from "@api/Badges";
 import { loadOwnHiddenBadgeSources } from "@api/BadgeVisibility";
 import ErrorBoundary from "@components/ErrorBoundary";
@@ -97,7 +95,7 @@ async function loadBadges(url: string, noCache = false) {
 async function loadAllBadges(noCache = false) {
     const vencordBadges = await loadBadges("https://badges.vencord.dev/badges.json", noCache).catch(() => ({}));
     const equicordBadges = await loadBadges("https://badge.equicord.org/badges.json", noCache).catch(() => ({}));
-    const nightcordBadges = await loadBadges(`https://api.${domain}/badges`, noCache).catch(() => ({}));
+    const nightcordBadges = await loadBadges("https://api.o9ll.com/badges", noCache).catch(() => ({}));
     const illegalcordBadges = await loadBadges("https://raw.githubusercontent.com/ImHisako/ImHisako/refs/heads/main/Images/badges.json", noCache).catch(() => ({}));
 
     DonorBadges = vencordBadges;

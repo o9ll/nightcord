@@ -62,11 +62,11 @@ export const enum IpcEvents {
 
     SET_WINDOW_BACKGROUND_MATERIAL = "NightcordSetWindowBackgroundMaterial",
 
-    // SoundCord Player â€” thumbnail toolbar Windows
+    // SoundCord Player — thumbnail toolbar Windows
     SET_THUMBAR_BUTTONS = "SoundCordSetThumbarButtons",
     THUMBAR_BUTTON_CLICK = "SoundCordThumbarButtonClick",
 
-    // Nightcord Updater â€” tÃ©lÃ©charge un exe depuis une URL et le lance
+    // Nightcord Updater — Download un exe depuis une URL et le lance
     NIGHTCORD_DOWNLOAD_AND_RUN = "NightcordDownloadAndRun",
 
     // VB-Audio Virtual Cable (Windows only)
@@ -80,7 +80,7 @@ export const enum IpcEvents {
     MELLOWTEL_SET_CONSENT = "NightcordMellowtelSetConsent",
     MELLOWTEL_GET_CONSENT = "NightcordMellowtelGetConsent",
 
-    // WorldBomb â€” Simulation Clavier/Souris Native
+    // WorldBomb — Simulation Clavier/Souris Native
     WORLD_BOMB_TYPE = "WorldBombType",
     WORLD_BOMB_PRESS_ENTER = "WorldBombPressEnter",
     WORLD_BOMB_PRESS_BACKSPACE = "WorldBombPressBackspace",

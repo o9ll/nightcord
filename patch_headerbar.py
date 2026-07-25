@@ -1,6 +1,6 @@
 ﻿import re
 
-with open(r"C:\Users\zzafi\Documents\GitHub\nightcord\src\api\HeaderBar.tsx", "r", encoding="utf-8") as f:
+with open(r"C:\Users\o9\Documents\Githubb\nightcord\src\api\HeaderBar.tsx", "r", encoding="utf-8") as f:
     content = f.read()
 
 # 1. Ajouter import findComponentByCodeLazy si pas déjà présent
@@ -117,5 +117,5 @@ else:
     idx = content.find("function HeaderBarButtons()")
     print(repr(content[idx:idx+500]))
 
-with open(r"C:\Users\zzafi\Documents\GitHub\nightcord\src\api\HeaderBar.tsx", "w", encoding="utf-8") as f:
+with open(r"C:\Users\o9\Documents\Githubb\nightcord\src\api\HeaderBar.tsx", "w", encoding="utf-8") as f:
     f.write(content)

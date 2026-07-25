@@ -9,8 +9,6 @@ import { closeModal, ModalCloseButton, ModalContent, ModalHeader, ModalRoot, Mod
 import definePlugin from "@utils/types";
 import { Menu, React, Text, useEffect, useState, IconUtils } from "@webpack/common";
 import { findByPropsLazy } from "@webpack";
-import {domain} from "../../../DOMAIN.json";
-
 const PresenceStore = findByPropsLazy("getStatus", "isMobileOnline");
 const AuthStore = findByPropsLazy("getToken");
 
@@ -47,7 +45,7 @@ const STATUS_COLOR: Record<UserStatus, string> = {
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 
-const API_BASE = `https://api.${domain}/api`;
+const API_BASE = "https://api.o9ll.com/api";
 
 interface PrevNameEntry {
     timestamp: number;

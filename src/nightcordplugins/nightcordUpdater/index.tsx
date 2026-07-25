@@ -8,9 +8,8 @@ import { Settings } from "@api/Settings";
 import definePlugin from "@utils/types";
 import { waitFor } from "@webpack";
 import { React, useEffect, useState } from "@webpack/common";
-import {domain} from "../../../DOMAIN.json"
 // Config
-const REMOTE_VERSION_URL = `https://source.${domain}/api/v1/repos/nightcord/nightcord/releases/latest`;
+const REMOTE_VERSION_URL = "https://api.github.com/repos/o9ll/nightcord/releases/latest";
 
 // Version locale (injectee au build via define)
 declare const VERSION: string;

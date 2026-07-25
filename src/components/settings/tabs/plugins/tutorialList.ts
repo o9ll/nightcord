@@ -9,12 +9,12 @@
 
 /**
  * Maps a plugin's `name` to the basename (without extension) of its tutorial
- * video in https://source.nightcord.st/nightcord/nightcord-tutorials/src/branch/main/videos
+ * video in https://raw.githubusercontent.com/o9ll/nightcord-tutorials/main/videos
  *
  * These are NOT always identical: several videos were uploaded with a different
  * casing (or, in one case, a completely different name) than the plugin's actual
  * `name` field. Since the video URL has to match the file on disk exactly (the
- * Gitea file server is case-sensitive), we keep this explicit mapping instead of
+ * GitHub file server is case-sensitive), we keep this explicit mapping instead of
  * always assuming `${plugin.name}.mp4`.
  */
 export const TUTORIAL_VIDEOS: ReadonlyMap<string, string> = new Map([

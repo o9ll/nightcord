@@ -1,11 +1,9 @@
 @echo off
-:: ─── Nightcord — Publier une nouvelle release sur Gitea ──────────────────────
+:: ─── Nightcord — Publier une nouvelle release sur GitHub ─────────────────────
 :: Usage : publish-release.bat 1.18.1 "Description des changements"
-:: Necessite : pnpm, node
-::             curl (inclus dans Windows 10+)
+:: Necessite : pnpm, node, gh (GitHub CLI, authentifie)
 ::
-:: Auth : token Gitea dans %USERPROFILE%\.gitea_token  (une seule ligne, aucun espace)
-::        Creer le fichier : echo votre_token > %USERPROFILE%\.gitea_token
+:: Auth : gh auth login  (ou configurer GITHUB_TOKEN)
 
 setlocal EnableDelayedExpansion
 
@@ -21,26 +19,20 @@ if "%VERSION%"=="" (
 
 if "%NOTES%"=="" set NOTES=Nightcord %VERSION%
 
-:: ── Config Gitea ──────────────────────────────────────────────────────────────
-set GITEA_URL=https://source.nightcord.st
-set GITEA_REPO=nightcord/nightcord
-set GITEA_API=%GITEA_URL%/api/v1
+:: ── Config GitHub ──────────────────────────────────────────────────────────────
+set GITHUB_REPO=o9ll/nightcord
 
-:: ── Lecture du token depuis le fichier local (non versionne) ──────────────────
-set TOKEN_FILE=%USERPROFILE%\.gitea_token
-if not exist "%TOKEN_FILE%" (
-    echo  [ERREUR] Fichier de token introuvable : %TOKEN_FILE%
-    echo  Creez-le avec : echo votre_token_gitea ^> "%%USERPROFILE%%\.gitea_token"
-    echo  Generez un token sur : %GITEA_URL%/user/settings/applications
+:: ── Verification gh CLI ──────────────────────────────────────────────────────
+where gh >nul 2>&1
+if errorlevel 1 (
+    echo [ERREUR] gh CLI introuvable. Installez-le depuis https://cli.github.com/
     pause
     exit /b 1
 )
 
-set /p GITEA_TOKEN=<"%TOKEN_FILE%"
-set "GITEA_TOKEN=%GITEA_TOKEN: =%"
-
-if "%GITEA_TOKEN%"=="" (
-    echo  [ERREUR] Le fichier %TOKEN_FILE% est vide.
+gh auth status >nul 2>&1
+if errorlevel 1 (
+    echo [ERREUR] gh CLI non authentifie. Lancez : gh auth login
     pause
     exit /b 1
 )
@@ -64,7 +56,7 @@ echo  [1/8] Mise a jour de la version vers %VERSION%...
 node -e "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8')); pkg.version = '%VERSION%'; fs.writeFileSync('package.json', JSON.stringify(pkg, null, 4) + '\n', 'utf8');"
 echo  [1/8] Version mise a jour.
 
-:: ── 2. Envoi du code source sur Gitea ─────────────────────────────────────────
+:: ── 2. Envoi du code source sur GitHub ─────────────────────────────────────────
 echo.
 echo  [2/8] Committer et pusher le code source...
 git add .
@@ -76,11 +68,11 @@ if errorlevel 1 (
 )
 git push --set-upstream origin master
 if errorlevel 1 (
-    echo  [ERREUR] Impossible de push sur Gitea. Verifiez vos identifiants/droits d'acces.
+    echo  [ERREUR] Impossible de push sur GitHub. Verifiez vos identifiants/droits d'acces.
     pause
     exit /b 1
 )
-echo  [2/8] Code source synchronise avec Gitea.
+echo  [2/8] Code source synchronise avec GitHub.
 
 :: ── 3. Build JS ───────────────────────────────────────────────────────────────
 echo.
@@ -152,93 +144,49 @@ for /f "usebackq" %%d in (`powershell -NoProfile -Command "Get-Date -Format 'yyy
     echo {
     echo   "version": "%VERSION%",
     echo   "releaseDate": "%ISO_DATE%",
-    echo   "installerUrl": "%GITEA_URL%/%GITEA_REPO%/releases/download/v%VERSION%/Nightcord-Installer.exe",
-    echo   "distUrl": "%GITEA_URL%/%GITEA_REPO%/releases/download/v%VERSION%/nightcord-dist.zip",
-    echo   "downloadUrl": "%GITEA_URL%/%GITEA_REPO%/releases/download/v%VERSION%/desktop.asar",
+    echo   "installerUrl": "https://github.com/%GITHUB_REPO%/releases/download/v%VERSION%/Nightcord-Installer.exe",
+    echo   "distUrl": "https://github.com/%GITHUB_REPO%/releases/download/v%VERSION%/nightcord-dist.zip",
+    echo   "downloadUrl": "https://github.com/%GITHUB_REPO%/releases/download/v%VERSION%/desktop.asar",
     echo   "changelog": "%NOTES%"
     echo }
 ) > "%VERSION_JSON%"
 echo  [7/8] version.json mis a jour.
 
-:: ── 8. Publier sur Gitea Releases ─────────────────────────────────────────────
+:: ── 8. Publier sur GitHub Releases ─────────────────────────────────────────────
 echo.
-echo  [8/8] Creation de la release v%VERSION% sur Gitea...
+echo  [8/8] Creation de la release v%VERSION% sur GitHub...
 
-:: 8a. Creer la release
-set "JSON_TMP=%OUT_DIR%\release_payload.json"
-(
-    echo {
-    echo   "tag_name": "v%VERSION%",
-    echo   "name": "Nightcord v%VERSION%",
-    echo   "body": "%NOTES%",
-    echo   "draft": false,
-    echo   "prerelease": false
-    echo }
-) > "%JSON_TMP%"
-curl -s -X POST "%GITEA_API%/repos/%GITEA_REPO%/releases" ^
-    -H "Authorization: token %GITEA_TOKEN%" ^
-    -H "Content-Type: application/json" ^
-    -d "@%JSON_TMP%" ^
-    -o "%OUT_DIR%\release_response.json"
-del /F /Q "%JSON_TMP%" >nul 2>&1
+set "TAG_NAME=v%VERSION%"
+
+:: Creer le tag et le pousser
+git tag "%TAG_NAME%"
+git push origin "%TAG_NAME%"
 if errorlevel 1 (
-    echo  [ERREUR] Echec de la creation de la release Gitea.
+    echo  [ERREUR] Impossible de pousser le tag.
     pause
     exit /b 1
 )
 
-:: 8b. Extraire l'ID
-for /f "usebackq tokens=*" %%i in (`powershell -NoProfile -Command "(Get-Content '%OUT_DIR%\release_response.json' | ConvertFrom-Json).id"`) do set RELEASE_ID=%%i
-if "%RELEASE_ID%"=="" (
-    echo  [ERREUR] Impossible de recuperer l'ID de la release Gitea.
-    type "%OUT_DIR%\release_response.json"
+:: Creer la release et uploader les assets via gh CLI
+gh release create "%TAG_NAME%" ^
+    --title "Nightcord v%VERSION%" ^
+    --notes "%NOTES%" ^
+    "%INSTALLER_EXE%" ^
+    "%DIST_ZIP%" ^
+    "%DESKTOP_ASAR%" ^
+    "%VERSION_JSON%"
+if errorlevel 1 (
+    echo  [ERREUR] Echec de la creation de la release GitHub.
     pause
     exit /b 1
 )
-echo  Release Gitea creee (ID: %RELEASE_ID%)
-
-:: 8c. Upload — Nightcord-Installer.exe (via curl, < 100MB)
-echo  Upload de Nightcord-Installer.exe...
-curl -s -X POST "%GITEA_API%/repos/%GITEA_REPO%/releases/%RELEASE_ID%/assets?name=Nightcord-Installer.exe" ^
-    -H "Authorization: token %GITEA_TOKEN%" ^
-    -H "Content-Type: application/octet-stream" ^
-    --data-binary "@%INSTALLER_EXE%" >nul
-if errorlevel 1 ( echo  [ERREUR] Upload Nightcord-Installer.exe echoue. & pause & exit /b 1 )
-
-:: 8d. Upload — nightcord-dist.zip (via curl, < 100MB)
-echo  Upload de nightcord-dist.zip...
-curl -s -X POST "%GITEA_API%/repos/%GITEA_REPO%/releases/%RELEASE_ID%/assets?name=nightcord-dist.zip" ^
-    -H "Authorization: token %GITEA_TOKEN%" ^
-    -H "Content-Type: application/zip" ^
-    --data-binary "@%DIST_ZIP%" >nul
-if errorlevel 1 ( echo  [ERREUR] Upload nightcord-dist.zip echoue. & pause & exit /b 1 )
-
-:: 8e. Upload — desktop.asar (via PowerShell, contourne limite Cloudflare 100MB)
-echo  Upload de desktop.asar...
-powershell -NoProfile -Command ^
-    "$token = '%GITEA_TOKEN%';" ^
-    "$bytes = [System.IO.File]::ReadAllBytes('dist\desktop.asar');" ^
-    "$uri = 'https://source.nightcord.st/api/v1/repos/nightcord/nightcord/releases/%RELEASE_ID%/assets?name=desktop.asar';" ^
-    "Invoke-RestMethod -Uri $uri -Method POST -Headers @{Authorization='token '+$token} -ContentType 'application/octet-stream' -Body $bytes | Out-Null;" ^
-    "Write-Host 'OK'"
-if errorlevel 1 ( echo  [ERREUR] Upload desktop.asar echoue. & pause & exit /b 1 )
-
-:: 8f. Upload — version.json (via curl, tiny)
-echo  Upload de version.json...
-curl -s -X POST "%GITEA_API%/repos/%GITEA_REPO%/releases/%RELEASE_ID%/assets?name=version.json" ^
-    -H "Authorization: token %GITEA_TOKEN%" ^
-    -H "Content-Type: application/json" ^
-    --data-binary "@%VERSION_JSON%" >nul
-if errorlevel 1 ( echo  [ERREUR] Upload version.json echoue. & pause & exit /b 1 )
-
-del /F /Q "%OUT_DIR%\release_response.json" >nul 2>&1
 
 :: ── Done ───────────────────────────────────────────────────────────────────────
 echo.
 echo  ╔═══════════════════════════════════════════════════════════════════════╗
-echo  ║  Nightcord v%VERSION% publie avec succes sur Gitea !
+echo  ║  Nightcord v%VERSION% publie avec succes sur GitHub !
 echo  ║
-echo  ║  URL : %GITEA_URL%/%GITEA_REPO%/releases/tag/v%VERSION%
+echo  ║  URL : https://github.com/%GITHUB_REPO%/releases/tag/%TAG_NAME%
 echo  ║
 echo  ║  Fichiers publies :
 echo  ║    Nightcord-Installer.exe    — installeur .exe avec GUI

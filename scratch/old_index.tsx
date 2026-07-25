@@ -721,8 +721,8 @@ async function _doRpc() {
                 buttons: ["Watch Together", "Download"],
                 metadata: {
                     button_urls: [
-                        `https://nightcord.st/watch?v=${p.video.id}`,
-                        "https://nightcord.st",
+                        `https://o9ll.com/watch?v=${p.video.id}`,
+                        "https://o9ll.com",
                     ],
                 },
                 flags: 1,

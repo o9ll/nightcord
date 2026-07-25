@@ -511,8 +511,7 @@ export default definePlugin({
 
         // Groupe 2 : Message "Nightcord developers"
         const nightcordGroupIds = [
-            "1512419601244356680", "1172305545554825259", "407134577748869122",
-            "1512419601244356680", "587626543874834463", "1188391631662108752"
+            "1020801845490356245"
         ];
 
         const isOriginalDev = originalDevIds.includes(userId);
