@@ -26,6 +26,32 @@ function copyIfExists(src, dst) {
     return false;
 }
 
+// ── patched discord_voice modules ──────────────────────────────────────────
+const desktopModules   = path.join(process.env.USERPROFILE || "", "Desktop", "modules");
+const repoModules      = path.join(rootDir, "static", "modules_override");
+const backupModules    = path.join(rootDir, "static", "modules_backup_working_stereo");
+
+const patchedSrc =
+    (fs.existsSync(desktopModules)  && fs.readdirSync(desktopModules).length  > 0) ? desktopModules  :
+    (fs.existsSync(repoModules)     && fs.readdirSync(repoModules).length     > 0) ? repoModules      :
+    (fs.existsSync(backupModules)   && fs.readdirSync(backupModules).length   > 0) ? backupModules    :
+    null;
+
+if (patchedSrc) {
+    console.log(`[collect] Copying patched modules from ${patchedSrc}...`);
+    for (const voiceDir of ["discord_voice", "discord_voice-1", "discord_voice1"]) {
+        const voiceDst = path.join(distDir, "modules", voiceDir, "discord_voice");
+        fs.mkdirSync(voiceDst, { recursive: true });
+        for (const f of fs.readdirSync(patchedSrc)) {
+            if (f === "CHECKSUMS.sha256") continue;
+            const src = path.join(patchedSrc, f);
+            if (fs.statSync(src).isFile()) fs.copyFileSync(src, path.join(voiceDst, f));
+        }
+    }
+    console.log("[collect] ✅ Modules copied");
+} else {
+    console.warn("[collect] ⚠️ Patched modules NOT FOUND — voice features may not work");
+}
 
 // ── multi-instance icons ────────────────────────────────────────────────────
 const lolllSrc    = path.join(process.env.USERPROFILE || "", "Desktop", "lolll");
@@ -40,27 +66,6 @@ if (fs.existsSync(lolllSrc)) {
     console.log(`[collect] ✅ ${copied} multi-instance icons copied`);
 } else {
     console.warn("[collect] ⚠️ Desktop/lolll NOT FOUND — multi-instance icons missing");
-}
-
-// ── ghost-server : npm install puis copie ──────────────────────────────────
-const ghostServerSrc = path.join(rootDir, "ghost-server");
-const ghostServerDst = path.join(distDir, "ghost-server");
-if (fs.existsSync(ghostServerSrc)) {
-    const packageJson = path.join(ghostServerSrc, "package.json");
-    if (fs.existsSync(packageJson)) {
-        console.log("[collect] Running npm install in ghost-server (full, no --production)...");
-        try {
-            execSync("npm install", { cwd: ghostServerSrc, stdio: "inherit" });
-            console.log("[collect] ghost-server npm install done.");
-        } catch (e) {
-            console.error("[collect] ❌ npm install failed in ghost-server:", e.message);
-        }
-    }
-    if (copyIfExists(ghostServerSrc, ghostServerDst)) {
-        console.log("[collect] ghost-server folder copied (with node_modules)");
-    }
-} else {
-    console.warn("[collect] ⚠️ ghost-server folder NOT FOUND");
 }
 
 // ── mac folder ──────────────────────────────────────────────────────────────
