@@ -389,7 +389,7 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
             plugin.description.toLowerCase().includes(search) ||
             plugin.tags?.some(t => t.toLowerCase().includes(search))
         );
-    }, [searchValue, search, ratings]);
+    }, [searchValue, search]);
 
     const [newPluginsSet] = useAwaiter(() => DataStore.get("Vencord_existingPlugins").then((cachedPlugins: Record<string, number> | undefined) => {
         const now = Date.now() / 1000;
