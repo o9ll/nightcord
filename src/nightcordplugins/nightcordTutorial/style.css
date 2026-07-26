@@ -1,0 +1,162 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-nightcord-tutorial-root {
+    display: flex;
+    container-type: inline-size;
+    width: 100%;
+    max-height: min(620px, calc(100vh - 180px));
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+}
+
+.vc-nightcord-tutorial-language {
+    padding-bottom: 2px;
+}
+
+.vc-nightcord-tutorial-progress {
+    height: 6px;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--background-modifier-accent);
+}
+
+.vc-nightcord-tutorial-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--interactive-active);
+    transition: width 180ms ease;
+}
+
+.vc-nightcord-tutorial-layout {
+    display: grid;
+    grid-template-columns: minmax(140px, 170px) minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+}
+
+.vc-nightcord-tutorial-step-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vc-nightcord-tutorial-step-button {
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.vc-nightcord-tutorial-step-index {
+    display: inline-flex;
+    min-width: 18px;
+    justify-content: center;
+    margin-right: 6px;
+    font-variant-numeric: tabular-nums;
+}
+
+.vc-nightcord-tutorial-content {
+    min-width: 0;
+}
+
+.vc-nightcord-tutorial-main {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vc-nightcord-tutorial-content-with-aside {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.vc-nightcord-tutorial-panel {
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 14px 16px;
+}
+
+.vc-nightcord-tutorial-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding-left: 18px;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.vc-nightcord-tutorial-bullets li {
+    padding-left: 2px;
+}
+
+.vc-nightcord-tutorial-recommendation-list {
+    display: flex;
+    max-height: 280px;
+    flex-direction: column;
+    gap: 6px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.vc-nightcord-tutorial-recommendation-actions {
+    row-gap: 6px;
+}
+
+.vc-nightcord-tutorial-recommendations-panel {
+    background: var(--background-secondary);
+}
+
+.vc-nightcord-tutorial-recommendation-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 10px;
+    border: 1px solid var(--background-modifier-accent);
+    border-radius: 8px;
+    background: var(--background-primary);
+}
+
+.vc-nightcord-tutorial-recommendation-row label {
+    min-width: 0;
+}
+
+@container (min-width: 720px) {
+    .vc-nightcord-tutorial-content-with-aside {
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
+    }
+}
+
+@media (width <= 760px) {
+    .vc-nightcord-tutorial-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .vc-nightcord-tutorial-step-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+    .vc-nightcord-tutorial-step-button {
+        width: auto;
+        min-width: 150px;
+    }
+
+    .vc-nightcord-tutorial-recommendation-row {
+        grid-template-columns: 1fr;
+    }
+
+    .vc-nightcord-tutorial-panel {
+        padding: 12px;
+    }
+}
