@@ -13,13 +13,13 @@ const settings = definePluginSettings({
         type: OptionType.SELECT,
         description: "Transcription language. Auto-detect may occasionally hallucinate English.",
         options: [
-            { label: "French (Français)", value: "fr", default: true },
+            { label: "Auto-detect", value: "", default: true },
             { label: "English (Anglais)", value: "en" },
+            { label: "French (Français)", value: "fr" },
             { label: "Spanish (Español)", value: "es" },
             { label: "German (Deutsch)", value: "de" },
             { label: "Italian (Italiano)", value: "it" },
-            { label: "Portuguese (Português)", value: "pt" },
-            { label: "Auto-detect", value: "" }
+            { label: "Portuguese (Português)", value: "pt" }
         ],
         restartNeeded: false,
     },
