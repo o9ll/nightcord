@@ -13,7 +13,7 @@
         "url": "https://github.com/o9ll/nightcord.git"
     },
     "license": "GPL-3.0-or-later",
-    "author": "Equicord",
+    "author": "o9ll",
     "scripts": {
         "build": "pnpm depCheck && pnpm generatePluginJson && node --require=./scripts/suppressExperimentalWarnings.js scripts/build/build.mjs",
         "buildStandalone": "pnpm build --standalone",

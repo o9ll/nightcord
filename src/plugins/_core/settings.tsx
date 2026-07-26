@@ -224,8 +224,8 @@ export default definePlugin({
 
         const mainEntry = buildEntry({
             key: "equicord_main",
-            title: "Nightcord",
-            panelTitle: "Nightcord Settings",
+            title: "Settings",
+            panelTitle: "Settings",
             Component: VencordTab,
             Icon: MainSettingsIcon
         });
@@ -247,34 +247,34 @@ export default definePlugin({
             }),
             buildEntry({
                 key: "equicord_create_theme",
-                title: "Create Theme",
-                panelTitle: "Theme Creator",
+                title: "Create",
+                panelTitle: "Creator",
                 Component: CreateThemeTab,
                 Icon: PencilSparkleIcon
             }),
             !IS_UPDATER_DISABLED && UpdaterTab && buildEntry({
                 key: "equicord_updater",
                 title: "Updater",
-                panelTitle: "Nightcord Updater",
+                panelTitle: "Updater",
                 Component: UpdaterTab,
                 Icon: UpdaterIcon
             }),
             buildEntry({
                 key: "equicord_changelog",
-                title: "Changelog",
+                title: "Logs",
                 Component: ChangelogTab,
                 Icon: LogIcon,
             }),
             buildEntry({
                 key: "equicord_backup_restore",
-                title: "Backup & Restore",
+                title: "Backup",
                 Component: BackupAndRestoreTab,
                 Icon: BackupRestoreIcon
             }),
             buildEntry({
                 key: "nightcord_sync",
-                title: "Synchronization",
-                panelTitle: "Nightcord Sync",
+                title: "Sync",
+                panelTitle: "Sync",
                 Component: SyncTab,
                 Icon: CloudIcon
             }),
@@ -286,13 +286,13 @@ export default definePlugin({
             }),
             IS_DEV && PatchHelperTab && buildEntry({
                 key: "equicord_patch_helper",
-                title: "Patch Helper",
+                title: "Helper",
                 Component: PatchHelperTab,
                 Icon: PatchHelperIcon
             }),
             buildEntry({
                 key: "nightcord_icon_finder",
-                title: "Icon Finder",
+                title: "Icon",
                 Component: IconsTab,
                 Icon: MagnifyingGlassIcon
             }),
@@ -304,7 +304,7 @@ export default definePlugin({
             type: LayoutTypes.SECTION,
             useTitle: () => {
                 try { if (localStorage.getItem("Nightcord_stealthMode") === "1") return ""; } catch { }
-                return t("Nightcord Settings");
+                return t("Settings");
             },
             buildLayout: () => {
                 try { if (localStorage.getItem("Nightcord_stealthMode") === "1") return [mainEntry]; } catch { }
