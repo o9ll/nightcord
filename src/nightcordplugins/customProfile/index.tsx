@@ -758,9 +758,6 @@ const userContextMenuPatch: NavContextMenuPatchCallback = (_children, _props: an
     // "Copy this profile" / "Remove copy profile" removed
 };
 
-
-
-
 function getRealDateVariants(): string[] {
     try {
         const u = UserStore.getCurrentUser();
@@ -892,13 +889,13 @@ function formatBoostBadgeDesc(d: Date | string): string {
     if (!dateObj || isNaN(dateObj.getTime())) return "Server boosting since";
     const locale = getDiscordLocale().toLowerCase();
     const isFr = locale.startsWith("fr");
-    
+
     const day = dateObj.getDate();
     const year = dateObj.getFullYear();
-    
+
     const monthsEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthsFr = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
-    
+
     if (isFr) {
         const mName = monthsFr[dateObj.getMonth()] || "janv.";
         return `Booster de serveurs depuis le ${day} ${mName} ${year}`;
@@ -2193,7 +2190,7 @@ export default definePlugin({
             }
 
             let badgesArr = overrideFlags ? [] : (Array.isArray(profile.badges) ? [...profile.badges] : []);
-            
+
             if (overrideFlags) {
                 if (data.nitro) {
                     const nl = data.nitroLevel ?? 0;
@@ -2231,7 +2228,7 @@ export default definePlugin({
                     merged.premiumSince = null;
                     merged.premiumGuildSince = null;
                 }
-                
+
                 const wantedFlags = (data.badgeFlags != null) ? data.badgeFlags : profile.publicFlags;
                 merged.publicFlags = wantedFlags;
             }
@@ -2612,7 +2609,7 @@ export default definePlugin({
                     if (realUser && !realUser.constructor.prototype._cp_premium_hook) {
                         try {
                             const UserClass = realUser.constructor;
-                            
+
                             // Patch isPremium if it's a method
                             if (typeof UserClass.prototype.isPremium === "function") {
                                 const origIsPremium = UserClass.prototype.isPremium;
@@ -2636,7 +2633,7 @@ export default definePlugin({
                             // This ensures even standalone functions reading user.premiumType see the fake value!
                             Object.defineProperty(UserClass.prototype, "premiumType", {
                                 get() {
-                                    const isFake = (isEnabled && isMe(this.id) && storedData.nitro) || 
+                                    const isFake = (isEnabled && isMe(this.id) && storedData.nitro) ||
                                                    (Settings.seeAllCustomProfile && publicProfilesCache.get(this.id)?.data?.nitro);
                                     if (isFake) {
                                         return 2;
@@ -2688,21 +2685,21 @@ export default definePlugin({
                 US.getUser = (id: string) => {
                     const user = origGet(id);
                     if (!user) return user;
-                    
+
                     if (isEnabled && isMe(id)) {
                         return this.fakeCurrentUser(user);
                     }
-                    
+
                     // Check if seeAll was just turned off and clear cache if needed
                     checkSeeAllSettingChange();
-                    
+
                     if (Settings.seeAllCustomProfile && !isMe(id)) {
                         const cached = publicProfilesCache.get(id);
                         if (cached?.fetched && cached.data) {
                             return this.fakeOtherUser(user, cached.data);
                         }
                     }
-                    
+
                     return user;
                 };
                 US._cp_perfect_hook = true;
@@ -2740,11 +2737,11 @@ export default definePlugin({
                     try {
                         const profile = origGetProfile(userId);
                         if (!userId) return profile;
-                        
+
                         if (isEnabled && isMe(userId) && profile) {
                             return this.hookUserProfile(profile);
                         }
-                        
+
                         if (Settings.seeAllCustomProfile && !isMe(userId)) {
                             fetchPublicProfileIfNeeded(userId);
                             const cached = publicProfilesCache.get(userId);
@@ -2752,7 +2749,7 @@ export default definePlugin({
                                 return this.hookOtherUserProfile(profile, cached.data, cached.timestamp);
                             }
                         }
-                        
+
                         return profile;
                     } catch (e) {
                         console.error("[CustomProfile] Error in getUserProfile hook:", e);
@@ -2764,11 +2761,11 @@ export default definePlugin({
                     try {
                         const profile = origGetGuild(userId, guildId);
                         if (!userId) return profile;
-                        
+
                         if (isEnabled && isMe(userId) && profile) {
                             return this.hookUserProfile(profile);
                         }
-                        
+
                         if (Settings.seeAllCustomProfile && !isMe(userId)) {
                             fetchPublicProfileIfNeeded(userId);
                             const cached = publicProfilesCache.get(userId);
@@ -2776,7 +2773,7 @@ export default definePlugin({
                                 return this.hookOtherUserProfile(profile, cached.data, cached.timestamp);
                             }
                         }
-                        
+
                         return profile;
                     } catch (e) {
                         console.error("[CustomProfile] Error in getGuildMemberProfile hook:", e);
