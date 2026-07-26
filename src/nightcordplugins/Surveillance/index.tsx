@@ -1028,7 +1028,7 @@ export default definePlugin({
             const diagIndex = SettingsPlugin.customEntries.findIndex(entry => entry.key === "vc-client-diagnostics");
             const entry = {
                 key: SETTINGS_ENTRY_KEY,
-                title: "Surveillance",
+                title: "Spy",
                 Component: SurveillanceTab,
                 Icon: SurveillanceIcon,
             };

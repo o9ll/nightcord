@@ -30,7 +30,7 @@ function registerMutualScannerSettingsTab() {
 
     SettingsPlugin.customEntries.push({
         key: MUTUAL_SCANNER_SETTINGS_KEY,
-        title: "Mutual Scanner",
+        title: "Scanner",
         Component: MutualScannerTab,
         Icon: MagnifyingGlassIcon,
     });

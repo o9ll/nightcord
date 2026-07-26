@@ -537,7 +537,7 @@ export default definePlugin({
         if (!SettingsPlugin.customEntries.some(entry => entry.key === SETTINGS_ENTRY_KEY)) {
             SettingsPlugin.customEntries.push({
                 key: SETTINGS_ENTRY_KEY,
-                title: "StereoInstaller",
+                title: "Stereo",
                 Component: ErrorBoundary.wrap(StereoInstallerPage, { noop: true }),
                 Icon: HeadphonesIcon,
             });

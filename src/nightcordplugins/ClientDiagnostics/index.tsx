@@ -1729,7 +1729,7 @@ export default definePlugin({
             startLagNotifications();
             SettingsPlugin.customEntries.push({
                 key: ENTRY_KEY,
-                title: "Client diagnostics",
+                title: "Performance",
                 Component: DiagnosticsPageWrapped,
                 Icon: ClockIcon
             });

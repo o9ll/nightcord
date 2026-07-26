@@ -29,7 +29,7 @@ export default definePlugin({
     start() {
         SettingsPlugin.customEntries.push({
             key: "equicord_theme_library",
-            title: "Theme Library",
+            title: "Library",
             Component: require("./components/ThemeTab").default,
             Icon: ColorPaletteIcon
         });
