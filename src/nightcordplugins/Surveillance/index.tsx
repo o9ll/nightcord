@@ -1001,8 +1001,8 @@ export default definePlugin({
     enabledByDefault: true,
     description: "Adds a local live event dashboard for selected users and servers.",
     tags: ["Friends", "Utility"],
-    authors: [{ name: "irritably",
-     id: 928787166916640838n }],
+    authors: [{ name: "Nightcord",
+     id: 0n }],
     required: true,
     settings,
     contextMenus: {

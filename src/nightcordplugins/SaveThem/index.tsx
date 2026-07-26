@@ -300,8 +300,8 @@ export const settings = definePluginSettings({
 export default definePlugin({
     name: "SaveThem",
     description: "Allows you to save users with profile backups and a reason, directly from context menus.",
-    authors: [{ name: "irritably",
-     id: 928787166916640838n }],
+    authors: [{ name: "Nightcord",
+     id: 0n }],
     tags: ["Utility", "Chat"],
     contextMenus: {
         "user-context": UserContextMenuPatch
