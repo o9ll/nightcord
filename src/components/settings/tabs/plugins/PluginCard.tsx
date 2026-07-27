@@ -18,11 +18,20 @@ import { React, showToast, Text, Toasts, Tooltip, UserStore } from "@webpack/com
 import { Settings } from "Vencord";
 import { t } from "@api/i18n";
 import { tPlugin } from "@api/pluginI18n";
+import { detailedPluginDescriptions } from "@api/detailedPluginDescriptions";
 
 import { TUTORIAL_CACHE } from "./components/Common";
 import { openPluginModal } from "./PluginModal";
 import { getTutorialVideoName, TUTORIAL_PLUGIN_NAMES } from "./tutorialList";
 import { PluginMeta } from "~plugins";
+
+export function removeEmojis(text: string): string {
+    if (!text) return "";
+    return text
+        .replace(/[\u{1F300}-\u{1F9FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E6}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]|[\u{2190}-\u{21FF}]|[\u{2B50}]|[\u{2300}-\u{23FF}]|[\u{2B00}-\u{2BFF}]|[\u{E000}-\u{F8FF}]/gu, "")
+        .replace(/  +/g, " ")
+        .trim();
+}
 
 const logger = new Logger("PluginCard");
 const cl = classNameFactory("vc-plugins-");
@@ -214,7 +223,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         openModal(props => (
             <ModalRoot {...props} size={ModalSize.SMALL}>
                 <ModalHeader>
-                    <HeadingPrimary>Credits - {plugin.name}</HeadingPrimary>
+                    <HeadingPrimary>Credits - {removeEmojis(plugin.name)}</HeadingPrimary>
                     <ModalCloseButton onClick={props.onClose} />
                 </ModalHeader>
                 <ModalContent style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" } as any}>
@@ -240,7 +249,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         ));
     }
 
-    const hasSettings = plugin.settings?.def && Object.values(plugin.settings.def).some(s => s.type !== OptionType.CUSTOM && !s.hidden);
+    const hasSettings = !!plugin.settingsAboutComponent || (plugin.settings?.def && Object.values(plugin.settings.def).some(s => s.type !== OptionType.CUSTOM && !s.hidden));
 
     const PluginIcon = plugin.headerBarButton?.icon || 
                        plugin.chatBarButton?.icon || 
@@ -273,7 +282,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
                                     onMouseLeave={onMouseLeave}
                                     onClick={() => window.open("https://github.com/o9ll", "_blank")}
                                 >
-                                    <svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
                                         <path fill="currentColor" d="M14.5 8a3 3 0 1 0-2.7-4.3c-.2.4.06.86.44 1.12a5 5 0 0 1 2.14 3.08c.01.06.06.1.12.1ZM18.44 17.27c.15.43.54.73 1 .73h1.06c.83 0 1.5-.67 1.5-1.5a7.5 7.5 0 0 0-6.5-7.43c-.55-.08-.99.38-1.1.92-.06.3-.15.6-.26.87-.23.58-.05 1.3.47 1.63a9.53 9.53 0 0 1 3.83 4.78ZM12.5 9a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2 20.5a7.5 7.5 0 0 1 15 0c0 .83-.67 1.5-1.5 1.5a.2.2 0 0 1-.2-.16c-.2-.96-.56-1.87-.88-2.54-.1-.23-.42-.15-.42.1v2.1a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2.1c0-.25-.31-.33-.42-.1-.32.67-.67 1.58-.88 2.54a.2.2 0 0 1-.2.16A1.5 1.5 0 0 1 2 20.5Z" />
                                     </svg>
                                 </button>
@@ -286,7 +295,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
                             onClick={() => openPluginModal(plugin, onRestartNeeded)}
                             className={cl("info-button")}
                         >
-                            <CogWheel className={cl("info-icon")} />
+                            <CogWheel className={cl("info-icon")} width={20} height={20} />
                         </button>
                     )}
                 </div>

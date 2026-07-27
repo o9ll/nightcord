@@ -17,6 +17,8 @@ import {
 import MutualScannerTab from "./MutualScannerTab";
 import { resetMutualScannerRuntime } from "./runtime";
 
+import { t } from "../autoTranslateNightcord";
+
 const MUTUAL_SCANNER_SETTINGS_KEY = "kamidere_mutual_scanner";
 
 function unregisterMutualScannerSettingsTab() {

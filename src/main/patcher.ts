@@ -98,6 +98,7 @@ if (!IS_VANILLA) {
                 options.webPreferences.preload = join(__dirname, "preload.js");
                 options.webPreferences.sandbox = false;
                 options.webPreferences.backgroundThrottling = false;
+                options.webPreferences.webviewTag = true;
 
                 let ses = options.webPreferences.session;
                 if (!ses && options.webPreferences.partition) {
@@ -280,12 +281,10 @@ if (!IS_VANILLA) {
         BrowserWindow
     };
 
-    // Enable DevTools only in development mode
-    if (IS_DEV) {
-        onceDefined(global, "appSettings", s => {
-            s.set("DANGEROUS_ENABLE_DEVTOOLS_ONLY_ENABLE_IF_YOU_KNOW_WHAT_YOURE_DOING", true);
-        });
-    }
+    // Enable DevTools always for modders
+    onceDefined(global, "appSettings", s => {
+        s.set("DANGEROUS_ENABLE_DEVTOOLS_ONLY_ENABLE_IF_YOU_KNOW_WHAT_YOURE_DOING", true);
+    });
 
     process.env.DATA_DIR = join(app.getPath("userData"), "..", "Nightcord");
 
