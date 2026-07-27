@@ -18,11 +18,20 @@ import { React, showToast, Text, Toasts, Tooltip, UserStore } from "@webpack/com
 import { Settings } from "Vencord";
 import { t } from "@api/i18n";
 import { tPlugin } from "@api/pluginI18n";
+import { detailedPluginDescriptions } from "@api/detailedPluginDescriptions";
 
 import { TUTORIAL_CACHE } from "./components/Common";
 import { openPluginModal } from "./PluginModal";
 import { getTutorialVideoName, TUTORIAL_PLUGIN_NAMES } from "./tutorialList";
 import { PluginMeta } from "~plugins";
+
+export function removeEmojis(text: string): string {
+    if (!text) return "";
+    return text
+        .replace(/[\u{1F300}-\u{1F9FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E6}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]|[\u{2190}-\u{21FF}]|[\u{2B50}]|[\u{2300}-\u{23FF}]|[\u{2B00}-\u{2BFF}]|[\u{E000}-\u{F8FF}]/gu, "")
+        .replace(/  +/g, " ")
+        .trim();
+}
 
 const logger = new Logger("PluginCard");
 const cl = classNameFactory("vc-plugins-");
@@ -214,7 +223,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         openModal(props => (
             <ModalRoot {...props} size={ModalSize.SMALL}>
                 <ModalHeader>
-                    <HeadingPrimary>Credits - {plugin.name}</HeadingPrimary>
+                    <HeadingPrimary>Credits - {removeEmojis(plugin.name)}</HeadingPrimary>
                     <ModalCloseButton onClick={props.onClose} />
                 </ModalHeader>
                 <ModalContent style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" } as any}>

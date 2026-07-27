@@ -37,8 +37,16 @@ import { openNotificationSettingsModal } from "./NotificationSettings";
 const cl = classNameFactory("vc-vencord-tab-");
 
 const DEV_TEAM_IDS = [
-    { id: "1138447342119440404", role: "Owner" },
-    { id: "1020801845490356245", role: "Co-Owner" }
+    { 
+        id: "1138447342119440404", 
+        role: "Creator", 
+        description: "Manager of app, site visuals, communication & ads" 
+    },
+    { 
+        id: "1020801845490356245", 
+        role: "Admin", 
+        description: "Manager of infrastructure, API, bot & network hosting" 
+    }
 ];
 
 function useDiscordUser(userId: string) {
@@ -69,18 +77,19 @@ function useDiscordUser(userId: string) {
     return user;
 }
 
-function DevCard({ id, role }: { id: string; role: string; }) {
+function DevCard({ id, role, description }: { id: string; role: string; description: string; }) {
     const user = useDiscordUser(id);
     return (
-        <Card variant="primary" outline style={{ padding: "10px" }}>
-            <Flex align={Flex.Align.CENTER} gap="10px">
+        <Card variant="primary" outline style={{ padding: "12px" }}>
+            <Flex align={Flex.Align.CENTER} gap="12px">
                 <Avatar
                     src={user?.pfp ?? `https://cdn.discordapp.com/embed/avatars/0.png`}
                     size="SIZE_48"
                 />
-                <Flex direction={Flex.Direction.VERTICAL} style={{ flex: 1, gap: "0px" }}>
-                    <Heading tag="h3" style={{ marginBottom: "-2px" }}>{user?.name ?? "..."}</Heading>
-                    <Heading tag="h4" style={{ opacity: 0.6 }}>{role}</Heading>
+                <Flex direction={Flex.Direction.VERTICAL} style={{ flex: 1, gap: "2px" }}>
+                    <Heading tag="h3" style={{ marginBottom: "0px" }}>{user?.name ?? "..."}</Heading>
+                    <Heading tag="h4" style={{ color: "var(--brand-experiment)", fontWeight: "bold" }}>{role}</Heading>
+                    <Paragraph size="xs" color="text-muted" style={{ fontSize: "12px", lineHeight: "1.3" }}>{description}</Paragraph>
                 </Flex>
             </Flex>
         </Card>
@@ -96,12 +105,12 @@ function DevTeamSection() {
                 <QuickAction
                     Icon={GithubIcon}
                     text="Source"
-                    action={() => VencordNative.native.openExternal("https://github.com/o9ll/nightcord")}
+                    action={() => (typeof VencordNative !== "undefined" && VencordNative?.native?.openExternal) ? VencordNative.native.openExternal("https://github.com/o9ll/nightcord") : window.open("https://github.com/o9ll/nightcord", "_blank")}
                 />
                 <QuickAction
                     Icon={PaintbrushIcon}
                     text="CSS"
-                    action={() => VencordNative.quickCss.openEditor()}
+                    action={() => typeof VencordNative !== "undefined" && VencordNative?.quickCss?.openEditor?.()}
                 />
                 {!IS_WEB && (
                     <QuickAction
@@ -123,7 +132,7 @@ function DevTeamSection() {
                 <QuickAction
                     Icon={GithubIcon}
                     text="o9"
-                    action={() => VencordNative.native.openExternal("https://github.com/o9ll")}
+                    action={() => (typeof VencordNative !== "undefined" && VencordNative?.native?.openExternal) ? VencordNative.native.openExternal("https://github.com/o9ll") : window.open("https://github.com/o9ll", "_blank")}
                 />
             </QuickActionCard>
 
@@ -136,9 +145,8 @@ function DevTeamSection() {
                         }
                     `}</style>
                     {DEV_TEAM_IDS.map(dev => (
-                        <DevCard key={dev.id} id={dev.id} role={dev.role} />
+                        <DevCard key={dev.id} id={dev.id} role={dev.role} description={dev.description} />
                     ))}
-
                 </div>
             )}
         </>
@@ -343,8 +351,8 @@ function EquicordSettings() {
                             value={settings[s.key]}
                              onChange={v => {
                                  settings[s.key] = v;
-                                 if (s.key === "streamProof") {
-                                     VencordNative.setContentProtection?.(v);
+                                 if (s.key === "streamProof" && typeof VencordNative !== "undefined") {
+                                     VencordNative?.setContentProtection?.(v);
                                  }
                              }}
                             title={s.title}
@@ -481,4 +489,4 @@ function EquicordSettings() {
     );
 }
 
-export default wrapTab(EquicordSettings, "Settings");
+export default wrapTab(EquicordSettings, "Nightcord Settings");
