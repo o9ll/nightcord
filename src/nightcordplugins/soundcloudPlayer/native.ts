@@ -85,7 +85,7 @@ export async function fetchSoundCloudClientId(_?: any): Promise<string | null> {
                     const match = js.match(pat);
                     if (match?.[1]) return match[1];
                 }
-            } catch { /* essayer le suivant */ }
+            } catch { /* try next */ }
         }
 
         return null;
