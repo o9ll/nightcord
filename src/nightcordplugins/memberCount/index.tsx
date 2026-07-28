@@ -46,12 +46,12 @@ export const settings = definePluginSettings({
         type: OptionType.BOOLEAN,
         description: "Show member count in the member list",
         default: true,
-        restartNeeded: true
+        restartNeeded: false
     },
     voiceActivity: {
         type: OptionType.BOOLEAN,
         description: "Show voice activity with member count in the member list",
-        default: true
+        default: false
     }
 });
 
