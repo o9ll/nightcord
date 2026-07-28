@@ -54,7 +54,7 @@ const NIGHTCORD_TAB_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAA
 const VENCORD_EQUICORD_TAB_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAJFBMVEVHcExAPz78+/tWVFSGhIT8+/tSTU37+flhWlrrdpjptMUiIiHE2RBUAAAACXRSTlMA//38+rGaWE6GHvjSAAACyUlEQVR4nO1Uv0/bUBB+peLHyOEqavWWcsSi9YRxhWi7FGK1lCyVpYiVKlLUEUVC6miJtsqczd4wLDbTK5l4/1zv3nuJnUCHqisnRS/y9/m7u+/OT4jH+Nc490/MORoMBqM5ZBm3+UBE/0ys9SOOvbTGVwnhI3hWoO9witMaD8LiC+m0tX6DnShaZCRBV+9SjqVNrXRxUBOi1Al0tb7zhRjeaKWaCtG+JQRaa4VnIulqdYtRtCixiu+JQUXQqSaBF92TSG6k1hvbq0hCd0wgE0aDhsRSW0k98Zcpldpoe9E389ovQ9ixOQCkwvMtyrS75XBmeJ63Z/5iV4I8xE0iHF62Zv71ZzmGm0rK33jDtXY+9XonZ4awwhLGrOVAKT1hOxQWyGGHFnlhuO8aBa1RAkwIrKoKzfAuQoq9utFjLeUdwRlFQb71OYPnCdsom6lB7pZZmRnGq34ErBA6MyUzlP6cuRhveRB69HMj5QK1hluL5mVWXAKhoQdgCUP2AOQ7R6gyPOC3L4izY3fOTFSVU0KFIXitdAUALIEnWWeoqpwIrVSskIwjJGSjemEbQCzHQQhUPiusi1mj8q0pz1jZDkEYgrc+XVwqwmav4mPEK2iJOQWRXMUx6VdFEFNcAzynh0/rIsWQdAmvijbhHbD9P4GpD5Sj1wsoQ8kExs1afG0QeLudwtGa6ZEiJEI6R8hIgVfup89P1giH5hfKRo637cf60pXQahIqYuS0CSLBsW9KULMujd1MyNDvJVjmyC4oUKcNQmKWKad+qRr60qgZBc1rZPjazcrW8qOjVLMEmgf3WbqFyP04BgnNDFQlG2FU6MA4ljCXgaosHYGy5EToqPV5wjCobAqimaF10nkCXVa1wDURPoiFGGLlGkEW+LiIs8Wl84K3Ir1HoBuV7KT3TYIHcLqNzUYyfvQgzouT+CffB6O/wI/xH/EHRrhV74EZqhwAAAAASUVORK5CYII=";
 
 function NightcordTabIcon() {
-    return <img src={NIGHTCORD_TAB_ICON} alt="Nightcord" style={{ width: 18, height: 18, borderRadius: 4 }} />;
+    return <img src={NIGHTCORD_TAB_ICON} alt="Plugins" style={{ width: 18, height: 18, borderRadius: 4 }} />;
 }
 
 function VencordEquicordTabIcon() {
@@ -67,7 +67,7 @@ function UserPluginsTabIcon() {
 
 const makeCategoryOptions = (othersCount?: number) => [
     { label: "Vencord & Equicord", value: SearchStatus.OTHERS },
-    { label: "Nightcord", value: SearchStatus.NIGHTCORD },
+    { label: "Plugins", value: SearchStatus.NIGHTCORD },
     { label: t("User Plugins"), value: SearchStatus.USER_PLUGINS },
     { label: t("Community Plugins"), value: "community", disabled: true }
 ];
@@ -141,7 +141,7 @@ export const ExcludedReasons: Record<"web" | "discordDesktop" | "vesktop" | "equ
     vesktop: "Vesktop/Equibop apps",
     equibop: "Vesktop/Equibop apps",
     web: "Vesktop/Equibop apps & Discord web",
-    dev: "Developer version of Nightcord"
+    dev: "Developer version"
 };
 
 function ExcludedPluginsList({ search }: { search: string; }) {
@@ -666,7 +666,7 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
                     <div className={cl("ecosystem-banner")}>
                         <div className={cl("ecosystem-banner-text")}>
                             <HeadingTertiary>{t("Plugin Ecosystem Management")}</HeadingTertiary>
-                            <Paragraph>{t("Manage your Nightcord and community plugins here. Enable, disable, and configure them to your liking.")}</Paragraph>
+                            <Paragraph>{t("Manage your Plugins and community plugins here. Enable, disable, and configure them to your liking.")}</Paragraph>
                         </div>
                         <div className={cl("ecosystem-banner-buttons")}>
                             <Button
@@ -726,7 +726,7 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
                             <div className={cl("stat-title")}>
                                 {searchValue.status === SearchStatus.USER_PLUGINS ? t("USER PLUGINS") : 
                                  searchValue.status === SearchStatus.OTHERS ? t("VENCORD & EQUICORD PLUGINS") : 
-                                 t("NIGHTCORD PLUGINS")}
+                                 t("PLUGINS")}
                             </div>
                             <div className={cl("stat-value")}>
                                 {searchValue.status === SearchStatus.USER_PLUGINS ? totalUserPlugins : 

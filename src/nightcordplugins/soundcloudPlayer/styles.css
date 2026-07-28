@@ -244,7 +244,7 @@
     margin-top: 2px;
 }
 
-/* Icônes dans la liste */
+/* Icons in the list */
 .sc-play-btn,
 .sc-fav-btn {
     background: none;
@@ -398,7 +398,7 @@
     flex-shrink: 0;
 }
 
-/* Force les SVG à hériter la couleur du parent */
+/* Force SVGs to inherit parent color */
 .sc-play-pause-btn svg,
 .sc-ctrl-btn svg,
 .sc-play-btn svg,
