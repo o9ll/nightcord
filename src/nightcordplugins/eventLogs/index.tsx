@@ -655,7 +655,7 @@ function LogsModal({ rootProps }: { rootProps: any; }) {
 
                 <div className="el-list">
                     {slice.length === 0
-                        ? <div className="el-empty">{t("Aucun événement")}</div>
+                        ? <div className="el-empty">{t("No events")}</div>
                         : slice.map(e => <LogRow key={e.id} e={e} />)}
                 </div>
 
@@ -973,13 +973,13 @@ function subscribeToEvents() {
         }
     });
     sub("GUILD_BAN_ADD", d => { const b = uInfo(d.user?.id); const g = getGuild(d.guildId); pushLog({ type: "guild_ban", content: t("Banned"), ...b, guildId: d.guildId, guildName: g?.name }); });
-    sub("GUILD_BAN_REMOVE", d => { const b = uInfo(d.user?.id); const g = getGuild(d.guildId); pushLog({ type: "friend_remove", content: t("Débanni"), ...b, guildId: d.guildId, guildName: g?.name }); });
+    sub("GUILD_BAN_REMOVE", d => { const b = uInfo(d.user?.id); const g = getGuild(d.guildId); pushLog({ type: "friend_remove", content: t("Unbanned"), ...b, guildId: d.guildId, guildName: g?.name }); });
 
     sub("GUILD_MEMBER_UPDATE", d => {
         if (!d.guildId || !d.user?.id) return;
         const b = uInfo(d.user.id); const g = getGuild(d.guildId);
         if (d.communicationDisabledUntil) {
-            pushLog({ type: "guild_timeout", content: t("Exclu temporairement (Timeout)"), ...b, guildId: d.guildId, guildName: g?.name });
+            pushLog({ type: "guild_timeout", content: t("Timed out"), ...b, guildId: d.guildId, guildName: g?.name });
         }
     });
 

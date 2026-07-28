@@ -224,7 +224,7 @@ export async function follow(userId: string) {
         if (myCh !== followedChannel) {
             if (isUserStreaming()) {
                 Toasts.show({
-                    message: `Suivi activé, mais impossible de rejoindre ${followedName} pendant que vous streamez`,
+                    message: `Following enabled, but unable to join ${followedName} while streaming`,
                     type: Toasts.Type.FAILURE,
                     id: Toasts.genId()
                 });

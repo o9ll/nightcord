@@ -150,34 +150,34 @@ async function handleMessage(message: any) {
             }).join("\n");
         } catch { }
 
-        const prompt = `Tu es l'utilisateur (MOI). Réponds au dernier message de L'AMI.
+        const prompt = `You are the user (ME). Reply to the FRIEND's latest message.
         
-MES INFOS PERSONNELLES :
+MY PERSONAL INFO :
 ${settings.store.personalInfo}
 
-MES INSTRUCTIONS :
+MY INSTRUCTIONS :
 ${settings.store.customInstructions}
 
-LISTE NOIRE :
+BLACKLIST :
 ${settings.store.blacklistedWords}
 
-HISTORIQUE :
+CHAT HISTORY :
 ${localHistory}
 
 LATEST MESSAGE : "${message.content}"
 
-RÈGLES DE COMPORTEMENT (CRUCIAL) :
-1. RÉPONSES COURTES : Fais des réponses concises (1 ou 2 phrases max). Ne fais pas de longs paragraphes.
-2. DISCRÉTION DES INFOS : N'utilise mes infos personnelles (ex: Paris) que si c'est pertinent. Ne ramène pas tout à Paris à chaque message.
-3. STYLE ÉCRIT NATUREL : À l'écrit, on ne dit pas "heu..." ou "attends" quand on calcule. On donne juste le résultat ou on continue la phrase. Supprime toute trace d'hésitation orale.
-4. HUMAIN : Parle comme un pote sur Discord (langage SMS léger autorisé si mon style le permet).
+BEHAVIOR RULES (CRUCIAL) :
+1. KEEP IT SHORT: Reply with concise messages (1–2 sentences max). Don't write long paragraphs.
+2. USE PERSONAL INFO SPARINGLY: Only use my personal info (e.g. New York) when it's relevant. Don't bring it up in every message.
+3. NATURAL WRITING: Don't write things like "uh..." or "wait..." while thinking. Just give the answer or continue the sentence. Remove any spoken hesitation.
+4. BE HUMAN: Talk like a friend on Discord (light texting style is okay if it matches my style).
 
 MISSION :
-Réponds de manière naturelle. NE RENVOIE QUE LE TEXTE DE TA RÉPONSE.`;
+Reply naturally. RETURN ONLY THE REPLY TEXT..`;
 
         const reply = await groqChat({
             messages: [
-                { role: "system", content: "Tu es un AutoResponder ultra-personnalisable pour Discord." },
+                { role: "system", content: "You are a highly customizable Discord AutoResponder." },
                 { role: "user", content: prompt }
             ],
             temperature: 0.7,

@@ -91,7 +91,7 @@ const DoubleCallButton: UserAreaButtonFactory = ({ iconForeground }: UserAreaRen
         // Enable
         const vs = getMyVoiceState();
         if (!vs) {
-            showToast("Rejoignez d'abord une voix pour l'ancrer !");
+            showToast("Join a voice channel first to pin it !");
             return;
         }
 

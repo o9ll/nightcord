@@ -332,7 +332,7 @@ function useStreamPoller(userId: string | null, active: boolean) {
                     // Stop polling once active
                     if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
                 } else if (d.state === "error") {
-                    setStatus("❌ Error: " + (d.error ?? "inconnue"));
+                    setStatus("❌ Error: " + (d.error ?? "unknown"));
                     if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
                 } else if (d.state === "idle") {
                     // Stream finished
@@ -419,13 +419,13 @@ function GhostPopover({ onClose, anchorRect }: { onClose: () => void; anchorRect
                         setMicLabel(virtualMic);
                         ghostMicLabel = virtualMic;
                         DataStore.set(DS_KEY_MIC_DEVICE, virtualMic);
-                        console.log("[GhostClient] Premier lancement : Câble virtuel détecté et sélectionné par défaut.");
+                        console.log("[GhostClient] First launch: Virtual cable detected and selected by default.");
                     }
                 } else {
                     // Otherwise scrupulously respect user choice
                     setMicLabel(savedMic as string);
                     ghostMicLabel = savedMic as string;
-                    console.log("[GhostClient] Chargement du micro préféré de l'utilisateur :", savedMic);
+                    console.log("[GhostClient] Loading user's preferred microphone:", savedMic);
                 }
             }
         }).catch(() => { });
@@ -476,7 +476,7 @@ function GhostPopover({ onClose, anchorRect }: { onClose: () => void; anchorRect
             });
             const d = await r.json();
             if (!d.ok) {
-                setStreamStatus("❌ Error: " + (d.error ?? "inconnue"));
+                setStreamStatus("❌ Error: " + (d.error ?? "unknown"));
                 setIsPolling(false);
             } else {
                 // Server accepted request and is processing in background
@@ -485,13 +485,13 @@ function GhostPopover({ onClose, anchorRect }: { onClose: () => void; anchorRect
                 setIsPolling(true);
             }
         } catch (e: any) {
-            setStreamStatus("❌ ghost-server inaccessible : " + (e?.message ?? String(e)));
+            setStreamStatus("❌ ghost-server unreachable: " + (e?.message ?? String(e)));
             setIsPolling(false);
         }
     }
 
     const accountOptions = [
-        { value: "all", label: "All les accounts", avatar: undefined },
+        { value: "all", label: "All accounts", avatar: undefined },
         ...accounts.map(a => ({ value: a.userId, label: a.username, avatar: a.avatar, userId: a.userId }))
     ];
     const micOptions = [
@@ -764,10 +764,10 @@ export default definePlugin({
 
             (async () => {
                 if (savedAccounts.length === 0) return;
-                console.log("[GhostClient] Pré-connexion de", savedAccounts.length, "account(s)...");
+                console.log("[GhostClient] Pre-connecting", savedAccounts.length, "account(s)...");
                 for (const acc of savedAccounts) {
                     Native.preConnectGhost(acc.userId, acc.token, ghostMicLabel)
-                        .then(r => console.log("[GhostClient] Pré-connecté:", acc.username, r?.ok))
+                        .then(r => console.log("[GhostClient] Pre-connected:", acc.username, r?.ok))
                         .catch(() => { });
                     await new Promise(r => setTimeout(r, 800));
                 }
@@ -777,13 +777,13 @@ export default definePlugin({
         try {
             if (typeof (VencordNative as any)?.ipc?.on === "function") {
                 (VencordNative as any).ipc.on("ghost-client-disconnected", (_: any, userId: string, code: number, reason: string) => {
-                    console.error(`[GhostClient] ${userId} déconnecté de force (code=${code} reason=${reason})`);
+                    console.error(`[GhostClient] ${userId} forcibly disconnected (code=${code} reason=${reason})`);
                     ghostStates.set(userId, { active: false, connecting: false, error: `Disconnected (${code})` });
                     notify();
                 });
             }
         } catch (e: any) {
-            console.warn("[GhostClient] ipc.on non disponible:", e?.message);
+            console.warn("[GhostClient] ipc.on not available:", e?.message);
         }
     },
 

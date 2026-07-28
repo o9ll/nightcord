@@ -147,10 +147,10 @@ export default definePlugin({
     },
 
     start() {
-        log("[AntiGroup] Plugin démarré");
+        log("[AntiGroup] Plugin started");
     },
 
     stop() {
-        log("[AntiGroup] Plugin arrêté");
+        log("[AntiGroup] Plugin stopped");
     }
 });

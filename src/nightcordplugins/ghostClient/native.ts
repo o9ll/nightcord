@@ -53,9 +53,9 @@ function findServerScript(): string | null {
     console.log("[GhostNative] __dirname:", __dirname);
     for (const c of candidates) {
         console.log("[GhostNative] test:", c, fs.existsSync(c) ? "✓" : "✗");
-        if (fs.existsSync(c)) { console.log("[GhostNative] server.js trouvé:", c); return c; }
+        if (fs.existsSync(c)) { console.log("[GhostNative] server.js found:", c); return c; }
     }
-    console.error("[GhostNative] server.js introuvable ! Candidats testés:", candidates.length);
+    console.error("[GhostNative] server.js not found! Tested candidates:", candidates.length);
     return null;
 }
 
@@ -86,9 +86,9 @@ function findNode(): string {
         path.join(process.cwd(), "node_modules", ".bin", "node.exe"),
     ];
     for (const c of candidates) {
-        if (fs.existsSync(c)) { console.log("[GhostNative] node.exe trouvé:", c); return c; }
+        if (fs.existsSync(c)) { console.log("[GhostNative] node.exe found:", c); return c; }
     }
-    console.warn("[GhostNative] node.exe bundlé introuvable, fallback vers 'node' du PATH");
+    console.warn("[GhostNative] Bundled node.exe not found, falling back to PATH 'node'");
     return "node";
 }
 
@@ -143,7 +143,7 @@ async function ensureServer(): Promise<boolean> {
 
         const script = findServerScript();
         if (!script) {
-            console.error("[GhostNative] server.js introuvable !");
+            console.error("[GhostNative] server.js not found!");
             startPromise = null;
             return false;
         }
@@ -151,7 +151,7 @@ async function ensureServer(): Promise<boolean> {
         const nodeExe = findNode();
         const scriptDir = path.dirname(script);
         const nodeModulesPath = path.join(scriptDir, "node_modules");
-        console.log(`[GhostNative] Lancement: ${nodeExe} ${script}`);
+        console.log(`[GhostNative] Launching: ${nodeExe} ${script}`);
         console.log(`[GhostNative] cwd: ${scriptDir}`);
         console.log(`[GhostNative] node_modules exists: ${fs.existsSync(nodeModulesPath)}`);
 
@@ -175,7 +175,7 @@ async function ensureServer(): Promise<boolean> {
             logStream.write(`=== GHOST SERVER LOGS STARTED AT ${new Date().toISOString()} ===\n`);
             console.log("[GhostNative] Log file created at:", logPath);
         } catch (e: any) {
-            console.error("[GhostNative] Impossible de creer le fichier de log:", e.message);
+            console.error("[GhostNative] Unable to create log file:", e.message);
         }
 
         let logBuffer = "";
@@ -213,7 +213,7 @@ async function ensureServer(): Promise<boolean> {
         for (let i = 0; i < 300; i++) {
             await new Promise(r => setTimeout(r, 200));
             if (await ping()) {
-                console.log("[GhostNative] ghost-server prêt ✓");
+                console.log("[GhostNative] ghost-server ready ✓");
                 serverReady = true;
                 startPromise = null;
                 return true;
@@ -235,7 +235,7 @@ async function api(endpoint: string, body?: object, timeoutMs = 15000): Promise<
     // 15s is plenty for fast calls (/connect, /join, /leave).
     // Slow calls (/stream-start) are now non-blocking on server.js side.
     const ok = await ensureServer();
-    if (!ok) return { ok: false, error: "ghost-server introuvable ou timeout" };
+    if (!ok) return { ok: false, error: "ghost-server not found or timeout" };
 
     return new Promise((resolve, reject) => {
         const data = body !== undefined ? JSON.stringify(body) : undefined;
@@ -379,7 +379,7 @@ export async function disconnectGhost(_: any, userId: string): Promise<void> {
 
 export async function init(_: any): Promise<void> {
     const script = findServerScript();
-    console.log("[GhostNative] init — server.js:", script ?? "NON TROUVÉ");
+    console.log("[GhostNative] init — server.js:", script ?? "NOT FOUND");
     console.log("[GhostNative] node exe:", findNode());
 
     const ok = await ensureServer();
@@ -387,7 +387,7 @@ export async function init(_: any): Promise<void> {
         console.error("[GhostNative] ghost-server failed");
         return;
     }
-    console.log("[GhostNative] ghost-server HTTP prêt ✓");
+    console.log("[GhostNative] ghost-server HTTP ready ✓");
 }
 
 // ── Cleanup ───────────────────────────────────────────────────────────────────

@@ -9,10 +9,10 @@ setTimeout(() => {
 
             (async () => {
                 if (savedAccounts.length === 0) return;
-                console.log("[GhostClient] Pré-connexion de", savedAccounts.length, "account(s)...");
+                console.log("[GhostClient] Pre-connecting", savedAccounts.length, "account(s)...");
                 for (const acc of savedAccounts) {
                     Native.preConnectGhost(acc.userId, acc.token, ghostMicLabel)
-                        .then(r => console.log("[GhostClient] Pré-connecté:", acc.username, r?.ok))
+                        .then(r => console.log("[GhostClient] Pre-connected:", acc.username, r?.ok))
                         .catch(() => { });
                     // FIX CRASH SCROLL DM: delay increased from 800ms → 2000ms
                     // Mass pre-connection (20+ accounts × 800ms) saturated the renderer

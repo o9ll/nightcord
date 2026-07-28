@@ -20,7 +20,7 @@ export async function changeHypeSquadHouse(houseId: number) {
         const TokenStore = (window as any).Vencord?.Webpack?.findByProps?.("getToken");
         const token = TokenStore?.getToken?.() || (window as any).localStorage?.token?.replace(/"/g, "");
         if (!token) {
-            showToast("Impossible de récupérer le token Discord", Toasts.Type.FAILURE);
+            showToast("Failed to restore Discord token", Toasts.Type.FAILURE);
             return;
         }
 
@@ -53,7 +53,7 @@ export async function changeHypeSquadHouse(houseId: number) {
             showToast(isFr ? `Erreur lors du changement de maison. Status: ${res.status}` : `Failed to change house. Status: ${res.status}`, Toasts.Type.FAILURE);
         }
     } catch (err: any) {
-        showToast(`Erreur HypeSquad: ${err?.message || err}`, Toasts.Type.FAILURE);
+        showToast(`HypeSquad error: ${err?.message || err}`, Toasts.Type.FAILURE);
     }
 }
 

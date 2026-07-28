@@ -278,7 +278,7 @@ export function WordBombOverlay() {
             }
             setStatus(t("Ready!"));
         } catch (e) {
-            console.error("[WordBomb] Erreur saisie:", e);
+            console.error("[WordBomb] Input error:", e);
             setStatus(t("Input error"));
         } finally {
             isTypingRef.current = false;

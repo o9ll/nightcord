@@ -28,7 +28,7 @@ let noVideoAutoplay = false;
 const settings = definePluginSettings({
     disableSpringAnimations: {
         type: OptionType.BOOLEAN,
-        description: "Désactiver les animations spring de l'interface Discord (boutons, modals, etc.)",
+        description: "Disable Discord interface spring animations (buttons, modals, etc.)",
         default: true,
         disabled: () => isPluginEnabled("DisableAnimations"),
         onChange(val: boolean) {
@@ -40,63 +40,63 @@ const settings = definePluginSettings({
     },
     disableTypingDots: {
         type: OptionType.BOOLEAN,
-        description: "Désactiver les points \"X est en train d'écrire...\"",
+        description: "Disable \"X is typing...\" dots",
         default: true,
         disabled: () => isPluginEnabled("NoTypingAnimation"),
         restartNeeded: true
     },
     noGifAvatars: {
         type: OptionType.BOOLEAN,
-        description: "Bloquer les avatars GIF animés dans les listes et messages",
+        description: "Block animated GIF avatars in lists and messages",
         default: true,
         restartNeeded: true,
         onChange(v: boolean) { noGifAvatars = v; }
     },
     noAnimatedEmoji: {
         type: OptionType.BOOLEAN,
-        description: "Désactiver l'animation des emojis Discord",
+        description: "Disable Discord emoji animations",
         default: false,
         restartNeeded: true,
         onChange(v: boolean) { noAnimatedEmoji = v; }
     },
     noStickers: {
         type: OptionType.BOOLEAN,
-        description: "Empêcher l'autoplay des stickers animés Lottie",
+        description: "Prevent autoplay of animated Lottie stickers",
         default: false,
         restartNeeded: true,
         onChange(v: boolean) { noStickers = v; }
     },
     noActivities: {
         type: OptionType.BOOLEAN,
-        description: "Masquer la section Activités (jeux, Spotify, etc.) dans le panneau membres",
+        description: "Hide Activities section (games, Spotify, etc.) in member panel",
         default: false,
         restartNeeded: true,
         onChange(v: boolean) { noActivities = v; }
     },
     noVideoAutoplay: {
         type: OptionType.BOOLEAN,
-        description: "Bloquer l'autoplay des vidéos intégrées dans les messages (MP4, WebM)",
+        description: "Block autoplay of embedded message videos (MP4, WebM)",
         default: false,
         restartNeeded: true,
         onChange(v: boolean) { noVideoAutoplay = v; }
     },
     noSoundboardPreview: {
         type: OptionType.BOOLEAN,
-        description: "Désactiver la prévisualisation audio du soundboard au survol",
+        description: "Disable soundboard audio preview on hover",
         default: true,
         restartNeeded: true,
         onChange(v: boolean) { noSoundboardPreview = v; }
     },
     limitMsgCache: {
         type: OptionType.BOOLEAN,
-        description: "Vider le cache des messages des canaux inactifs",
+        description: "Clear message cache of inactive channels",
         default: true,
         restartNeeded: false,
         onChange(v: boolean) { limitMsgCache = v; if (!v) stopCacheCleaner(); else startCacheCleaner(); }
     },
     reduceFpsBackground: {
         type: OptionType.BOOLEAN,
-        description: "Limiter Discord à ~10 FPS quand la fenêtre est en arrière-plan",
+        description: "Limit Discord to ~10 FPS when window is in background",
         default: true,
         restartNeeded: false,
         onChange(v: boolean) { applyBgFpsPatch(v); }

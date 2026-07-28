@@ -233,15 +233,15 @@ function toApiMsg(m: Message) {
         try {
             const b64 = f.base64.split(",")[1] ?? "";
             const decoded = atob(b64);
-            return `--- Fichier: ${f.name} ---\n${decoded.slice(0, 8000)}`;
+            return `--- File: ${f.name} ---\n${decoded.slice(0, 8000)}`;
         } catch {
-            return `[Fichier: ${f.name} — impossible de lire le contenu]`;
+            return `[File: ${f.name} — unable to read content]`;
         }
     });
 
     const text = [...fileParts, m.content].filter(Boolean).join("\n\n");
 
-    if (images.length === 0) return { role: m.role, content: text || "(message vide)" };
+    if (images.length === 0) return { role: m.role, content: text || "(empty message)" };
 
     const parts: any[] = [];
     if (text) parts.push({ type: "text", text });

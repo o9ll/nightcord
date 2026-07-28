@@ -117,7 +117,7 @@ function injectMacOsButtons() {
     // Vert — Maximiser
     const btnMax = document.createElement("button");
     btnMax.className = "macos-btn macos-btn-max";
-    btnMax.title = "Maximiser / Restaurer";
+    btnMax.title = "Maximize / Restore";
     btnMax.innerHTML = `<span class="macos-btn-icon"><svg width="7" height="7" viewBox="0 0 7 7" fill="none"><path d="M1 6L6 1M1 3.5V1H3.5M3.5 6H6V3.5" stroke="#0a3a00" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
     btnMax.addEventListener("click", (e) => { e.stopPropagation(); Native.maximizeWindow(); });
 
