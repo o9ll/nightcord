@@ -65,7 +65,7 @@ function YoutubeButtonWrapper() {
 const RenderElement = () => <ErrorBoundary><YoutubeButtonWrapper /></ErrorBoundary>;
 
 export default definePlugin({
-    name: "youtubePlayer",
+    name: "YoutubePlayer",
     enabledByDefault: false,
     description: "Adds a YouTube button next to the QxChat button",
     authors: [{ name: "Nightcord", id: 0n }],
@@ -82,7 +82,6 @@ export default definePlugin({
         FluxDispatcher.subscribe("GUILD_SELECT", handleDiscordNavigation);
         FluxDispatcher.subscribe("QXCHAT_TOGGLE", handleOtherPluginToggle);
         FluxDispatcher.subscribe("BROWSER_TOGGLE", handleOtherPluginToggle);
-        FluxDispatcher.subscribe("NIGHTCORDNEWS_TOGGLE", handleOtherPluginToggle);
     },
 
     stop() {
@@ -93,6 +92,5 @@ export default definePlugin({
         FluxDispatcher.unsubscribe("GUILD_SELECT", handleDiscordNavigation);
         FluxDispatcher.unsubscribe("QXCHAT_TOGGLE", handleOtherPluginToggle);
         FluxDispatcher.unsubscribe("BROWSER_TOGGLE", handleOtherPluginToggle);
-        FluxDispatcher.unsubscribe("NIGHTCORDNEWS_TOGGLE", handleOtherPluginToggle);
     }
 });
