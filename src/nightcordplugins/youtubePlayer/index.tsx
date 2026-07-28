@@ -36,7 +36,7 @@ export function setYoutubeOpen(open: boolean) {
         }
         isYoutubeOpen = open;
         updateButtonState();
-        
+
         // Dispatch an event so the view can update
         FluxDispatcher.dispatch({ type: "YOUTUBE_TOGGLE", isOpen: open });
         if (!open) {
@@ -58,7 +58,7 @@ function handleOtherPluginToggle(e: any) {
 function YoutubeButtonWrapper() {
     const [, forceUpdate] = React.useState({});
     updateButtonState = () => forceUpdate({});
-    
+
     return <YoutubeButton />;
 }
 
@@ -77,7 +77,7 @@ export default definePlugin({
         Native.installWatchingTogetherIntercept(isDark).catch(() => {});
         addServerListElement(ServerListRenderPosition.Above, RenderElement);
         forceServerListRerender();
-        
+
         FluxDispatcher.subscribe("CHANNEL_SELECT", handleDiscordNavigation);
         FluxDispatcher.subscribe("GUILD_SELECT", handleDiscordNavigation);
         FluxDispatcher.subscribe("QXCHAT_TOGGLE", handleOtherPluginToggle);
@@ -88,7 +88,7 @@ export default definePlugin({
     stop() {
         removeServerListElement(ServerListRenderPosition.Above, RenderElement);
         forceServerListRerender();
-        
+
         FluxDispatcher.unsubscribe("CHANNEL_SELECT", handleDiscordNavigation);
         FluxDispatcher.unsubscribe("GUILD_SELECT", handleDiscordNavigation);
         FluxDispatcher.unsubscribe("QXCHAT_TOGGLE", handleOtherPluginToggle);

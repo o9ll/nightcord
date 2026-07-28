@@ -705,8 +705,8 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
                                 </div>
                             </div>
                         </div>
-                        <div 
-                            className={cl("stat-item")} 
+                        <div
+                            className={cl("stat-item")}
                             style={searchValue.status === SearchStatus.USER_PLUGINS ? { cursor: "pointer", transition: "0.2s" } : {}}
                             onClick={() => {
                                 if (searchValue.status !== SearchStatus.USER_PLUGINS) return;
@@ -724,13 +724,13 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
                             title={searchValue.status === SearchStatus.USER_PLUGINS ? "Click to open folder" : ""}
                         >
                             <div className={cl("stat-title")}>
-                                {searchValue.status === SearchStatus.USER_PLUGINS ? t("USER PLUGINS") : 
-                                 searchValue.status === SearchStatus.OTHERS ? t("VENCORD & EQUICORD PLUGINS") : 
+                                {searchValue.status === SearchStatus.USER_PLUGINS ? t("USER PLUGINS") :
+                                 searchValue.status === SearchStatus.OTHERS ? t("VENCORD & EQUICORD PLUGINS") :
                                  t("PLUGINS")}
                             </div>
                             <div className={cl("stat-value")}>
-                                {searchValue.status === SearchStatus.USER_PLUGINS ? totalUserPlugins : 
-                                 searchValue.status === SearchStatus.OTHERS ? totalOtherPlugins : 
+                                {searchValue.status === SearchStatus.USER_PLUGINS ? totalUserPlugins :
+                                 searchValue.status === SearchStatus.OTHERS ? totalOtherPlugins :
                                  totalNightcordPlugins}
                             </div>
                         </div>
@@ -782,8 +782,6 @@ export default function PluginSettings({ premiumOnly = false }: PluginSettingsPr
                             {nightcordPlugins}
                         </div>
                     )}
-                    
-
 
                     {othersData.length > 0 && searchValue.status === SearchStatus.OTHERS && (
                         <div className={cl("grid")}>

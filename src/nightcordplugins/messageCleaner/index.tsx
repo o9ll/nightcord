@@ -96,13 +96,13 @@ async function cleanChannel(channelId: string, logEntry: LogEntry, taskName: str
     let lastMessageId: string | undefined;
     let keepRunning = true;
     let totalProcessed = 0;
-    
+
     let initialTotalResults: number = 0;
     try {
         const res = await RestAPI.get({ url: `/channels/${channelId}/messages/search?author_id=${currentUserId}` });
         if (res?.body?.total_results) initialTotalResults = res.body.total_results;
     } catch (e) {}
-    
+
     currentTask = { name: taskName, progress: "Fetching...", percentage: 0 };
     emit();
 
@@ -112,7 +112,7 @@ async function cleanChannel(channelId: string, logEntry: LogEntry, taskName: str
             if (messages.length === 0) break;
 
             const validMessages = messages.filter(msg => canDeleteMessage(msg, currentUserId));
-            
+
             if (validMessages.length === 0) {
                 lastMessageId = messages[messages.length - 1].id;
                 logEntry.skipped += messages.length;
@@ -133,16 +133,16 @@ async function cleanChannel(channelId: string, logEntry: LogEntry, taskName: str
                 totalProcessed++;
                 // Keep total as max(initial, deleted) so bar never goes backwards
                 const effectiveTotal = Math.max(initialTotalResults, logEntry.deleted);
-                currentTask = { 
-                    name: taskName, 
-                    progress: effectiveTotal > 0 ? `Deleted ${logEntry.deleted} / ${effectiveTotal}` : `Deleted ${logEntry.deleted}`, 
-                    percentage: effectiveTotal > 0 ? Math.min((logEntry.deleted / effectiveTotal) * 100, 99) : Math.min((totalProcessed / (totalProcessed + 50)) * 100, 99) 
+                currentTask = {
+                    name: taskName,
+                    progress: effectiveTotal > 0 ? `Deleted ${logEntry.deleted} / ${effectiveTotal}` : `Deleted ${logEntry.deleted}`,
+                    percentage: effectiveTotal > 0 ? Math.min((logEntry.deleted / effectiveTotal) * 100, 99) : Math.min((totalProcessed / (totalProcessed + 50)) * 100, 99)
                 };
                 emit();
-                
+
                 await new Promise(resolve => setTimeout(resolve, 800)); // Rate limit safety
             }
-            
+
             logEntry.skipped += messages.length - validMessages.length;
             lastMessageId = messages[messages.length - 1].id;
             if (messages.length < 100) break;
@@ -165,7 +165,7 @@ async function cleanGuild(guildId: string, logEntry: LogEntry, taskName: string)
     let maxId: string | undefined;
     let totalProcessed = 0;
     let initialTotalResults: number = 0;
-    
+
     currentTask = { name: taskName, progress: "Searching...", percentage: 0 };
     emit();
 
@@ -197,7 +197,7 @@ async function cleanGuild(guildId: string, logEntry: LogEntry, taskName: string)
                     }
                 }
             }
-            
+
             if (oldestHitId) {
                 maxId = (BigInt(oldestHitId) - 1n).toString();
             } else {
@@ -227,13 +227,13 @@ async function cleanGuild(guildId: string, logEntry: LogEntry, taskName: string)
                 totalProcessed++;
                 // Keep total as max(initial, deleted) so bar never goes backwards
                 const effectiveTotal = Math.max(initialTotalResults, logEntry.deleted);
-                currentTask = { 
-                    name: taskName, 
-                    progress: effectiveTotal > 0 ? `Deleted ${logEntry.deleted} / ${effectiveTotal}` : `Deleted ${logEntry.deleted}`, 
-                    percentage: effectiveTotal > 0 ? Math.min((logEntry.deleted / effectiveTotal) * 100, 99) : Math.min((totalProcessed / (totalProcessed + 50)) * 100, 99) 
+                currentTask = {
+                    name: taskName,
+                    progress: effectiveTotal > 0 ? `Deleted ${logEntry.deleted} / ${effectiveTotal}` : `Deleted ${logEntry.deleted}`,
+                    percentage: effectiveTotal > 0 ? Math.min((logEntry.deleted / effectiveTotal) * 100, 99) : Math.min((totalProcessed / (totalProcessed + 50)) * 100, 99)
                 };
                 emit();
-                
+
                 await new Promise(resolve => setTimeout(resolve, 800));
             }
         } catch (e: any) {
@@ -255,7 +255,7 @@ async function processQueue() {
 
     while (queue.length > 0 && !shouldStop) {
         const item = queue[0];
-        
+
         const logEntry: LogEntry = {
             id: Math.random().toString(36).substring(7),
             type: item.type,
@@ -268,9 +268,9 @@ async function processQueue() {
             messages: []
         };
         logs.unshift(logEntry);
-        
+
         let targetChannelId = item.targetId;
-        
+
         if (item.type === "dm" && targetChannelId.startsWith("friend-")) {
             const userId = targetChannelId.replace("friend-", "");
             try {
@@ -288,7 +288,7 @@ async function processQueue() {
         } else if (item.type === "server") {
             await cleanGuild(item.targetId, logEntry, item.name);
         }
-        
+
         if (!shouldStop) {
             queue.shift();
             showToast(`Cleaned ${item.name}`, Toasts.Type.SUCCESS);
@@ -317,7 +317,7 @@ function exportLogs() {
         showToast("No logs to export", Toasts.Type.FAILURE);
         return;
     }
-    
+
     let content = "MessageCleaner Logs\n=================================\n\n";
     for(const l of logs) {
         content += `[${new Date(l.timestamp).toLocaleString()}] ${l.type.toUpperCase()}: ${l.targetName} (${l.targetId})\n`;
@@ -529,7 +529,7 @@ function MessageCleanerTab() {
     const channels = React.useMemo(() => {
         const dms = Object.values(ChannelStore.getMutablePrivateChannels()).filter((c: any) => c.type === 1 || c.type === 3);
         const dmUserIds = new Set(dms.filter((c: any) => c.type === 1 && c.recipients).map((c: any) => c.recipients[0]));
-        
+
         const friendIds = RelationshipStore.getFriendIDs().filter((id: string) => !dmUserIds.has(id));
         const friendMockChannels = friendIds.map((id: string) => {
             const channelId = ChannelStore.getDMFromUserId?.(id) || `friend-${id}`;
@@ -678,7 +678,7 @@ function ChannelsCleanerTab() {
     const handleStart = () => {
         const ids = input.split(",").map(s => s.trim()).filter(s => s.length > 10);
         if (ids.length === 0) return;
-        
+
         const items = ids.map(id => ({ type: "channel" as const, targetId: id, name: `Channel ${id}`, id: Math.random().toString(36).substring(7) }));
         addToQueue(items);
         setInput("");
@@ -748,7 +748,7 @@ function CleanerModal({ rootProps }: { rootProps: any }) {
     return (
         <ModalRoot {...rootProps} size="large" className="mcv2-root">
             <style>{MODAL_STYLES}</style>
-            
+
             <div className="mcv2-header">
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", width: "100%" }}>
                     <div style={{ width: "40px", height: "40px", borderRadius: "8px", background: "#ed4245", display: "flex", alignItems: "center", justifyContent: "center", color: "white" }}>
@@ -764,8 +764,8 @@ function CleanerModal({ rootProps }: { rootProps: any }) {
 
             <div className="mcv2-tabs">
                 {TABS.map(t => (
-                    <div 
-                        key={t.id} 
+                    <div
+                        key={t.id}
                         className={`mcv2-tab ${activeTab === t.id ? "active" : ""}`}
                         onClick={() => setActiveTab(t.id)}
                     >
