@@ -10,7 +10,7 @@ import * as fs from "fs";
 import * as http from "http";
 import * as path from "path";
 
-// Handler IPC pour ouvrir les URLs externes (utilisé par NightcordUpdater)
+// IPC handler to open external URLs (used by NightcordUpdater)
 ipcMain.handle("NIGHTCORD_OPEN_URL", (_event, url: string) => {
     if (typeof url === "string" && url.startsWith("https://")) {
         shell.openExternal(url);
@@ -22,29 +22,29 @@ let serverProc: childProcess.ChildProcess | null = null;
 let serverReady = false;
 let startPromise: Promise<boolean> | null = null;
 
-// ── Trouver ghost-server/server.js ────────────────────────────────────────────
+// ── Find ghost-server/server.js ────────────────────────────────────────────
 function findServerScript(): string | null {
     const execDir = path.dirname(process.execPath);
     const resPath = (process as any).resourcesPath ?? "";
     const candidates = [
-        // Production Electron : resources/ghost-server/server.js
+        // Electron Production: resources/ghost-server/server.js
         path.join(resPath, "ghost-server", "server.js"),
-        // Production Electron (avec app.asar décompressé) : resources/app/ghost-server/server.js
+        // Electron Production (with unpacked app.asar): resources/app/ghost-server/server.js
         path.join(resPath, "app", "ghost-server", "server.js"),
-        // Production : exe + resources/ sous-dossier
+        // Production: exe + resources/ subdirectory
         path.join(execDir, "resources", "ghost-server", "server.js"),
         path.join(execDir, "resources", "app", "ghost-server", "server.js"),
-        // Portable (dist/desktop extrait) : exe dans dist/desktop, ghost-server à côté
+        // Portable (extracted dist/desktop): exe in dist/desktop, ghost-server alongside
         path.join(execDir, "ghost-server", "server.js"),
         // dev-inject : __dirname = dist/desktop/renderer
         path.join(__dirname, "..", "..", "ghost-server", "server.js"),
         path.join(__dirname, "..", "..", "..", "ghost-server", "server.js"),
         path.join(__dirname, "..", "..", "..", "..", "ghost-server", "server.js"),
-    // Racine du repo en dev
+    // Repo root in dev
     path.join(resPath, "..", "ghost-server", "server.js"),
-    // Dev: répertoire de travail courant (dev-inject, npm run dev)
+    // Dev: current working directory (dev-inject, npm run dev)
     path.join(process.cwd(), "ghost-server", "server.js"),
-    // Dev: remontée depuis le répertoire du bundle principal
+    // Dev: upward from main bundle directory
     path.join(__dirname, "..", "..", "..", "..", "..", "ghost-server", "server.js"),
     path.join(__dirname, "..", "..", "..", "..", "..", "..", "ghost-server", "server.js"),
     ];
@@ -63,16 +63,16 @@ function findNode(): string {
     const execDir = path.dirname(process.execPath);
     const resPath = (process as any).resourcesPath ?? "";
     const candidates = [
-        // Production Electron : node.exe copié à côté du .exe Discord
+        // Electron Production: node.exe copied alongside Discord .exe
         path.join(execDir, "node.exe"),
-        // Production : dans resources/ (collect-assets copie là)
+        // Production: in resources/ (collect-assets copies there)
         path.join(resPath, "node.exe"),
         path.join(resPath, "..", "node.exe"),
         path.join(resPath, "app", "node.exe"),
-        // Dans le sous-dossier resources/
+        // Inside resources/ subdirectory
         path.join(execDir, "resources", "node.exe"),
         path.join(execDir, "resources", "app", "node.exe"),
-        // Portable : dist/desktop contient node.exe, __dirname remonte à dist/desktop
+        // Portable: dist/desktop contains node.exe, __dirname goes up to dist/desktop
         path.join(__dirname, "..", "..", "node.exe"),
         path.join(__dirname, "..", "..", "..", "node.exe"),
         // NVM for Windows
@@ -81,7 +81,7 @@ function findNode(): string {
         "C:\\Program Files\\nodejs\\node.exe",
         "C:\\Program Files (x86)\\nodejs\\node.exe",
         path.join(process.env.LOCALAPPDATA ?? "", "Programs", "nodejs", "node.exe"),
-        // Dev: cwd + node_modules/.bin ou racine
+        // Dev: cwd + node_modules/.bin or root
         path.join(process.cwd(), "node.exe"),
         path.join(process.cwd(), "node_modules", ".bin", "node.exe"),
     ];
@@ -103,17 +103,17 @@ function ping(): Promise<boolean> {
 }
 
 async function killZombieServer(): Promise<void> {
-    // Si un ghost-server zombie tourne depuis un crash précédent, le tuer proprement
+    // If a zombie ghost-server is running from a previous crash, kill it cleanly
     try {
         const res = await Promise.race([
             ping(),
             new Promise<boolean>(r => setTimeout(() => r(false), 500))
         ]);
         if (res) {
-            // Un serveur répond — vérifier si c'est le nôtre ou un zombie
+            // A server responds — check if it's ours or a zombie
             if (!serverProc) {
-                // Pas notre process — c'est un zombie du crash précédent
-                // On essaie de l'arrêter via l'API HTTP
+                // Not our process — it's a zombie from the previous crash
+                // Try stopping it via HTTP API
                 try {
                     await new Promise<void>(resolve => {
                         const req = http.request({ hostname: "127.0.0.1", port: PORT, path: "/shutdown", method: "POST" }, () => resolve());
@@ -122,7 +122,7 @@ async function killZombieServer(): Promise<void> {
                         req.end();
                     });
                 } catch { }
-                // Fallback : taskkill
+                // Fallback: taskkill
                 try {
                     childProcess.execSync('taskkill /F /IM node.exe /FI "WINDOWTITLE eq ghost-server"', { stdio: "ignore" });
                 } catch { }
@@ -137,7 +137,7 @@ async function ensureServer(): Promise<boolean> {
     if (startPromise) return startPromise;
 
     startPromise = (async () => {
-        // Tuer les zombies avant de démarrer
+        // Kill zombies before starting
         await killZombieServer();
         if (await ping()) { serverReady = true; return true; }
 
@@ -165,9 +165,9 @@ async function ensureServer(): Promise<boolean> {
             }
         });
 
-        // Limiter les logs du ghost-server dans le main process Electron
-        // Trop de logs = I/O sur le thread principal = freezes
-        // Mais on les écrit dans un fichier de log pour le débogage
+        // Limit ghost-server logs in Electron main process
+        // Too many logs = I/O on main thread = freezes
+        // But write them to a log file for debugging
         const logPath = path.join(app.getPath("userData"), "ghost-server.log");
         let logStream: fs.WriteStream | null = null;
         try {
@@ -209,7 +209,7 @@ async function ensureServer(): Promise<boolean> {
             }
         });
 
-        // Poll toutes les 200ms pendant 60s max
+        // Poll every 200ms for 60s max
         for (let i = 0; i < 300; i++) {
             await new Promise(r => setTimeout(r, 200));
             if (await ping()) {
@@ -229,11 +229,11 @@ async function ensureServer(): Promise<boolean> {
 }
 
 async function api(endpoint: string, body?: object, timeoutMs = 15000): Promise<any> {
-    // FIX : timeout réduit de 90s → 15s.
-    // 90s bloquait l'UI Discord entière pendant presque 2 minutes si le ghost-server
-    // ne répondait pas (ex: yt-dlp en cours, ffmpeg qui démarre).
-    // 15s est largement suffisant pour tous les appels rapides (/connect, /join, /leave).
-    // Les appels lents (/stream-start) sont maintenant non-bloquants côté server.js.
+    // FIX: timeout reduced from 90s → 15s.
+    // 90s blocked entire Discord UI for nearly 2 minutes if ghost-server
+    // didn't respond (e.g., yt-dlp running, ffmpeg starting).
+    // 15s is plenty for fast calls (/connect, /join, /leave).
+    // Slow calls (/stream-start) are now non-blocking on server.js side.
     const ok = await ensureServer();
     if (!ok) return { ok: false, error: "ghost-server introuvable ou timeout" };
 
@@ -257,7 +257,7 @@ async function api(endpoint: string, body?: object, timeoutMs = 15000): Promise<
                 catch { resolve({ ok: false, error: "Invalid JSON" }); }
             });
         });
-        // FIX : timeout de 15s au lieu de 90s — évite de geler l'UI Discord
+        // FIX: 15s timeout instead of 90s — avoids freezing Discord UI
         req.setTimeout(timeoutMs, () => { req.destroy(); reject(new Error(`Timeout ${timeoutMs / 1000}s`)); });
         req.on("error", reject);
         if (data) req.write(data);
@@ -266,11 +266,11 @@ async function api(endpoint: string, body?: object, timeoutMs = 15000): Promise<
 }
 
 export async function listAudioInputDevices(_: any): Promise<{ label: string; dshowName: string; }[]> {
-    // FIX : on essaie le ghost-server D'ABORD (rapide, < 1s si dispo).
-    // Avant ce fix, si le ghost-server n'était pas prêt, on spawnait ffmpeg directement
-    // sur le main process Electron avec un timeout de 8s — ce qui freezait l'UI Discord
-    // pendant 8 secondes et expliquait le "ça charge longtemps" sur le sélecteur d'écran.
-    // Maintenant : ghost-server en 1s → fallback ffmpeg en 5s max (réduit de 8s).
+    // FIX: try ghost-server FIRST (fast, < 1s if available).
+    // Before this fix, if ghost-server wasn't ready, we spawned ffmpeg directly
+    // on Electron main process with an 8s timeout — freezing Discord UI
+    // for 8 seconds and explaining the "long loading" on screen selector.
+    // Now: ghost-server in 1s → ffmpeg fallback in 5s max (reduced from 8s).
     try {
         const ok = await Promise.race([
             ping(),
@@ -285,13 +285,13 @@ export async function listAudioInputDevices(_: any): Promise<{ label: string; ds
         }
     } catch { }
 
-    // Fallback ffmpeg direct — timeout réduit à 5s (au lieu de 8s)
+    // Direct ffmpeg fallback — timeout reduced to 5s (instead of 8s)
     return new Promise(resolve => {
         const ghostServerNodeModules = path.join(process.resourcesPath ?? "", "ghost-server", "node_modules");
         const ffmpegCandidates = [
             path.join(path.dirname(process.execPath), "ffmpeg.exe"),
             path.join(process.resourcesPath ?? "", "..", "ffmpeg.exe"),
-            // Bundled via node-av dans ghost-server/node_modules (déjà dans l'installer)
+            // Bundled via node-av in ghost-server/node_modules (already in installer)
             path.join(ghostServerNodeModules, "node-av", "binary", "ffmpeg.exe"),
             path.join(ghostServerNodeModules, "node_modules", "node-av", "binary", "ffmpeg.exe"),
             "ffmpeg",
@@ -311,8 +311,8 @@ export async function listAudioInputDevices(_: any): Promise<{ label: string; ds
             proc.stdout?.on("data", (d: Buffer) => chunks.push(d));
 
             proc.on("exit", () => {
-                // Décode UTF-8, fallback latin1 si caractères de remplacement
-                // (ffmpeg Windows utilise le codepage système, pas UTF-8)
+                // Decode UTF-8, fallback latin1 if replacement characters
+                // (Windows ffmpeg uses system codepage, not UTF-8)
                 const raw = Buffer.concat(chunks);
                 let out = raw.toString("utf8");
                 if (out.includes("\ufffd")) out = raw.toString("latin1");
@@ -329,7 +329,7 @@ export async function listAudioInputDevices(_: any): Promise<{ label: string; ds
             });
 
             proc.on("error", () => resolve([]));
-            // FIX : timeout réduit à 5s (au lieu de 8s) — réduit le freeze UI de 37%
+            // FIX: timeout reduced to 5s (instead of 8s) — reduces UI freeze by 37%
             setTimeout(() => { try { proc.kill(); } catch { } resolve([]); }, 5000);
         } catch { resolve([]); }
     });
@@ -338,8 +338,8 @@ export async function listAudioInputDevices(_: any): Promise<{ label: string; ds
 export async function connectGhost(
     _: any, userId: string, token: string, guildId: string, channelId: string, micDevice: string,
 ): Promise<{ ok: boolean; error?: string; }> {
-    // Le ghost-server attend DVS en interne (jusqu'à 60s) + login (20s) + joinVoice
-    // Timeout HTTP de 120s pour couvrir le pire cas sans stacker waitForDVS
+    // ghost-server awaits DVS internally (up to 60s) + login (20s) + joinVoice
+    // 120s HTTP timeout to cover worst case without stacking waitForDVS
     try { return await api("/connect", { userId, token, guildId, channelId, micDevice }, 120000); }
     catch (e: any) { return { ok: false, error: e?.message ?? String(e) }; }
 }

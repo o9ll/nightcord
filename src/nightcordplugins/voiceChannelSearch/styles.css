@@ -247,9 +247,9 @@
     opacity: .85;
 }
 
-/* ── Sidebar Discord : effets visuels canaux ───────────────────────────── */
+/* ── Discord Sidebar: channel visual effects ───────────────────────────── */
 
-/* Supprime les icônes cadenas sur les canaux sans accès */
+/* Remove lock icons on inaccessible channels */
 [class*="locked"] [class*="lockIcon"],
 [class*="locked"] [class*="lock-"],
 [class*="locked"] svg[class*="lock"],
@@ -258,14 +258,14 @@
     display: none !important;
 }
 
-/* Retire l'opacité réduite sur les canaux verrouillés */
+/* Remove reduced opacity on locked channels */
 [class*="wrapper"][class*="locked"],
 [class*="container"][class*="locked"],
 [class*="channel"][class*="locked"] {
     opacity: 1 !important;
 }
 
-/* Nom du canal verrouillé = même couleur que les normaux */
+/* Locked channel name = same color as normal ones */
 [class*="locked"] [class*="name"],
 [class*="locked"] [class*="channelName"] {
     opacity: 1 !important;

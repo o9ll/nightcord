@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-// Les patches HeaderBarAPI sont dans src/plugins/_api/headerBar.ts
-// Ce fichier existe uniquement pour satisfaire le système de build d'equicordplugins/_api
+// HeaderBarAPI patches are in src/plugins/_api/headerBar.ts
+// This file exists solely to satisfy equicordplugins/_api build system
 
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";

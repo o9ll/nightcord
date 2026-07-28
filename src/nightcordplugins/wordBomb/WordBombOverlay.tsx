@@ -265,14 +265,14 @@ export function WordBombOverlay() {
             if (wbNative?.sequence) {
                 await wbNative.sequence(word, lps, humanChance, -1, -1);
             } else {
-                // Fallback ComponentDispatch : tape lettre par lettre puis SUBMIT (Entrée)
+                // Fallback ComponentDispatch: type letter by letter then SUBMIT (Enter)
                 if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
                 const delay = Math.round(1000 / lps);
                 for (const char of word) {
                     ComponentDispatch?.dispatchToLastSubscribed("INSERT_TEXT", { rawText: char, plainText: char });
                     await new Promise(r => setTimeout(r, delay));
                 }
-                // Entrée pour valider le mot
+                // Enter to validate the word
                 await new Promise(r => setTimeout(r, 50));
                 ComponentDispatch?.dispatchToLastSubscribed("SUBMIT", {});
             }

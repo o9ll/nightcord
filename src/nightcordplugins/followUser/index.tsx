@@ -218,7 +218,7 @@ export async function follow(userId: string) {
     resetInactivityTimer();
     notifyAll();
 
-    // Rejoindre immediatement son vocal si il est deja dans un channel
+    // Immediately join their voice channel if they are already in one
     if (followedChannel) {
         const myCh = getCurrentUserChannel();
         if (myCh !== followedChannel) {

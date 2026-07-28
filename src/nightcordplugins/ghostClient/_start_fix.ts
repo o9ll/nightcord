@@ -14,13 +14,13 @@ setTimeout(() => {
                     Native.preConnectGhost(acc.userId, acc.token, ghostMicLabel)
                         .then(r => console.log("[GhostClient] Pré-connecté:", acc.username, r?.ok))
                         .catch(() => { });
-                    // FIX CRASH SCROLL DM: délai augmenté de 800ms → 2000ms
-                    // La pré-connexion de masse (20+ comptes × 800ms) saturait le renderer
-                    // pendant exactement la fenêtre où l'utilisateur scrolle dans ses DMs.
-                    // Chaque preConnectGhost déclenche des events IPC qui forcent des re-renders
-                    // React → removeChild crash sur la liste virtualisée des DMs.
-                    // 2000ms entre chaque connexion espace suffisamment la charge.
+                    // FIX CRASH SCROLL DM: delay increased from 800ms → 2000ms
+                    // Mass pre-connection (20+ accounts × 800ms) saturated the renderer
+                    // during exactly the window when the user scrolls through their DMs.
+                    // Each preConnectGhost triggers IPC events that force React re-renders
+                    // → removeChild crash on the virtualized DM list.
+                    // 2000ms between each connection spaces out the load sufficiently.
                     await new Promise(r => setTimeout(r, 2000));
                 }
             })();
-        }, 30000); // FIX: délai initial 10s → 30s pour laisser l'UI se stabiliser au démarrage
+        }, 30000); // FIX: initial delay 10s → 30s to let UI stabilize on startup

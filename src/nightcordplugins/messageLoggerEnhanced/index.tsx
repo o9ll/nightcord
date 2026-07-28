@@ -258,10 +258,10 @@ async function processMessageFetch(response: FetchMessagesResponse) {
     }
 }
 
-// Guard: vérifie qu'un élément est bien un objet Message complet.
-// Discord peut inclure des snowflakes bruts (strings/numbers) dans payload.messages
-// pour représenter des messages en lazy-loading non encore chargés.
-// Faire `'flags' in primitive` provoque un TypeError immédiat dans _handleLoadMessagesSuccess.
+// Guard: checks if an element is a complete Message object.
+// Discord can include raw snowflakes (strings/numbers) in payload.messages
+// to represent lazily loaded messages not yet loaded.
+// Doing `'flags' in primitive` causes an immediate TypeError in _handleLoadMessagesSuccess.
 function isMessageObject(m: unknown): m is LoggedMessageJSON {
     return m !== null && typeof m === "object" && typeof (m as any).id === "string";
 }
@@ -405,7 +405,7 @@ export default definePlugin({
     async start() {
         this.oldGetMessage = oldGetMessage = MessageStore.getMessage;
 
-        // Cache pour éviter de recréer les classes de messages à chaque appel (très fréquent au scroll)
+        // Cache to avoid recreating message classes on every call (very frequent on scroll)
         const combinedMessageCache = new Map<string, any>();
 
         MessageStore.getMessage = (channelId: string, messageId: string) => {

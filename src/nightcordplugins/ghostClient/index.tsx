@@ -100,19 +100,19 @@ async function fetchUser(token: string) {
 }
 
 async function getAllSavedAccounts(): Promise<GhostAccount[]> {
-    // 1. Récupérer les comptes propres à GhostAccounts
+    // 1. Retrieve accounts specific to GhostAccounts
     const ghostAccs = await DataStore.get<GhostAccount[]>(DS_KEY_TOKENS) ?? [];
 
-    // 2. Récupérer les comptes de TokenImporter
+    // 2. Retrieve accounts from TokenImporter
     const tiAccsRaw = await DataStore.get<any[]>(TI_ACCOUNTS_KEY) ?? [];
     const tiAccs: GhostAccount[] = tiAccsRaw.map(a => ({
         token: a.token,
         userId: a.id,
         username: a.username,
-        avatar: a.avatar ? a.avatar.split("/").pop()?.split(".")[0] || null : null // On extrait le hash de l'avatar
+        avatar: a.avatar ? a.avatar.split("/").pop()?.split(".")[0] || null : null // Extract avatar hash
     }));
 
-    // 3. Fusionner les deux listes sans doublons (basé sur userId)
+    // 3. Merge both lists without duplicates (based on userId)
     const combined = new Map<string, GhostAccount>();
     tiAccs.forEach(a => combined.set(a.userId, a));
     ghostAccs.forEach(a => combined.set(a.userId, a));
@@ -128,7 +128,7 @@ async function ghostActivate(account: GhostAccount) {
     notify();
     const vs = getMyVoiceState();
     try {
-        // Ajout d'un court délai pour éviter les collisions lors d'activations massives
+        // Add short delay to avoid collisions during massive activations
         await new Promise(r => setTimeout(r, 100));
         const result = await Native.connectGhost(account.userId, account.token, vs?.guildId ?? "", vs?.channelId ?? "", ghostMicLabel);
         if (!result.ok) {
@@ -148,24 +148,24 @@ async function ghostActivate(account: GhostAccount) {
 async function ghostDeactivate(userId: string) {
     ghostStates.delete(userId);
     notify();
-    // On ne l'attend pas pour ne pas bloquer l'UI
+    // Do not await to avoid blocking UI
     Native.leaveVoice(userId).catch(() => { });
 }
 
 async function ghostDeactivateAll() {
     const ids = Array.from(ghostStates.keys());
-    // On vide l'état local IMMÉDIATEMENT pour que l'UI soit propre
+    // Clear local state immediately for a clean UI
     ghostStates.clear();
     notify();
 
-    // Déconnexion propre par vagues pour ne pas surcharger le ghost-server
+    // Clean disconnection in waves to avoid overloading ghost-server
     (async () => {
         for (let i = 0; i < ids.length; i++) {
             Native.leaveVoice(ids[i]).catch(() => { });
-            // Délai progressif : plus il y a de comptes, plus on espace pour laisser respirer le serveur
+            // Progressive delay: more accounts means more spacing to let the server breathe
             if (i % 3 === 0) await new Promise(r => setTimeout(r, 150));
         }
-        // Appel final de sécurité pour s'assurer que TOUT est coupé côté serveur
+        // Final safety call to ensure EVERYTHING is stopped server-side
         Native.leaveVoiceAll(ids).catch(() => { });
     })();
 }
@@ -240,14 +240,14 @@ function Dropdown({ icon, label, value, options, onChange }: {
     useEffect(() => {
         const h = (e: MouseEvent) => {
             const t = e.target as HTMLElement;
-            // Sécurité : on vérifie si l'élément existe toujours avant de vérifier ses classes
+            // Safety: verify element still exists before checking its classes
             if (!t || !document.body.contains(t)) return;
             if (!t.closest(".gc-dropdown-wrap") && !t.closest(".gc-dropdown-list")) {
                 setOpen(false);
             }
         };
         if (open) {
-            // Utilisation d'un timeout pour éviter le déclenchement immédiat sur le clic d'ouverture
+            // Use timeout to prevent immediate triggering on open click
             const timer = setTimeout(() => document.addEventListener("mousedown", h), 10);
             return () => { clearTimeout(timer); document.removeEventListener("mousedown", h); };
         }
@@ -258,7 +258,7 @@ function Dropdown({ icon, label, value, options, onChange }: {
         e.stopPropagation();
         if (!btnRef.current) { setOpen(v => !v); return; }
         const rect = btnRef.current.getBoundingClientRect();
-        // ... (suite du code inchangée)
+        // ... (rest of code unchanged)
         const listH = Math.min(200, options.length * 40);
         const spaceBelow = window.innerHeight - rect.bottom - 8;
         const spaceAbove = rect.top - 8;
@@ -303,10 +303,10 @@ function Dropdown({ icon, label, value, options, onChange }: {
     );
 }
 
-// FIX streaming infini : hook de polling /stream-status
-// /stream-start répond maintenant immédiatement (resolving: true).
-// Ce hook polle l'état toutes les 800ms jusqu'à ce que le stream soit active ou en error.
-// L'UI affiche un message de progression en temps réel sans jamais bloquer.
+// FIX infinite streaming: /stream-status polling hook
+// /stream-start now responds immediately (resolving: true).
+// This hook polls state every 800ms until stream is active or in error.
+// UI displays real-time progress message without blocking.
 function useStreamPoller(userId: string | null, active: boolean) {
     const [status, setStatus] = useState<string | null>(null);
     const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -335,11 +335,11 @@ function useStreamPoller(userId: string | null, active: boolean) {
                     setStatus("❌ Error: " + (d.error ?? "inconnue"));
                     if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
                 } else if (d.state === "idle") {
-                    // Stream terminé
+                    // Stream finished
                     if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
                 }
             } catch {
-                // ghost-server temp unavailable — on continue à poller
+                // ghost-server temp unavailable — continue polling
             }
         }, 800);
 
@@ -362,14 +362,14 @@ function GhostPopover({ onClose, anchorRect }: { onClose: () => void; anchorRect
     const [streamingUserId, setStreamingUserId] = useState<string | null>(null);
     const [streamInput, setStreamInput] = useState("");
     const [isPolling, setIsPolling] = useState(false);
-    // FIX : streamStatus et polling séparés — setStreamStatus peut écrire un message instantané,
-    // le polling prend le relais une fois que /stream-start a répondu
+    // FIX: streamStatus and polling separated — setStreamStatus can write an instant message,
+    // polling takes over once /stream-start has responded
     const [streamStatus, setStreamStatusDirect] = useState<string | null>(null);
     const [pollStatus, setPollStatus] = useStreamPoller(streamingUserId, isPolling);
     const states = useGhostStates();
     const popoverRef = useRef<HTMLDivElement>(null);
 
-    // Le status affiché est soit le direct (pendant la requête initiale) soit le poll
+    // Displayed status is either direct (during initial request) or poll
     const displayStatus = isPolling ? pollStatus : streamStatus;
 
     function setStreamStatus(msg: string | null) {
@@ -393,7 +393,7 @@ function GhostPopover({ onClose, anchorRect }: { onClose: () => void; anchorRect
     useEffect(() => {
         getAllSavedAccounts().then(v => { setAccounts(v); savedAccounts = v; });
 
-        // Auto-follow activé par défaut (true si pas encore de valeur dans le DataStore)
+        // Auto-follow enabled by default (true if no value in DataStore yet)
         DataStore.get(DS_KEY_AUTO_FOLLOW).then((v: boolean | null) => {
             const shouldFollow = v ?? true;
             setAutoFollowState(shouldFollow);
@@ -402,14 +402,14 @@ function GhostPopover({ onClose, anchorRect }: { onClose: () => void; anchorRect
 
         DataStore.get(DS_KEY_SELECTED).then((v: string | null) => { if (v) setSelectedId(v); });
 
-        // Auto-sélection intelligente du câble virtuel au TOUT PREMIER lancement
+        // Smart auto-selection of virtual cable on VERY FIRST launch
         Native.listAudioInputDevices().catch(() => []).then(async (devs: any[]) => {
             const names = (devs as any[])?.map((d: any) => d.dshowName ?? d.name ?? d.label ?? "").filter(Boolean) ?? [];
             if (names.length) {
                 setDshowDevices(names);
 
                 const savedMic = await DataStore.get(DS_KEY_MIC_DEVICE);
-                // Si l'utilisateur n'a JAMAIS choisi de micro (première fois)
+                // If user has NEVER chosen a mic (first time)
                 if (savedMic === null || savedMic === undefined) {
                     const virtualMic = names.find(n =>
                         n.toLowerCase().includes("cable output") ||
@@ -422,7 +422,7 @@ function GhostPopover({ onClose, anchorRect }: { onClose: () => void; anchorRect
                         console.log("[GhostClient] Premier lancement : Câble virtuel détecté et sélectionné par défaut.");
                     }
                 } else {
-                    // Sinon on respecte scrupuleusement le choix de l'utilisateur
+                    // Otherwise scrupulously respect user choice
                     setMicLabel(savedMic as string);
                     ghostMicLabel = savedMic as string;
                     console.log("[GhostClient] Chargement du micro préféré de l'utilisateur :", savedMic);
@@ -460,9 +460,9 @@ function GhostPopover({ onClose, anchorRect }: { onClose: () => void; anchorRect
         if (v) startFollowing(); else stopFollowing();
     }
 
-    // FIX streaming infini : startStream envoie /stream-start et revient IMMÉDIATEMENT.
-    // Le serveur répond { ok: true, resolving: true } en < 5ms.
-    // Le polling useStreamPoller prend le relais et affiche la progression.
+    // FIX infinite streaming: startStream sends /stream-start and returns IMMEDIATELY.
+    // Server responds { ok: true, resolving: true } in < 5ms.
+    // useStreamPoller polling takes over and displays progress.
     async function startStream(url: string, userId: string) {
         if (!url.trim()) return;
         setStreamStatus("Sending request...");
@@ -472,15 +472,15 @@ function GhostPopover({ onClose, anchorRect }: { onClose: () => void; anchorRect
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId, url: url.trim() }),
-                signal: AbortSignal.timeout(5000), // timeout court — le serveur répond maintenant immédiatement
+                signal: AbortSignal.timeout(5000), // short timeout — server now responds immediately
             });
             const d = await r.json();
             if (!d.ok) {
                 setStreamStatus("❌ Error: " + (d.error ?? "inconnue"));
                 setIsPolling(false);
             } else {
-                // Le serveur a accepté la requête et traite en arrière-plan
-                // On passe en mode polling pour suivre l'état
+                // Server accepted request and is processing in background
+                // Switch to polling mode to track state
                 setStreamStatusDirect(null);
                 setIsPolling(true);
             }
@@ -671,12 +671,12 @@ const GhostUserAreaButton: UserAreaButtonFactory = ({ iconForeground, hideToolti
     }, [showPopover]);
 
     async function handleLeftClick() {
-        // On récupère TOUS les comptes (Native + Imported) pour le clic gauche
+        // Retrieve ALL accounts (Native + Imported) for left-click
         const storedAccounts = await getAllSavedAccounts();
         const storedSelected = await DataStore.get(DS_KEY_SELECTED) as string | null ?? "all";
         const myId = getMyId();
 
-        // On filtre TOUJOURS notre propre compte pour éviter les déconnexions
+        // ALWAYS filter out our own account to prevent disconnections
         const filteredAccounts = storedAccounts.filter(a => a.userId !== myId);
         const targets = storedSelected === "all" ? filteredAccounts : filteredAccounts.filter(a => a.userId === storedSelected);
 

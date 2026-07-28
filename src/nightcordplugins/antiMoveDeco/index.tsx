@@ -24,12 +24,12 @@ function onVoiceStateUpdate({ voiceStates }: { voiceStates: any[]; }) {
     if (!currentUser) return;
     const myId = currentUser.id;
 
-    // Chercher si mon état a changé dans cet update
+    // Check if my status has changed in this update
     const myState = voiceStates.find(s => s.userId === myId);
 
-    // Si on a un update me concernant
+    // If we have an update concerning me
     if (myState) {
-        // Si le nouveau channelId est différent de celui qu'on protège (ou null si déco)
+        // If the new channelId is different from the one being protected (or null if deco)
         if (myState.channelId !== targetChannelId) {
             setTimeout(() => {
                 if (enabled && targetChannelId) {
@@ -43,7 +43,7 @@ function onVoiceStateUpdate({ voiceStates }: { voiceStates: any[]; }) {
 }
 
 function AntiMoveDecoIcon({ enabled }: { enabled: boolean; }) {
-    const color = enabled ? "#39FF14" : "currentColor"; // Vert fluo si activé
+    const color = enabled ? "#39FF14" : "currentColor"; // Neon green if activated
     return (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2.5" />
@@ -59,7 +59,7 @@ function AntiMoveDecoButton() {
         if (!enabled) {
             const channelId = SelectedChannelStore?.getVoiceChannelId?.();
             if (!channelId) {
-                // Pas en vocal, on ne peut pas activer
+                // Not in voice, we cannot activate
                 return;
             }
             targetChannelId = channelId;

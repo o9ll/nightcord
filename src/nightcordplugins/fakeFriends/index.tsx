@@ -895,10 +895,10 @@ export default definePlugin({
         addContextMenuPatch("user-context", userContextPatch);
         addContextMenuPatch("guild-context", guildContextPatch);
 
-        // Charger l'état persistant puis réappliquer les dispatches
+        // Load persistent state then reapply dispatches
         await loadState();
         if (fakeState.size > 0) {
-            // Délai pour laisser Discord se charger complètement
+            // Delay to let Discord load completely
             setTimeout(() => reapplyFakeStates(), 3000);
         }
     },
@@ -907,8 +907,8 @@ export default definePlugin({
         removeContextMenuPatch("user-context", userContextPatch);
         removeContextMenuPatch("guild-context", guildContextPatch);
         unpatchAcceptFriend();
-        // On ne clear pas fakeState au stop — persistant intentionnellement
-        // Pour reset : clic Reset dans le plugin ou "Remove fake friend requests"
+        // Do not clear fakeState on stop — intentionally persistent
+        // To reset: click Reset in plugin or "Remove fake friend requests"
         unpatchStore();
         unpatchChannelStore();
     },

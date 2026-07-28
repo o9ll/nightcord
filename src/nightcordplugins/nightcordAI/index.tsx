@@ -129,7 +129,7 @@ async function callUser(userId: string): Promise<void> {
     await new Promise(r => setTimeout(r, 400));
     const channelId = await getDMChannelId(userId);
 
-    // Méthode 1 : startCall via CallActionsLazy
+    // Method 1: startCall via CallActionsLazy
     try {
         if (typeof CallActionsLazy?.startCall === "function") {
             CallActionsLazy.startCall({ channelId });
@@ -137,7 +137,7 @@ async function callUser(userId: string): Promise<void> {
         }
     } catch (_) { /* */ }
 
-    // Méthode 2 : CALL_CONNECT dispatch (démarre un appel sur un canal DM existant)
+    // Method 2: CALL_CONNECT dispatch (starts a call on an existing DM channel)
     try {
         FluxDispatcher?.dispatch({
             type: "CALL_CONNECT",
@@ -147,7 +147,7 @@ async function callUser(userId: string): Promise<void> {
         return;
     } catch (_) { /* */ }
 
-    // Méthode 3 : naviguer vers le canal DM et dispatcher RING
+    // Method 3: navigate to DM channel and dispatch RING
     FluxDispatcher?.dispatch({
         type: "CALL_CREATE",
         channelId,
@@ -158,18 +158,18 @@ async function callUser(userId: string): Promise<void> {
 
 function joinVoiceChannel(name: string): void {
     const query = name.toLowerCase().trim();
-    // Extraire uniquement les chiffres/mots du nom (ignorer le serveur mentionné)
-    // ex: "222 sur shibuya" → on cherche juste "222"
+    // Extract only numbers/words from name (ignore mentioned server)
+    // ex: "222 sur shibuya" → we just look for "222"
     const queryWords = query.split(/\s+(?:sur|in|on|dans|du|de|le|la|les)\s+/)[0].trim();
 
     function matchesChannel(channelName: string): boolean {
         const cn = channelName.toLowerCase();
         return cn.includes(queryWords) || cn.includes(query) ||
-            // Match partiel : chaque mot du query dans le nom
+            // Partial match: every word of query in name
             queryWords.split(/\s+/).every(w => cn.includes(w));
     }
 
-    // Chercher dans tous les guilds via GuildStore
+    // Search across all guilds via GuildStore
     try {
         const guildIds: string[] = GuildStore.getGuildIds?.() ?? [];
         for (const guildId of guildIds) {
@@ -196,7 +196,7 @@ function joinVoiceChannel(name: string): void {
     const match = allChannels.find((c: any) => c?.type === 2 && matchesChannel(c.name ?? ""));
     if (match) { VoiceActions.selectVoiceChannel(match.id); return; }
 
-    // Lister les salons disponibles dans l'error pour débugger
+    // List available channels in error for debugging
     const voiceList = allChannels
         .filter((c: any) => c?.type === 2)
         .map((c: any) => c.name)
@@ -205,7 +205,7 @@ function joinVoiceChannel(name: string): void {
     throw new Error(`Voice channel "${queryWords}" not found. Available channels: ${voiceList || "none"}`);
 }
 
-// detectAction est maintenant fusionné dans callAI pour économiser une requête API
+// detectAction is now merged into callAI to save an API request
 
 async function executeAction(action: DiscordAction): Promise<string> {
     const friend = action.target ? findFriend(action.target) : null;
@@ -223,7 +223,7 @@ async function executeAction(action: DiscordAction): Promise<string> {
     } catch (e: any) { return `❌ ${e.message}`; }
 }
 
-// Convertit un message en format API Groq
+// Convert message to Groq API format
 function toApiMsg(m: Message) {
     const atts = m.attachments ?? [];
     const images = atts.filter(a => a.mimeType.startsWith("image/"));
@@ -258,7 +258,7 @@ async function callAI(messages: Message[]): Promise<string> {
 
     // Groq uniquement via groqManager (rotation + anti rate-limit)
     const forceModel = hasImages
-        ? "meta-llama/llama-4-scout-17b-16e-instruct" // modèle vision
+        ? "meta-llama/llama-4-scout-17b-16e-instruct" // vision model
         : settings.store.model?.trim() || undefined;
 
     return groqChat({
@@ -272,7 +272,7 @@ async function callAI(messages: Message[]): Promise<string> {
     });
 }
 
-// ── Markdown léger ─────────────────────────────────────────────────────────────
+// ── Lightweight markdown ─────────────────────────────────────────────────────────────
 
 function renderMarkdown(text: string): React.ReactNode {
     const nodes: React.ReactNode[] = [];
@@ -337,7 +337,7 @@ function NightcordAIChat({ rootProps, panelMode, initialMessage }: { rootProps?:
     useEffect(() => {
         if (initialMessage && !didAutoSend.current) {
             didAutoSend.current = true;
-            // Court délai pour que le composant soit monté
+            // Short delay for component to mount
             setTimeout(() => send(initialMessage), 120);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -404,11 +404,11 @@ function NightcordAIChat({ rootProps, panelMode, initialMessage }: { rootProps?:
             const apiKey = settings.store.apiKey?.trim() ?? "";
             const provider = settings.store.provider ?? "groq";
 
-            // Détecte les actions Discord ET génère la réponse en 1 seul appel
-            // (au lieu de 2 appels séparés comme avant — économie de 50% du quota)
+            // Detects Discord actions AND generates response in a single call
+            // (instead of 2 separate calls as before — saving 50% quota)
             let reply: string;
             const lowerText = text.toLowerCase();
-            // Détection large — abréviations, typos, formulations françaises courantes
+            // Broad detection — abbreviations, typos, common phrasings
             const isDiscordAction = text && (
                 // Envoyer message
                 lowerText.includes("envoie") || lowerText.includes("envoyer") ||
@@ -649,7 +649,7 @@ Rules:
                     </div>
                 )}
                 <div className={`nai-input-box${loading || !hasKey ? " nai-input-box--disabled" : ""}`}>
-                    {/* Input file caché */}
+                    {/* Hidden file input */}
                     <input
                         ref={fileInputRef}
                         type="file"
@@ -658,7 +658,7 @@ Rules:
                         style={{ display: "none" }}
                         onChange={e => { if (e.target.files) addFiles(e.target.files); e.target.value = ""; }}
                     />
-                    {/* Bouton trombone */}
+                    {/* Attachment button */}
                     <button
                         className="nai-attach-btn"
                         onClick={() => fileInputRef.current?.click()}
@@ -705,13 +705,13 @@ Rules:
     );
 }
 
-// ── Panneau latéral (mode page) ────────────────────────────────────────────────
+// ── Side panel (page mode) ────────────────────────────────────────────────
 
 export function NightcordAIPanel() {
     return <NightcordAIChat panelMode={true} />;
 }
 
-// ── Bouton Nightcord AI dans le panneau DM (remplace Boutique) ─────────────────
+// ── Nightcord AI button in DM panel (replaces Shop) ─────────────────
 
 function NightcordAINavButton({ selected }: { selected?: boolean; }) {
     const handleClick = () => openModal(p => <NightcordAIChat rootProps={p} />);
@@ -782,11 +782,11 @@ export default definePlugin({
             ]
         },
         {
-            // Patch 2 : Injecter le bouton NightcordAI dans la barre latérale DM (Ancien système réactivé avec correctif de version)
+            // Patch 2: Inject NightcordAI button into DM sidebar (Old system reactivated with version fix)
             find: ".FRIENDS},\"friends\"",
             replacement: {
-                // On cible l'injection du bouton Boutique (Shop) dans le composant Sidebar
-                // Le match $1 capture l'expression de sélection (selected: ...)
+                // Target Shop button injection in Sidebar component
+                // Match $1 captures selection expression (selected: ...)
                 match: /\(0,\i\.jsx\)\(\i\.\i,\{selected:(\i===\i\.BVt\.COLLECTIBLES_SHOP).{0,400}?\},"discord-shop"\)/,
                 replace: "$self.renderNavButton($1)"
             }
@@ -794,7 +794,7 @@ export default definePlugin({
     ],
 
     start() {
-        // Migration automatique : copier la clé Settings → DataStore la première fois
+        // Automatic migration: copy Settings key → DataStore the first time
         const keyFromSettings = settings.store.apiKey?.trim();
         if (keyFromSettings) {
             getGroqKey().then(stored => {
@@ -804,7 +804,7 @@ export default definePlugin({
             });
         }
 
-        // Système de secours DOM si le patch Webpack échoue sur cette version de Discord
+        // DOM fallback system if Webpack patch fails on this version of Discord
         const findShopNavItem = (): HTMLElement | null => {
             const shop: HTMLElement | null =
                 document.querySelector('[data-list-item-id="private-channels___discord-shop"]') ??
@@ -919,7 +919,7 @@ export default definePlugin({
             const content = message?.content?.trim();
             if (!content) return;
 
-            // Insère après "copy-text"
+            // Insert after "copy-text"
             const group = findGroupChildrenByChildId("copy-text", children);
             const target = group ?? children;
             const idx = group

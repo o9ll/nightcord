@@ -212,7 +212,7 @@ function switchToQuick(token: string) {
     }
 }
 
-/** Switch pour accounts natifs sans token — utilise le mécanisme Discord natif */
+/** Switch for native accounts without token — uses native Discord mechanism */
 function switchNativeAccount(userId: string) {
     try {
         const multiAuth = findByProps("switchAccount", "loginToken") ?? findByProps("switchAccount");
@@ -220,7 +220,7 @@ function switchNativeAccount(userId: string) {
             multiAuth.switchAccount(userId);
             return;
         }
-        // Fallback : dispatch le flux event comme Discord le fait nativement
+        // Fallback: dispatch event flux as Discord does natively
         if (FluxDispatcher?.dispatch) {
             FluxDispatcher.dispatch({ type: "MULTI_ACCOUNT_SWITCH_ATTEMPT", userId });
         }
@@ -230,7 +230,7 @@ function switchNativeAccount(userId: string) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Context menu — monté dans document.body via portal pour éviter l'overflow
+// Context menu — mounted in document.body via portal to avoid overflow
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface CtxState {
@@ -253,7 +253,7 @@ function ContextMenuPortal(props: CtxMenuProps) {
     const ref = React.useRef<HTMLDivElement>(null);
     const [pos, setPos] = React.useState({ left: x, top: y });
 
-    // Crée le container portal une seule fois
+    // Create portal container only once
     const [container] = React.useState(() => {
         const el = document.getElementById("nightcord-mi-ctx-root") ?? document.createElement("div");
         el.id = "nightcord-mi-ctx-root";
@@ -261,7 +261,7 @@ function ContextMenuPortal(props: CtxMenuProps) {
         return el;
     });
 
-    // Nettoie le container à l'unmount
+    // Clean up container on unmount
     React.useEffect(() => {
         return () => {
             try { container.remove(); } catch { }
@@ -393,7 +393,7 @@ function MultiInstanceModal({ rootProps }: { rootProps: any; }) {
         if (!acc.hasToken) return;
         setCtx(null);
         setStatus(t("Opening detached instance…"));
-        // @ts-ignore - Argument 'detached' et pseudo ajoutés
+        // @ts-ignore - 'detached' argument and pseudo added
         const res = await Native.openInstanceWindow(acc.token, acc.id, true, acc.username).catch(() => ({ ok: false, error: "error" }));
         if ((res as any).ok) {
             setStatus(t("Instance opened ✓"));
@@ -547,7 +547,7 @@ function AccountAvatar({ url, name }: { url: string; name: string; }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Icônes
+// Icons
 // ─────────────────────────────────────────────────────────────────────────────
 
 function DiscordIcon() {

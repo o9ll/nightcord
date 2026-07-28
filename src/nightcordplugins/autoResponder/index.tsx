@@ -105,7 +105,7 @@ async function handleMessage(message: any) {
     const currentUser = UserStore.getCurrentUser();
     if (!currentUser || message.author.id === currentUser.id) return;
 
-    // Vérification de la blacklist utilisateurs
+    // Checking the user blacklist
     const blacklistedUsers = settings.store.blacklistedUsers?.split(",").map((id: string) => id.trim()) || [];
     if (blacklistedUsers.includes(message.author.id)) {
         return;
@@ -114,7 +114,7 @@ async function handleMessage(message: any) {
     if (message.id === lastMessageId) return;
 
     const channel = ChannelStore.getChannel(message.channel_id);
-    // RESTRICTION STRICTE : Uniquement les DMs (Type 1)
+    // STRICT RESTRICTION: Only DMs (Type 1)
     if (!channel || channel.type !== 1) return;
 
     lastMessageId = message.id;
@@ -131,7 +131,7 @@ async function handleMessage(message: any) {
                     cancelText: "Cancel",
                     onConfirm: () => {
                         const { openModal } = findByPropsLazy("openModal");
-                        // Logique pour ouvrir les settings NightcordAI si possible
+                        // Logic to open NightcordAI settings if possible
                     }
                 });
             } catch (e) {
@@ -140,7 +140,7 @@ async function handleMessage(message: any) {
             return;
         }
 
-        // Récupération de l'historique récent pour la cohérence
+        // Retrieving recent history for consistency
         let localHistory = "";
         try {
             const msgs = MessageStore.getMessages(message.channel_id).toArray().slice(-15);
@@ -185,7 +185,7 @@ Réponds de manière naturelle. NE RENVOIE QUE LE TEXTE DE TA RÉPONSE.`;
         });
 
         if (reply && !reply.startsWith("❌")) {
-            // Délai réaliste : base fixe + temps proportionnel à la longueur du message
+            // Realistic timeframe: fixed base + time proportional to message length
             const baseDelay = Math.floor(Math.random() * (settings.store.delayMax - settings.store.delayMin + 1) + settings.store.delayMin);
             const extraDelay = reply.length > 100 ? 2 : 0; // +2s si message long
             const totalDelay = (baseDelay + extraDelay) * 1000;

@@ -67,12 +67,12 @@ const DoubleCallButton: UserAreaButtonFactory = ({ iconForeground }: UserAreaRen
         const uid = getMyUserId();
 
         if (anchorState) {
-            // Désactiver : On retire uniquement le Ghost, on laisse le compte principal là où il est
+            // Disable: Remove only the Ghost, keep the principal account where it is
             try {
-                // 1. Quitter le moteur ghost uniquement
+                // 1. Leave ghost engine only
                 await Native.leaveVoice(uid);
 
-                // 2. Stopper l'audio de multi-écoute
+                // 2. Stop multi-listening audio
                 if (playback) {
                     playback.stop();
                     playback.delete();
@@ -88,7 +88,7 @@ const DoubleCallButton: UserAreaButtonFactory = ({ iconForeground }: UserAreaRen
             return;
         }
 
-        // Activer
+        // Enable
         const vs = getMyVoiceState();
         if (!vs) {
             showToast("Rejoignez d'abord une voix pour l'ancrer !");
@@ -101,7 +101,7 @@ const DoubleCallButton: UserAreaButtonFactory = ({ iconForeground }: UserAreaRen
         anchorState = { ...vs };
         await Native.connectGhost(uid, token, vs.guildId, vs.channelId, "default");
 
-        // Multi-écoute : stream WAV depuis le ghost-server
+        // Multi-listening: WAV stream from ghost-server
         if (playback) playback.delete();
         playback = createAudioPlayer(`http://127.0.0.1:47821/playback/${uid}`, {
             volume: 100,

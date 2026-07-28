@@ -1407,7 +1407,7 @@ function CustomProfileModal({ rootProps }: { rootProps: any; }) {
         } catch (e) { console.error("[CustomProfile] Failed to fetch accounts:", e); }
 
         const me = UserStore.getCurrentUser();
-        // Pour debug: si on ne trouve qu'un compte, on simule quand même pour voir si la barre s'affiche
+        // For debug: if only one account found, simulate anyway to see if bar displays
         return me ? [me, { ...me, id: "debug-placeholder", username: "Second Account?",
      globalName: "Simulation" }] : [];
     }, []);
@@ -3058,7 +3058,7 @@ export default definePlugin({
             }
         } catch { }
 
-        // Patch SnowflakeUtils.extractTimestamp pour faker la date de création
+        // Patch SnowflakeUtils.extractTimestamp to fake creation date
         try {
             if (SnowflakeUtils?.extractTimestamp && !this._origExtractTimestamp) {
                 this._origExtractTimestamp = SnowflakeUtils.extractTimestamp;
@@ -3094,7 +3094,7 @@ export default definePlugin({
             }
         });
 
-        // Patch getAvatarDecorationURL pour injecter notre déco uniquement sur notre user
+        // Patch getAvatarDecorationURL to inject our decoration only on our user
         try {
             const decoMod = (Vencord as any).Webpack?.findByProps?.("getAvatarDecorationURL");
             if (decoMod?.getAvatarDecorationURL) {

@@ -77,17 +77,17 @@ async function muteAllServers() {
         id: Toasts.genId(),
     });
 
-    // Étape 1 : Marquer tout comme lu (système Equicord)
+    // Step 1: Mark all as read (Equicord system)
     markAllAsRead();
 
-    // Étape 2 : Muter les serveurs
+    // Step 2: Mute servers
     if (guildIds.length > 0) {
         let count = 0;
         const updateSettings = findByPropsLazy("updateGuildNotificationSettings");
 
         for (const id of guildIds) {
             try {
-                // Ack individuel (sécurité)
+                // Individual ack (safety)
                 try { await RestAPI.post({ url: `/guilds/${id}/ack`, body: {} }); } catch { }
 
                 const settings = {

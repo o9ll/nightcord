@@ -253,7 +253,7 @@ export default definePlugin({
     },
 
     start() {
-        // Reset au démarrage — pas de timers persistants
+        // Reset on startup — no persistent timers
     },
 
     stop() {

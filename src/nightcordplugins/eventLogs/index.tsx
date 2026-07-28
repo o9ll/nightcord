@@ -15,7 +15,7 @@ import { ChannelStore, ContextMenuApi, FluxDispatcher, Forms, GuildStore, IconUt
 
 import { t, useTranslation } from "../autoTranslateNightcord";
 
-// Stratégie de navigation alternative via Dispatcher
+// Alternative navigation strategy via Dispatcher
 const navigateTo = (path: string) => {
     try {
         const Router = findByProps("transitionTo") || findByProps("push");
@@ -536,7 +536,7 @@ function LogsModal({ rootProps }: { rootProps: any; }) {
         return () => { updateListeners.delete(fn); };
     }, []);
 
-    // Debounce search à 200ms
+    // Debounce search to 200ms
     useEffect(() => {
         const t = setTimeout(() => { setDebouncedSearch(search); setPage(0); }, 200);
         return () => clearTimeout(t);
@@ -750,8 +750,8 @@ function subscribeToEvents() {
     });
     sub("LOAD_MESSAGES_SUCCESS", d => {
         if (!d) return;
-        // FIX CRASH DM SCROLL: isLoadingMessages bloque la purge du msgCache pendant
-        // le traitement du batch — évite un pic synchrone sur le thread principal.
+        // FIX CRASH DM SCROLL: isLoadingMessages blocks msgCache purge during
+        // batch processing — avoids synchronous spike on main thread.
         const msgs = [
             ...(Array.isArray(d.messages) ? d.messages : []),
             ...(Array.isArray(d.jump) ? d.jump : []),
@@ -760,12 +760,12 @@ function subscribeToEvents() {
         ];
         if (msgs.length === 0) return;
 
-        // requestIdleCallback est idéal pour le scan en arrière-plan sans lag
+        // requestIdleCallback is ideal for background scanning without lag
         if (typeof requestIdleCallback !== "undefined") {
             requestIdleCallback(() => {
                 isLoadingMessages = true;
                 try { for (const m of msgs) cacheMsg(m); } finally { isLoadingMessages = false; }
-                // Purge différée si le cache dépasse la limite
+                // Deferred purge if cache exceeds limit
                 pruneMsgCache();
             }, { timeout: 3000 });
         } else {
@@ -995,8 +995,8 @@ function subscribeToEvents() {
         if (changed) scheduleFlush();
     });
 
-    // Capture logout/disconnect (partiel car le plugin s'arrête si déco totale)
     sub("LOGOUT", () => { pushLog({ type: "user_disconnect", content: t("Déconnexion du account"), authorName: "System" }); });
+    // Capture logout/disconnect (partial because plugin stops on total disconnect)
 }
 
 export default definePlugin({

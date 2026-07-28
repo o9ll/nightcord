@@ -55,7 +55,7 @@ function LeaveAllServersModal({ rootProps }: { rootProps: any; }) {
         return (Object.values(raw) as GuildEntry[]).sort((a, b) => a.name.localeCompare(b.name));
     }, []);
 
-    // Exclure les serveurs owned si safeMode
+    // Exclude owned servers if safeMode
     const availableGuilds = useMemo(() =>
         settings.store.safeMode ? allGuilds.filter(g => g.ownerId !== myId) : allGuilds,
         [allGuilds, myId]
@@ -67,7 +67,7 @@ function LeaveAllServersModal({ rootProps }: { rootProps: any; }) {
         return availableGuilds.filter(g => g.name.toLowerCase().includes(q));
     }, [availableGuilds, search]);
 
-    // Sélectionner tout par défaut
+    // Select all by default
     useEffect(() => {
         setSelected(new Set(availableGuilds.map(g => g.id)));
     }, [availableGuilds]);

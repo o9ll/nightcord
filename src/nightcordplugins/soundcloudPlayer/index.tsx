@@ -276,7 +276,7 @@ function fmtDuration(ms: number): string {
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-// ─── Player singleton (persiste après fermeture de la modal) ─────────────────
+// ─── Player singleton (persists after modal closes) ─────────────────
 
 type PlayerListener = () => void;
 
@@ -372,14 +372,14 @@ async function playerPlayTrack(track: ScTrack, fromFavIdx = -1, seekPos = 0) {
     s.notify();
 
     try {
-        // Rafraîchir les données de la piste pour éviter les 404 (liens expirés)
+        // Refresh track data to avoid 404s (expired links)
         const freshTrack = await refreshTrackData(track, s.clientId);
         s.playing = freshTrack;
 
         const mp3Url = await getStreamUrl(freshTrack, s.clientId);
         const audio = new Audio();
 
-        // Nettoyage de l'ancienne instance
+        // Clean up old instance
         if (s.audio) {
             s.audio.pause();
             s.audio.src = "";
@@ -538,16 +538,16 @@ function SoundCloudModal({ onClose }: { onClose: () => void; }) {
     useEffect(() => {
         const load = async () => {
             try {
-                // FIX: MediaEngineStore.getOutputDevices() retourne les IDs internes Discord,
-                // PAS les vrais deviceId WebAudio requis par setSinkId().
-                // On utilise navigator.mediaDevices.enumerateDevices() pour avoir les vrais deviceId.
+                // FIX: MediaEngineStore.getOutputDevices() returns internal Discord IDs,
+                // NOT the real WebAudio deviceIds required by setSinkId().
+                // Use navigator.mediaDevices.enumerateDevices() to get real deviceIds.
                 let devices = await navigator.mediaDevices.enumerateDevices();
                 const outputs = devices.filter(d => d.kind === "audiooutput");
 
-                // Si les labels sont vides (permission pas encore accordée), on essaie de les obtenir
+                // If labels are empty (permission not granted yet), try to get them
                 if (outputs.some(d => !d.label)) {
                     try {
-                        // Demander accès micro déclenche la permission pour lister les outputs aussi
+                        // Requesting mic access triggers permission to list outputs as well
                         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                         stream.getTracks().forEach(t => t.stop());
                         devices = await navigator.mediaDevices.enumerateDevices();

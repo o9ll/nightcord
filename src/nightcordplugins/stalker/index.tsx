@@ -74,7 +74,7 @@ async function getLogsFromFile(userId: string, username: string): Promise<Stalke
         const parsed = JSON.parse(fileContents);
         return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
-        // Se il JSON è corrotto, logga l'errore e parti da zero invece di perdere silenziosamente i dati
+        // If JSON is corrupted, log error and start from scratch instead of silently losing data
         logger.error(`Failed to parse stalker log for user ${userId}, starting fresh:`, error);
         return [];
     }
@@ -82,7 +82,7 @@ async function getLogsFromFile(userId: string, username: string): Promise<Stalke
 
 function getCacheForUser(userId: string): UserLogCache | undefined {
     const cache = cachedLogsPerUser.get(userId);
-    // Invalida la cache se il giorno è cambiato
+    // Invalidate cache if day has changed
     if (cache && cache.date !== getTodayDate()) {
         cachedLogsPerUser.delete(userId);
         return undefined;

@@ -43,20 +43,20 @@ async function netGet(url: string, headers?: Record<string, string>): Promise<st
     return resp.text();
 }
 
-// ─── Fetch dynamique du client_id SoundCloud ─────────────────────────────────
-// Même logique que sc_fetch_client_id / sc_parse_js_for_clientid en C :
-//   Étape 1 : GET soundcloud.com → extraire les <script src="...">
-//   Étape 2 : GET le dernier bundle JS → chercher client_id:"XXXXXXXX"
+// ─── Dynamic fetch of SoundCloud client_id ─────────────────────────────────
+// Same logic as sc_fetch_client_id / sc_parse_js_for_clientid in C:
+//   Step 1: GET soundcloud.com → extract <script src="...">
+//   Step 2: GET latest JS bundle → search client_id:"XXXXXXXX"
 
 export async function fetchSoundCloudClientId(_?: any): Promise<string | null> {
     try {
-        // Étape 1 : charger soundcloud.com
+        // Step 1: load soundcloud.com
         const html = await netGet("https://soundcloud.com/", {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.5",
         });
 
-        // Extraire les URLs des bundles JS
+        // Extract JS bundle URLs
         const scriptUrls: string[] = [];
         const re = /<script[^>]+src="(https:\/\/[^"]+\.js[^"]*)"[^>]*>/g;
         let m: RegExpExecArray | null;
@@ -68,12 +68,12 @@ export async function fetchSoundCloudClientId(_?: any): Promise<string | null> {
 
         if (scriptUrls.length === 0) return null;
 
-        // Étape 2 : tester les bundles JS (on cherche dans les plus récents)
+        // Step 2: test JS bundles (search in most recent ones)
         for (const jsUrl of scriptUrls.slice(-5).reverse()) {
             try {
                 const js = await netGet(jsUrl);
 
-                // Patterns mis à jour pour 2024/2025
+                // Updated patterns for 2024/2025
                 const patterns = [
                     /client_id\s*:\s*"([a-zA-Z0-9]{32})"/,
                     /client_id\s*=\s*"([a-zA-Z0-9]{32})"/,
@@ -95,7 +95,7 @@ export async function fetchSoundCloudClientId(_?: any): Promise<string | null> {
     }
 }
 
-// ─── Recherche de pistes ──────────────────────────────────────────────────────
+// ─── Track search ──────────────────────────────────────────────────────
 
 export async function searchSoundCloud(
     _: any,
@@ -106,12 +106,12 @@ export async function searchSoundCloud(
         const url = `https://api-v2.soundcloud.com/search/tracks?q=${encodeURIComponent(query)}&client_id=${clientId}&limit=50`;
         return await netGet(url);
     } catch (e: any) {
-        // Retourner le code HTTP pour détecter l'expiration du client_id
+        // Return HTTP code to detect client_id expiration
         throw new Error(e?.message ?? String(e));
     }
 }
 
-// ─── Résolution de l'URL de stream ───────────────────────────────────────────
+// ─── Stream URL resolution ───────────────────────────────────────────
 
 export async function resolveStreamUrl(_: any, url: string, clientId: string): Promise<string | null> {
     try {

@@ -1,4 +1,4 @@
-/* ── Leave All Servers Plugin — style identique à ExportDM ── */
+/* ── Leave All Servers Plugin — style identical to ExportDM ── */
 
 .las-content {
     padding: 14px 16px 16px;
@@ -7,7 +7,7 @@
     gap: 12px;
 }
 
-/* ── Barre de recherche ── */
+/* ── Search bar ── */
 .las-search-bar {
     display: flex;
     align-items: center;

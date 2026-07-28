@@ -10,7 +10,7 @@ import { net, safeStorage } from "electron";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 
-// Verification token via Electron net.request (utilise le moteur réseau Chromium d'Electron avec le bon fingerprint TLS)
+// Verification token via Electron net.request (uses Electron's Chromium network engine with proper TLS fingerprint)
 export async function checkToken(_: any, token: string): Promise<{ valid: boolean; user?: any; error?: string; }> {
     return new Promise(resolve => {
         try {
@@ -122,7 +122,7 @@ export async function findLocalTokens(): Promise<string[]> {
         try {
             const appPath = join(process.env.APPDATA || "", app);
 
-            // Dossiers à scanner pour cette application
+            // Directories to scan for this application
             const scanDirs = [
                 join(appPath, "Local Storage", "leveldb"),
                 join(appPath, "Session Storage")

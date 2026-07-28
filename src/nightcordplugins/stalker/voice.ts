@@ -119,8 +119,8 @@ const logVoiceEvent = (userId: string, username: string, action: "voice_join" | 
 };
 
 export const init = () => {
-    // Inizializza lo stato attuale senza notificare,
-    // per evitare notifiche spurie all'avvio per chi era già in chiamata
+    // Initialize current state without notifying,
+    // to avoid spurious startup notifications for those already in a call
     const initialState: Record<string, VoiceStateData> = {};
     for (const id of targets) {
         const voiceState = VoiceStateStore.getVoiceStateForUser(id);

@@ -80,7 +80,7 @@ async function startSending(message: string, excludedIds: Set<string> = new Set(
         const user = UserStore?.getUser?.(id);
         const name = user ? (user.globalName || user.username) : id;
 
-        // Remplacement dynamique de @user par la mention réelle
+        // Dynamic replacement of @user with actual mention
         const personalizedMessage = message.replace(/@user/g, `<@${id}>`);
 
         try {
@@ -135,7 +135,7 @@ function MassDMModal({ rootProps }: { rootProps: any; }) {
     const [excludedIds, setExcludedIds] = useState<Set<string>>(new Set());
     const [showMentionHint, setShowMentionHint] = useState(false);
 
-    // Pour le multi-sélecteur premium
+    // For the premium multi-selector
     const [isSelectOpen, setIsSelectOpen] = useState(false);
     const logRef = useRef<any>(null);
     const delayInputRef = useRef<HTMLInputElement>(null);
@@ -146,7 +146,7 @@ function MassDMModal({ rootProps }: { rootProps: any; }) {
 
     const handleMsgChange = (val: string) => {
         setMsg(val);
-        // Affiche l'aide si l'utilisateur tape @
+        // Show hint if user types @
         if (val.endsWith("@")) {
             setShowMentionHint(true);
         } else {

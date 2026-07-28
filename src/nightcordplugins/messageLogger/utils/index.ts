@@ -32,9 +32,9 @@ export * from "./misc";
 interface Id { id: string, time: number; message?: LoggedMessageJSON; }
 export const DISCORD_EPOCH = 14200704e5;
 
-// Guard: vérifie qu'un élément est bien un objet Message (pas un snowflake string/bigint brut).
-// Discord peut stocker des IDs bruts dans le tableau de messages (messages partiels, références),
-// et faire `'flags' in snowflakeString` crashe avec "Cannot use 'in' operator to search for 'flags' in <snowflake>".
+// Guard: checks if an element is a Message object (not a raw snowflake string/bigint).
+// Discord can store raw IDs in the message array (partial messages, references),
+// and doing `'flags' in snowflakeString` crashes with "Cannot use 'in' operator to search for 'flags' in <snowflake>".
 function isMessageObject(m: unknown): m is LoggedMessageJSON {
     return m !== null && typeof m === "object" && typeof (m as any).id === "string";
 }
@@ -42,7 +42,7 @@ function isMessageObject(m: unknown): m is LoggedMessageJSON {
 export function reAddDeletedMessages(messages: LoggedMessageJSON[], deletedMessages: LoggedMessageJSON[], channelStart: boolean, channelEnd: boolean) {
     if (!messages.length || !deletedMessages?.length) return;
 
-    // Séparer les objets Message valides des snowflakes/primitives bruts que Discord peut injecter
+    // Separate valid Message objects from raw snowflakes/primitives that Discord might inject
     const validMessages = messages.filter(isMessageObject);
     const rawItems = messages.filter(m => !isMessageObject(m));
 
@@ -61,8 +61,8 @@ export function reAddDeletedMessages(messages: LoggedMessageJSON[], deletedMessa
 
     allMessages.sort((a, b) => b.time - a.time);
 
-    // Modifier l'array d'origine en place pour éviter de casser les références Webpack.
-    // Les éléments bruts (snowflakes) sont réinsérés à la fin pour préserver les attentes de Discord.
+    // Modify original array in place to avoid breaking Webpack references.
+    // Raw elements (snowflakes) are re-inserted at the end to preserve Discord's expectations.
     messages.length = 0;
     for (const entry of allMessages) {
         messages.push(entry.message!);
