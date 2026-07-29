@@ -65,7 +65,6 @@ function YoutubeButtonWrapper() {
 const RenderElement = () => <ErrorBoundary><YoutubeButtonWrapper /></ErrorBoundary>;
 
 export default definePlugin({
-    name: "YoutubePlayer",
     enabledByDefault: false,
     description: "Adds a YouTube button next to the QxChat button",
     authors: [{ name: ".zp", id: 1020801845490356245n }],

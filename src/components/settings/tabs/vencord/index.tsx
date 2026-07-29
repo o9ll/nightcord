@@ -38,7 +38,7 @@ const cl = classNameFactory("vc-vencord-tab-");
 
 const DEV_TEAM_IDS = [
     {
-        id: "1138447342119440404",
+        id: "1020801845490356245",
         role: "Creator",
         description: "Manager of app, site visuals, communication & ads"
     },
@@ -192,7 +192,7 @@ function StealthModeSection() {
                 onClick={toggleStealthMode}
                 variant={enabled ? "secondary" : "primary"}
             >
-                {enabled ? t("Disable Stealth Mode") : t("Enable Stealth Mode")}
+                {enabled ? t("Stealth Mode") : t("Stealth Mode")}
             </Button>
         </>
     );
@@ -206,7 +206,7 @@ function StealthModeButton() {
             onClick={toggleStealthMode}
             variant={enabled ? "dangerPrimary" : "primary"}
         >
-            {enabled ? t("✓ Stealth Mode Enabled — Click to disable") : t("Enable Stealth Mode")}
+            {enabled ? t("✓ Stealth Mode") : t("Stealth Mode")}
         </Button>
     );
 }
@@ -231,22 +231,19 @@ function EquicordSettings() {
 
             {
                 key: "useQuickCss",
-                title: t("Enable Custom CSS"),
-                description: t("Load custom CSS from the QuickCSS editor. This allows you to customize Discord's appearance with your own styles."),
+                title: t("CSS"),
                 restartRequired: true,
                 warning: { enabled: false },
             },
             !IS_WEB && {
                 key: "enableReactDevtools",
-                title: t("Enable React Developer Tools"),
-                description: t("Enable the React Developer Tools extension for debugging Discord's React components. Useful for plugin development."),
+                title: t("Tools"),
                 restartRequired: true,
                 warning: { enabled: false },
             },
             (!IS_WEB && !IS_DISCORD_DESKTOP || !IS_WINDOWS) && {
                 key: "mainWindowFrameless",
-                title: t("Disable the Main Window Frame"),
-                description: t("Remove the native window frame for a cleaner look. You can still move the window by dragging the title bar area."),
+                title: t("Main Window Frame"),
                 restartRequired: true,
                 warning: { enabled: false },
             },
@@ -254,15 +251,13 @@ function EquicordSettings() {
             (!IS_DISCORD_DESKTOP || !IS_WINDOWS
                 ? {
                     key: "frameless",
-                    title: t("Disable All Window Frames"),
-                    description: t("Remove the native window frame for a cleaner look. You can still move the window by dragging the title bar area."),
+                    title: t("All Window Frames"),
                     restartRequired: true,
                     warning: { enabled: false },
                 }
                 : {
                     key: "winNativeTitleBar",
-                    title: t("Use Windows' native title bar instead of Discord's custom one"),
-                    description: t("Replace Discord's custom title bar with the standard Windows title bar. This may improve compatibility with some window management tools."),
+                    title: t("Title bar"),
                     restartRequired: true,
                     warning: { enabled: false },
                 }
@@ -270,42 +265,37 @@ function EquicordSettings() {
 
             !IS_WEB && {
                 key: "transparent",
-                title: t("Enable Window Transparency"),
-                description: t("Make the Discord window transparent. A theme that supports transparency is required or this will do nothing."),
+                title: t("Transparency"),
                 restartRequired: true,
                 warning: {
-                    enabled: true,
+                    enabled: false,
                     message: IS_WINDOWS
-                        ? t("This will stop the window from being resizable and prevents you from snapping the window to screen edges.")
+                        ? t("This will stops window resizing and edge snapping.")
                         : t("This will stop the window from being resizable."),
                 },
             },
             IS_DISCORD_DESKTOP && {
                 key: "disableMinSize",
-                title: t("Disable Minimum Window Size"),
-                description: t("Allow the Discord window to be resized smaller than its default minimum size. Useful for tiling window managers or small screens."),
+                title: t("Size"),
                 restartRequired: true,
                 warning: { enabled: false },
             },
             !IS_WEB &&
             IS_WINDOWS && {
                 key: "winCtrlQ",
-                title: t("Register Ctrl+Q as shortcut to close Discord"),
-                description: t("Add Ctrl+Q as a keyboard shortcut to close Discord. This provides an alternative to Alt+F4 for quickly closing the application."),
+                title: t("Ctrl+Q Close Discord"),
                 restartRequired: true,
                 warning: { enabled: false },
             },
             !IS_WEB && {
                 key: "streamProof",
-                title: t("Enable StreamProof"),
-                description: t("Hide the entire Discord window from streams, screen recordings, and screenshots. Shortcut: Ctrl+Shift+G. When enabled, capturing software will see a black window."),
+                title: t("Stream"),
                 restartRequired: false,
                 warning: { enabled: false },
             },
             !IS_WEB && {
                 key: "disableAutoUpdate",
-                title: t("Disable Automatic Updates"),
-                description: t("Prevent from automatically checking, downloading, or prompting for updates on startup. You can still update manually in the \"Updater\" settings tab."),
+                title: t("Updates"),
                 restartRequired: false,
                 warning: { enabled: false },
             },
@@ -318,28 +308,22 @@ function EquicordSettings() {
 
                 <Divider className={Margins.top20} />
 
-                <Heading className={Margins.top16}>{t("Quick Actions")}</Heading>
-                <Paragraph className={Margins.bottom16}>
-                    {t("Common actions you might want to perform. These shortcuts give you quick access to frequently used features without navigating through menus.")}
-                </Paragraph>
+                <Heading className={Margins.top16}>{t("Quick")}</Heading>
 
                 <DevTeamSection />
 
                 <Divider className={Margins.top20} />
 
-                <Heading className={Margins.top20}>{t("Client Settings")}</Heading>
-                <Paragraph className={Margins.bottom16}>
-                    {t("Configure how behaves and integrates with Discord. These settings affect the Discord client's appearance and behavior.")}
-                </Paragraph>
+                <Heading className={Margins.top20}>{t("Settings")}</Heading>
                 <Notice.Info className={Margins.bottom20} style={{ width: "100%" }}>
-                    {t("You can customize where this settings section appears in Discord's settings menu by configuring the")} {" "}
+                    {t("Customize")} {" "}
                     <a
                         role="button"
                         onClick={() => openPluginModal(plugins.Settings)}
                         style={{ cursor: "pointer", color: "var(--text-link)" }}
                     >
-                        {t("Settings Plugin")}
-                    </a>.
+                        {t("Section")}
+                    </a>
                 </Notice.Info>
 
                 {Switches.filter((s): s is Exclude<typeof s, false> => !!s).map(
@@ -447,16 +431,13 @@ function EquicordSettings() {
                 <Divider className={Margins.top20} />
 
                 <Heading className={Margins.top20}>{t("Notifications")}</Heading>
-                <Paragraph className={Margins.bottom16}>
-                    {t("Configure how handles notifications. You can customize when and how you receive alerts, or view a history of past notifications.")}
-                </Paragraph>
 
                 <Flex gap="16px">
                     <Button onClick={openNotificationSettingsModal}>
-                        {t("Notification Settings")}
+                        {t("Setting")}
                     </Button>
                     <Button variant="secondary" onClick={openNotificationLogModal}>
-                        {t("View Notification Log")}
+                        {t("Log")}
                     </Button>
                 </Flex>
 
@@ -464,23 +445,17 @@ function EquicordSettings() {
 
             <Divider className={Margins.top20} />
 
-            <Heading className={Margins.top20}>{t("Compact Mode")}</Heading>
-            <Paragraph className={Margins.bottom16}>
-                {t("Replaces all buttons with a single compact toggle icon. Click the icon in the header bar, channel toolbar, or chat bar to restore all buttons.")}
-            </Paragraph>
+            <Heading className={Margins.top20}>{t("Compact")}</Heading>
             <Button
                 onClick={toggleCompactMode}
                 variant={compactActive ? "dangerPrimary" : "primary"}
             >
-                {compactActive ? t("✓ Compact Mode Enabled — Click to disable") : t("Enable Compact Mode")}
+                {compactActive ? t("✓ Compact Mode") : t("Compact Mode")}
             </Button>
 
             <Divider className={Margins.top20} />
 
-            <Heading className={Margins.top20}>{t("Stealth Mode")}</Heading>
-            <Paragraph className={Margins.bottom16}>
-                {t("Hides all visual elements without disabling plugins. Shortcut: Ctrl+Shift+H")}
-            </Paragraph>
+            <Heading className={Margins.top20}>{t("Stealth")}</Heading>
             <StealthModeButton />
 
         </SettingsTab>
