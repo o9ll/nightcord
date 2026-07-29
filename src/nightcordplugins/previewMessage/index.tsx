@@ -275,8 +275,7 @@ export default definePlugin({
     name: "PreviewMessage",
     enabledByDefault: true,
     description: "Hover over a DM in your inbox to preview unread messages without opening the conversation. Only shows when there are unread messages.",
-    authors: [{ name: "nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Chat", "Utility"],
 
     start() {

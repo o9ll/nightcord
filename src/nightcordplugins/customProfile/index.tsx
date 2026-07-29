@@ -1810,8 +1810,7 @@ export default definePlugin({
     name: "CustomProfile",
     enabledByDefault: true,
     description: "Visually customize your Discord profile (username, PFP, banner, badges, bio...) — persistent, only visible to you.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["HeaderBarAPI", "ContextMenuAPI"],
 
     headerBarButton: {

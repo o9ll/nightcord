@@ -398,8 +398,7 @@ function restoreWebRtc(): void {
 export default definePlugin({
     name: "WebCordHardened",
     description: "Adds WebCord privacy hardening with network, permission, and WebRTC protections.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Privacy", "Utility", "Voice"],
     settings,
     startAt: StartAt.Init,

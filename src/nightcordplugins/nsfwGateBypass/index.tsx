@@ -14,8 +14,7 @@ let intervalId: ReturnType<typeof setInterval> | undefined;
 export default definePlugin({
     name: "NSFWGateBypass",
     description: "Forces 'Verified Adult' status, unlocks Stages, and clears all invite blocks.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Privacy", "Servers"],
 
     patches: [

@@ -336,8 +336,7 @@ export default definePlugin({
     name: "AutoResponder",
     enabledByDefault: true,
     description: "Automatically reply to DMs using AI to match your writing style.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settings,
     chatBarButton: {
         icon: KeyboardIcon,

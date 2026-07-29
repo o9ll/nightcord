@@ -184,8 +184,7 @@ export default definePlugin({
     name: "LastSeen",
     enabledByDefault: true,
     description: "Shows when a user was last seen online, in their profile.",
-    authors: [{ name: "nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settings,
 
     patches: [

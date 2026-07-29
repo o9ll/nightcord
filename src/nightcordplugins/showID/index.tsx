@@ -91,8 +91,7 @@ export default definePlugin({
     name: "ShowID",
     enabledByDefault: true,
     description: "Shows the user ID in Discord profiles, below the 'Member Since' section.",
-    authors: [{ name: "nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
 
     patches: [
         // dm user sidebar

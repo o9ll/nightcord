@@ -19,8 +19,7 @@ export default definePlugin({
     name: "StealthMode",
     enabledByDefault: true,
     description: "Hides all plugin buttons without disabling them. Shortcut: Ctrl+Shift+H. The toggle is in Nightcord Settings.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     required: true,
     managedStyle: style,
 

@@ -316,8 +316,7 @@ export default definePlugin({
     name: "FollowUser",
     enabledByDefault: true,
     description: "Follows a user in voice channels. Right-click user → Follow User. White heart in header = active following (left-click = join voice channel, right-click = unfollow). Auto-unfollows after inactivity.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settings,
 
     headerBarButton: {

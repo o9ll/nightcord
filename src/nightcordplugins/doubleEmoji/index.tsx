@@ -12,8 +12,7 @@ export default definePlugin({
     name: "DoubleEmoji",
     enabledByDefault: true,
     description: "Keeps the emoji picker open on click and highlights selected emojis with a blue border.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
 
     start() {
         clickListener = (e: MouseEvent) => {

@@ -205,8 +205,7 @@ async function handleMessage(message: any) {
 export default definePlugin({
     name: "AutoClaim",
     description: "Automatically claim tickets by clicking a button on the bot's first message in a ticket channel.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settings,
 
     flux: {

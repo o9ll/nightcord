@@ -126,8 +126,7 @@ const SafeStartpageBrowserButton = ErrorBoundary.wrap(StartpageBrowserButton, { 
 export default definePlugin({
     name: "PrivateSearchEngine",
     description: "Opens a hardened private search window.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["HeaderBarAPI"],
     settings,
     headerBarButton: {

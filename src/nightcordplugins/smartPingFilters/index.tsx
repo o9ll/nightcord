@@ -32,7 +32,7 @@ export const settings = definePluginSettings({
 export default definePlugin({
     name: "SmartPingFilters",
     description: "Smartly filter pings by keywords or users.",
-    authors: [{ name: "Nightcord", id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settings,
     flux: {
         MESSAGE_CREATE(event: any) {

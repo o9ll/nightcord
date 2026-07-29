@@ -52,8 +52,7 @@ const settings = definePluginSettings({
 export default definePlugin({
     name: "VoiceHighQuality",
     description: "🎙️ Professional studio-grade audio quality for Discord. 510kbps OPUS @ 48kHz with maximum quality settings. Optimized for 192kHz microphones.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Voice", "Customisation"],
 
     settings,

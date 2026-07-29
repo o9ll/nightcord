@@ -44,8 +44,7 @@ const changeListener = () => {
 export default definePlugin({
     name: "CursorMacOS",
     description: "Replaces Windows SYSTEM cursors with authentic macOS cursors (.cur/.ani). Restores default cursors when disabled.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
 
     settings,
 

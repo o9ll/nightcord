@@ -142,8 +142,7 @@ function transformMessage(text: string, style: TextStyle): string {
 export default definePlugin({
     name: "AutoModBypass",
     description: "Transforms your messages into various text styles (Fraktur, Zalgo, Squared, etc.) for automod bypass & Fun",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Chat", "Fun", "Utility"],
     enabledByDefault: false,
     settings,

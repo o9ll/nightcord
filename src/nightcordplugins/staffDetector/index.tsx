@@ -662,8 +662,7 @@ function scanChannelStaff(channelId: string, isInit: boolean): void {
 export default definePlugin({
     name: "StaffDetector",
     description: "Alerts (toast/notification + sound) when staff join or leave your VC.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Servers", "Utility"],
     settings,
 

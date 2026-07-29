@@ -231,8 +231,7 @@ export default definePlugin({
     enabledByDefault: true,
     required: true,
     description: "Shows a banner when a new Nightcord version is available. Click Update to install.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
 
     start() {
         const mountWhenReady = () => setTimeout(mountBanner, 1500);

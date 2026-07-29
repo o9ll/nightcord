@@ -2147,8 +2147,7 @@ function getCustomThumbnail(originalThumbnail: string): string {
 export default definePlugin({
     name: "CustomStream",
     description: "Custom stream preview images with profiles & slideshow. GitHub: https://github.com/MrTopQ/customStream-Vencord",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
 
     settings,
 

@@ -571,8 +571,7 @@ export default definePlugin({
     name: "ExportDM",
     enabledByDefault: true,
     description: "Exports your DMs with messages, images, videos, audio, links, embeds, stickers, reactions in TXT/JSON/CSV/MD/HTML.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["HeaderBarAPI"],
 
     headerBarButton: {

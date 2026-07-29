@@ -132,7 +132,7 @@ const settings = definePluginSettings({
 export default definePlugin({
     name: "AutoAFK",
     description: "Automatically switches your status to appear offline when you've been inactive, and switches it back once you're active again.",
-    authors: [{ name: "Nightcord", id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Activity", "Utility"],
     dependencies: ["UserSettingsAPI"],
     settings,

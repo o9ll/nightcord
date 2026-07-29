@@ -222,8 +222,7 @@ export default definePlugin({
     name: "SelfDestruct",
     enabledByDefault: true,
     description: "Sends messages that are automatically deleted after a configurable delay. Red timer visible on each message.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["ChatInputButtonAPI", "MessageAccessoriesAPI"],
     settings,
 

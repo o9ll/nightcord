@@ -277,8 +277,7 @@ const patchUserContext: NavContextMenuPatchCallback = (children, { user }: UserC
 export default definePlugin({
     name: "Stalker",
     description: "Notifies you whenever a person does something.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Friends", "Utility"],
 
     contextMenus: {

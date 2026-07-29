@@ -26,8 +26,7 @@ async function openFirstRunTutorial() {
 export default definePlugin({
     name: "NightcordTutorial",
     description: "Shows a first-run guided tutorial for Nightcord features.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settingsAboutComponent: SafeTutorialSettings,
     toolboxActions: {
         "Open Nightcord tutorial": openTutorial,

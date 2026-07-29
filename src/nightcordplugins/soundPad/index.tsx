@@ -341,8 +341,7 @@ const SafeSoundPadSettings = ErrorBoundary.wrap(SoundPadSettings, { noop: true }
 export default definePlugin({
     name: "SoundPad",
     description: "Routes local audio files through a virtual microphone device. (Beta) Require https://vb-audio.com/Cable/",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Voice", "Utility"],
     dependencies: ["UserAreaAPI"],
     settings,

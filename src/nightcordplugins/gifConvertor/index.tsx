@@ -390,8 +390,7 @@ export default definePlugin({
     name: "GifConvertor",
     enabledByDefault: true,
     description: "Converts an image or video to GIF and sends it in the current channel.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["ChatInputButtonAPI"],
 
     chatBarButton: {

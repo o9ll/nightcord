@@ -295,8 +295,7 @@ export default definePlugin({
     name: "VoiceChannelSearch",
     enabledByDefault: true,
     description: "Search and join any voice channel across all your servers.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["HeaderBarAPI"],
 
     headerBarButton: {

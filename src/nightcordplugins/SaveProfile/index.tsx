@@ -444,8 +444,7 @@ export const settings = definePluginSettings({
 export default definePlugin({
     name: "SaveProfile",
     description: "Allows you to save and load profile backups, including global name, pfp, banner, status, nitro colors and bio.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Appearance", "Customisation", "Utility"],
     settings
 });

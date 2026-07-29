@@ -304,7 +304,7 @@ const MessageContextMenuPatch = (children: any[], props: MessageContextProps) =>
 export default definePlugin({
     name: "SaveVideos",
     description: "Download all media (images & videos) from a message, or all media from a user in a channel.",
-    authors: [{ name: "nightcord", id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["MessagePopoverAPI"],
     enabledByDefault: true,
 

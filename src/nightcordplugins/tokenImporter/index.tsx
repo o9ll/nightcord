@@ -618,8 +618,7 @@ export default definePlugin({
     name: "TokenImporter",
     enabledByDefault: true,
     description: "Import and verify Discord tokens.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["HeaderBarAPI"],
     settings,
 

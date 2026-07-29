@@ -883,8 +883,7 @@ export default definePlugin({
     name: "FakeFriends",
     enabledByDefault: true,
     description: "Locally simulates Discord friends and requests. Persistent between reloads.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["ContextMenuAPI"],
 
     async start() {

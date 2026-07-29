@@ -346,8 +346,7 @@ export default definePlugin({
     name: "DMBomb",
     enabledByDefault: true,
     description: "Sends an aggressive message to ALL server members or a specific role via right click with optional multi-account token rotation.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
 
     start() {
         addContextMenuPatch("guild-context", this.patchGuildContext);

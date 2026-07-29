@@ -168,8 +168,7 @@ async function launchGhostSource(): Promise<void> {
 export default definePlugin({
     name: "GhostSelfbot",
     description: "Launch Ghost Selfbot (exe or source code) with optional auto-token fill from your current Discord session",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Utility", "Customisation"],
     settings,
 

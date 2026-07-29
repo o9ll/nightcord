@@ -160,8 +160,7 @@ function removeMacOsButtons() {
 export default definePlugin({
     name: "MacOsButtons",
     description: "Replaces Windows buttons with macOS-style buttons — red, yellow, green.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     required: false,
     patches: [],
 

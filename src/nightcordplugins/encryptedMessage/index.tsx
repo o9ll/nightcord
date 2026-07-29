@@ -802,8 +802,7 @@ export default definePlugin({
     name: "EncryptedMessage",
     enabledByDefault: true,
     description: "AES-256 end-to-end encryption for Discord. Share the same password with other users to communicate securely.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["ChatInputButtonAPI", "MessageEventsAPI", "MessageAccessoriesAPI"],
     settings,
 

@@ -661,8 +661,7 @@ export default definePlugin({
     name: "ServerCloner",
     enabledByDefault: true,
     description: "Clone an entire server (channels, roles, permissions, icon, emojis, embeds) to a server where you have ADMIN permission. Can be opened from server context menu.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settings,
     start() {
         addContextMenuPatch("guild-context", patchGuildContext);

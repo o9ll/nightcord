@@ -1328,7 +1328,7 @@ export default definePlugin({
     name: "SharePerms",
     enabledByDefault: true,
     description: "Multi-user permission sharing with interactive UI.",
-    authors: [{ name: "Nightcord", id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settings,
 
     headerBarButton: { icon: InternalFolderIcon },

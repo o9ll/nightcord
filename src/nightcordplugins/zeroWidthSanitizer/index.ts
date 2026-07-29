@@ -55,8 +55,7 @@ export default definePlugin({
     name: "ZeroWidthSanitizer",
     description: "Removes invisible zero-width characters from messages to prevent fingerprinting and tracking",
     tags: ["Privacy", "Chat"],
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settings,
 
     // Richiede l'API MessageEvents

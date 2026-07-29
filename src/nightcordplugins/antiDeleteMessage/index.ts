@@ -130,8 +130,7 @@ async function resendMessage(cached: CachedMessage) {
 export default definePlugin({
     name: "AntiDeleteMessage",
     description: "Automatically resends your messages if someone deletes them. Cache persisted across restarts.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     settings,
 
     flux: {

@@ -1003,8 +1003,7 @@ export default definePlugin({
     name: "EventLogs",
     enabledByDefault: true,
     description: "Logs deleted/edited messages, friends, pings, etc. Open via Discord Header Bar.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["HeaderBarAPI"],
 
     headerBarButton: {

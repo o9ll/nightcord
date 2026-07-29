@@ -41,8 +41,7 @@ function openSpatialAudio() {
 export default definePlugin({
     name: "SpatialAudio",
     description: "Positions voice participants on a 2D canvas and spatializes their audio with HRTF.",
-    authors: [{ name: "nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
 
     patches: [
         {

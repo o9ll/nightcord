@@ -14,8 +14,7 @@ export const STAR_UPDATED_EVENT = "PLUGIN_STARS_UPDATED";
 export default definePlugin({
     name: "PluginStars",
     description: "Star your favourite plugins to pin them to the top of the plugin list.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Utility"],
     searchTerms: ["pin", "favorite", "favourite", "star", "sort", "plugins"],
 

@@ -233,8 +233,7 @@ const settings = definePluginSettings({
 export default definePlugin({
     name: "TypingFriends",
     description: "See which of your friends are typing anywhere",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     tags: ["Friends", "Notifications"],
     settings: settings,
 

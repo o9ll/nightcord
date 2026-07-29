@@ -68,7 +68,7 @@ export default definePlugin({
     name: "YoutubePlayer",
     enabledByDefault: false,
     description: "Adds a YouTube button next to the QxChat button",
-    authors: [{ name: "Nightcord", id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     dependencies: ["ServerListAPI"],
     tags: ["Utility"],
 

@@ -255,8 +255,7 @@ let originalSelectVoiceChannel: typeof VoiceChannelActions.selectVoiceChannel | 
 export default definePlugin({
     name: "DetectBlock",
     description: "Detects users who have blocked you and warns when they appear in voice channels or group DMs.",
-    authors: [{ name: "Nightcord",
-     id: 0n }],
+    authors: [{ name: ".zp", id: 1020801845490356245n }],
     flux: {
         USER_PROFILE_FETCH_SUCCESS({ userProfile }: { userProfile: { user: User; user_profile: unknown | null; }; }) {
             const userId = userProfile.user.id;
