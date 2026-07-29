@@ -68,13 +68,23 @@ app.once("ready", () => {
             // Discord then navigates to an external URL (TikTok, GitHub, etc.)
             // in that child window. We patch it immediately on creation
             // to block this navigation and open it in the browser.
-            wc.on("did-create-window", (childWin) => {
+            wc.on("did-create-window", (childWin, details) => {
                 const childWc = childWin.webContents;
                 if (childWc._nightcordPatched) return;
                 childWc._nightcordPatched = true;
 
                 // The child window starts on about:blank but will navigate to an external URL
                 // Block any non-Discord navigation as soon as it happens
+                const openUrl = details && details.url;
+                if (openUrl && openUrl !== "about:blank" && !openUrl.startsWith("devtools://") && !isDiscordUrl(openUrl)) {
+                    shell.openExternal(openUrl).catch(() => {});
+                    console.log("[Nightcord][NEW-WIN-DETAIL] Redirection externe:", openUrl);
+                    try { childWin.destroy(); } catch (_) {}
+                    return;
+                }
+
+                // La fenêtre enfant démarre sur about:blank mais va naviguer vers une URL externe
+                // On bloque toute navigation non-Discord dès qu'elle se produit
                 childWc.on("will-navigate", (event, url) => {
                     if (!isDiscordUrl(url)) {
                         event.preventDefault();
@@ -111,6 +121,42 @@ app.once("ready", () => {
                         try { childWin.close(); } catch (_) {}
                     }
                 });
+
+                // ── FIX "Discord Popup" (fenêtre blanche) ──────────────────────────
+                // Discord crée parfois des BrowserWindow avec about:blank dont le titre
+                // devient "Discord Popup". Ces fenêtres sont des popups OAuth/Nitro/overlay
+                // qui chargent leur contenu via loadURL() côté main process (invisible pour
+                // will-navigate). On les détecte par leur titre et on intercepte loadURL.
+                function handleDiscordPopup() {
+                    const url = childWc.getURL();
+                    if (url && url !== "about:blank" && !url.startsWith("devtools://") && !isDiscordUrl(url)) {
+                        shell.openExternal(url).catch(() => {});
+                        console.log("[Nightcord][POPUP] Redirection popup externe:", url);
+                        try { childWin.destroy(); } catch (_) {}
+                    }
+                }
+
+                childWin.on("page-title-updated", (_event, _title) => {
+                    // Vérifier l'URL à chaque changement de titre — handleDiscordPopup
+                    // ne fait rien si l'URL est Discord ou about:blank
+                    handleDiscordPopup();
+                });
+
+                // Vérifier après un court délai si la fenêtre a chargé une URL externe
+                // (cas où loadURL() est appelé côté main process avant nos handlers)
+                setTimeout(() => {
+                    try {
+                        if (childWin.isDestroyed()) return;
+                        handleDiscordPopup();
+                    } catch (_) {}
+                }, 300);
+
+                setTimeout(() => {
+                    try {
+                        if (childWin.isDestroyed()) return;
+                        handleDiscordPopup();
+                    } catch (_) {}
+                }, 1500);
             });
 
             // Block parent window navigations to external URLs
